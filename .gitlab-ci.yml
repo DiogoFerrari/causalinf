@@ -42,20 +42,23 @@ run:
       - build/*
 
 pages:
+  before_script:
+    - apt-get update && apt-get install make --no-install-recommends -y
+    - python -m pip install sphinx sphinx-bootstrap-theme
   script:
-    - pip install sphinx sphinx-bootstrap-theme
     - cd docs && make html
-    - mv ./_build/html/ ./public/
   # make html compiles the html to ./docs/_build/html
   # then, we need to move it b/c Gitlab Pages publishes what is in a ./public foder
+  after_script:
+    - mv docs/_build/html/ ./public/
   artifacts:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    # - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    # - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 deploy:
   stage: deploy
-  script: echo "Define your deployment script!"
+  script: echo "Deploying the pages..."
   environment: production
