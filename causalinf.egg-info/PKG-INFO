@@ -1,0 +1,19 @@
+Metadata-Version: 2.1
+Name: causalinf
+Version: 0.0.1
+Summary: A small example package for causal inference
+Home-page: <github website>
+Author: Diogo Ferrari
+Author-email: diogoferrari@gmail.com
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: xlsxwriter
+Requires-Dist: gspread
+Requires-Dist: oauth2client

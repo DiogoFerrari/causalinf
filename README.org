@@ -1,0 +1,4 @@
+
+* Python module for causal inference
+
+See documentation [[https://diogoferrari.github.io/causalinf][here]]

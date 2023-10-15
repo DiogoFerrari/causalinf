@@ -1,0 +1,17 @@
+#+AUTHOR: 
+#+OPTIONS: toc:nil H:3
+
+* Introduction
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+This package does....
+
+#+BEGIN_SRC python :exports code,results,both,none :tangle 
+from causalinf import did
+
+est = did.estimate("y~did")
+est.summary()
+
+#+END_SRC
