@@ -35,7 +35,7 @@ before_script:
 run:
   script:
     # to install from requirements.txt
-    # - pip install .
+    - pip install .
     # run the command here
   artifacts:
     paths:
@@ -49,7 +49,7 @@ pages:
   # make html compiles the html to ./docs/_build/html
   # then, we need to move it b/c Gitlab Pages publishes what is in a ./public foder
   after_script:
-    - mv docs/build/html/ ./public/
+    - mv docs/_build/html/ ./public/
   artifacts:
     paths:
       - public
