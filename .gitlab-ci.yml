@@ -35,7 +35,7 @@ before_script:
 run:
   script:
     # to install from requirements.txt
-    # - pip install .
+    - pip install .
     # run the command here
   artifacts:
     paths:
