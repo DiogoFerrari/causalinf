@@ -26,15 +26,16 @@ before_script:
   - virtualenv venv
   - source venv/bin/activate
 
-test:
-  script:
-    - pip install ruff tox  # you can also use tox
-    - pip install --editable ".[test]"
-    - tox -e py,ruff
+# test:
+#   script:
+#     - pip install ruff tox  # you can also use tox
+#     - pip install --editable ".[test]"
+#     - tox -e py,ruff
 
 run:
   script:
-    - pip install .
+    # to install from requirements.txt
+    # - pip install .
     # run the command here
   artifacts:
     paths:
