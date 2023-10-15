@@ -4,7 +4,7 @@
 Introduction
 ------------
 
-This package does....
+This package estimate causal parameters based on different identification strageries.
 
 .. code:: python
 
