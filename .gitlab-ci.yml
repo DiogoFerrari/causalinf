@@ -45,11 +45,9 @@ pages:
   script:
     - pip install sphinx sphinx-bootstrap-theme
     - cd docs && make html
-
+    - mv ./_build/html/ ./public/
   # make html compiles the html to ./docs/_build/html
   # then, we need to move it b/c Gitlab Pages publishes what is in a ./public foder
-  after_script:
-    - mv docs/_build/html/ ./public/
   artifacts:
     paths:
       - public
