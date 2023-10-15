@@ -6,8 +6,7 @@
 # Official language image. Look for the different tagged releases at:
 # https://hub.docker.com/r/library/python/tags/
 
-
-image: python:latest
+# image: python:latest
 
 
 # Change pip's cache directory to be inside the project directory since we can
@@ -20,8 +19,9 @@ image: python:latest
 #   paths:
 #     - .cache/pip
 
-before_script:
-  - python --version ; pip --version  # For debugging
+# before_script:
+#   - pip install --upgrade pip
+#   - python --version ; pip --version  # For debugging
   # - pip install virtualenv
   # - virtualenv venv
   # - source venv/bin/activate
@@ -32,9 +32,18 @@ before_script:
 #     - pip install --editable ".[test]"
 #     - tox -e py,ruff
 
+# ------------------------------------------
+
+
+image: python:latest
+
+before_script:
+  - pip install --upgrade pip
+  - python --version ; pip --version  # For debugging
+
+# install current module
 run:
   script:
-    # install current module
     - pip install .
   artifacts:
     paths:
@@ -55,7 +64,6 @@ pages:
     paths:
       - public
   rules:
-    # - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
 deploy:
