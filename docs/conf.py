@@ -35,7 +35,10 @@ html_static_path = ['_static']
 # html_theme = 'sphinx_material'
 # pip install pydata-sphinx-theme
 # html_theme = 'pydata_sphinx_theme' ## pretty good
-html_theme = 'bootstrap'
+# html_theme = 'bootstrap'
+# html_theme = 'bootstrap'
+html_theme = 'python_docs_theme'
+
 
 # ----------
 def skip(app, what, name, obj, would_skip, options):
