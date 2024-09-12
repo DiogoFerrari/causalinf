@@ -13,19 +13,19 @@ setuptools.setup(
     author="Diogo Ferrari",
     author_email="diogoferrari@gmail.com",
     # 
-    description="A small example package for causal inference",
+    description="A comprehensive package for causal inference",
     long_description=long_description,
     long_description_content_type="text/markdown",
     # 
-    url="<github website>",
+    url="https://gitlab.com/diogoferrari/causalinf/",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
     # Needed for dependencies
-    install_requires=['pandas', 'numpy', 'matplotlib',
-                      "xlsxwriter", "gspread", "oauth2client"],
+    install_requires=['polars', 'tidypolars', 'pandas',
+                      'numpy', 'matplotlib'],
     # data
     package_data={'causalinf': ['data/*.csv']},
     include_package_data=True,
