@@ -20,5 +20,4 @@ class estimate():
 
         """
         print(self.formula)
-        print("ok")
         return None

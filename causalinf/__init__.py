@@ -1,3 +1,3 @@
 
 
-__all__ = ['data', 'did', 'rdd']
+__all__ = ['did', 'rdd', 'iv']

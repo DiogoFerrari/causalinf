@@ -2,7 +2,8 @@
 class estimate():
 
     def __init__(self, formula):
-        """Fit DID model
+        """
+        Fit DID model
 
         :param formula: A formula that specifies the model
         :type formula: string
@@ -20,5 +21,4 @@ class estimate():
 
         """
         print(self.formula)
-        print("ok")
         return None
