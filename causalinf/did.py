@@ -1,24 +1,34 @@
 
 class estimate():
-
+    
     def __init__(self, formula):
         """
-        Fit DID model
+        Fit DID model.
 
-        :param formula: A formula that specifies the model
-        :type formula: string
-        :returns: Object of class DiD
-        :rtype: class
+        Parameters
+        ----------
+        formula : str
+            A formula that specifies the model.
 
+        Returns
+        -------
+        DiD
+            Object of class DiD with the fitted model.
         """
         self.formula = formula
 
     def summary(self):
-        """Summarize DiD estimation 
-
-        :returns: Print summary of DiD estimation
-        :rtype: None
-
+        """
+        Summarize DiD estimation 
         """
         print(self.formula)
         return None
+
+    def plot_trends(self):
+        print('ok')
+        
+    def plot_effects(self):
+        print('ok')
+
+
+

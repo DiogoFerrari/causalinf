@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+import tidypolars4sci as tp
 from pandas.api.types import CategoricalDtype
 
 def __categories__(df, cats, ordered=True):
@@ -18,15 +19,13 @@ def __categories__(df, cats, ordered=True):
     return df
 
 
-__all__ = (
-    "example",
-)
+__all__ = ("example", 'minimum_wage')
 
 data_dir = Path(__file__).parent
 
-cats = {
-    "cat": ["c1", 'c2'],
-}
+# * example
+
+cats = {"cat": ["c1", 'c2']}
 example = __categories__(pd.read_csv(data_dir / "example.csv"), cats)
 example.__doc__ = f'''
 Example dataset
@@ -54,3 +53,10 @@ Author (year) Paper name
 
 
 del(cats)
+
+# * Minimum wage
+
+
+minimum_wage = pd.read_csv(data_dir / "minimum_wage.csv", sep=';')
+minimum_wage.__doc__ = f'''TBC'''
+minimum_wage = tp.from_pandas(minimum_wage)

@@ -1,0 +1,42 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "causalinf"
+version = "0.0.0"
+description = "A comprehensive package for causal inference"
+authors = [{name = "Diogo Ferrari", email = "diogoferrari@gmail.com"}]
+maintainers = [{name = "Diogo Ferrari", email = "diogoferrari@gmail.com"}]
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.6"
+keywords = [
+	 "Causal inference", "Science", "Causal Effect", "Estimation",
+	 "Instrumental variable", "IV", "Difference-in-differences", "DiD",
+	 "Regression discontinuity", "RDD", "Structural causal models", "SEM"
+	 ]
+classifiers = [
+	    "Development Status :: 2 - Pre-Alpha",
+	    "Intended Audience :: Science/Research",
+	    "Topic :: Scientific/Engineering"
+]
+dependencies = [
+	     "functools",
+	     'itertools',
+	     "numpy",
+	     "operator",
+	     "pandas",
+	     "polars",
+	     "tidypolars4sci"
+]
+
+[tool.setuptools.package-data]
+tidypolars4sci.data = ["*.csv", "*.rda"]
+
+[project.urls]
+Homepage = "https://github.com/DiogoFerrari/causalinf"
+Documentation = "https://github.com/DiogoFerrari/causalinf"
+Changelog = "https://github.com/DiogoFerrari/causalinf/blob/master/CHANGELOG.md"
+Issues = "https://github.com/DiogoFerrari/causalinf/issues/"
