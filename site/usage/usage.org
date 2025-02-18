@@ -1,0 +1,32 @@
+
+** Basic usage
+
+causalinf provides submodules based on the identification strategy required by the problem. For instance, for DiD estimation, one can use:
+
+#+BEGIN_SRC python :exports both :results output code :tangle usage.py :cache yes :noweb no :session *Python-Org*
+from causalinf import did
+from causalinf.data import minimum_wage as df
+
+#+END_SRC
+
+#+RESULTS[89bdd46aadebfd8f6355f10cf6149c8df1e50b44]:
+#+begin_src python
+#+end_src
+
+# # information about the dataframe
+# df.__doc__
+# df
+
+#  # **causalinf** is a package for causal inference in Python. It provides functions for (1) evaluating the plausibility of causal identification assumptions, (2) estimating causal effects, (3) creating tables and plots with summary results, (4) conducting sensitivity analyses, and (5) producing model diagnostics. The methods available include difference-in-differences (DiD), regression discountinuity design (RDD), instrumental variables (IV), matching methods (MM) selection on observables (SoO), and structural causal models (SCM).
+
+# # 1. Checking whether identification assumptions are plausible
+# res.plot_trends(outcome="emptot", time="date",
+#                 first_treated_period="November")
+
+# # estimation
+# res = did.estimate("emptot ~ date*wage_st")
+
+# res.summary()
+# res.plot_effects()
+
+
