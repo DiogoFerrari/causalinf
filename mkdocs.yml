@@ -1,0 +1,109 @@
+
+# Project information
+site_name: causalinf - User guide
+site_url: https://www.diogoferrari.com/causalinf
+repo_url: https://github.com/DiogoFerrari/causalinf
+repo_name: causalinf
+use_directory_urls: true
+
+nav:
+  - User Guide:
+    - Overview: index.md
+    - Installation: usage/installation.md
+    - Usage:
+      - DiD: usage/did.md
+      - IV: usage/iv.md
+      - Mathing: usage/matching.md
+      - Mediation: usage/mediation.md
+      - RDD: usage/rdd.md
+      - SoO: usage/soo.md
+      - SCM: usage/scm.md
+  - API Reference: api.md
+  - Releases: releases.md
+
+theme:
+  name: material
+  locale: en
+  custom_dir: docs/_css
+  palette:
+  # Palette toggle for light mode
+  - media: "(prefers-color-scheme: light)"
+    scheme: white
+    primary: custom
+    toggle:
+      icon: material/brightness-7
+      name: Switch to dark mode
+  # Palette toggle for dark mode
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    toggle:
+      icon: material/brightness-4
+      name: Switch to light mode
+  logo: _css/causalinf-icon.png
+  features:
+    - navigation.tracking
+    - navigation.tracking
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.footer
+    - navigation.indexes
+    - content.tabs.link
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - content.code.copy
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.path
+    - toc.integrate 
+    - navigation.sections
+
+# Preview controls
+strict: true
+
+
+extra_css:
+  - _css/extra.css
+  - _css/stylesheets.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_signature: true
+            docstring_style: numpy
+
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - extra
+  - tables
+  - mdx_math:
+      enable_dollar_delimiter: True
+  - fenced_code
+  - smarty
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.details
+  - pymdownx.superfences
+  - md_in_html
+  - pymdownx.blocks.caption
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_javascript: 
+    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML
