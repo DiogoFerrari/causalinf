@@ -1,3 +1,6 @@
 
 
-__all__ = ['did', 'rdd', 'iv', 'utils']
+__all__ = ['scm', 'did', 'rdd', 'iv',
+           'synthetic_data',
+           'utils',
+           ]

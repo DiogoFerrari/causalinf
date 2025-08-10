@@ -29,6 +29,7 @@ dependencies = [
 	     "operator",
 	     "pandas",
 	     "polars",
+	     'tools4sci',
 	     "tidypolars4sci"
 ]
 

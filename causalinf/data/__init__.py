@@ -1,62 +1,10 @@
 from pathlib import Path
-import pandas as pd
-import tidypolars4sci as tp
-from pandas.api.types import CategoricalDtype
+from .minimum_wage import __load_minimum_wage__
 
-def __categories__(df, cats, ordered=True):
-    """Convert objects to categories
+__all__ = ('minimum_wage')
 
-    :param df: data
-    :type df: pandas DataFrame
-    :param cats: keys are the column name and value the categories
-    :type cats: {str: list}
-    :param ordered: True if categories should be ordered
-    :type ordered: boolean
+DATA_DIR = Path(__file__).parent
 
-    """
-    for col, cats in cats.items():
-        df[col] = df[col].astype(CategoricalDtype(cats, ordered=ordered))
-    return df
+minimum_wage = __load_minimum_wage__()
 
 
-__all__ = ("example", 'minimum_wage')
-
-data_dir = Path(__file__).parent
-
-# * example
-
-cats = {"cat": ["c1", 'c2']}
-example = __categories__(pd.read_csv(data_dir / "example.csv"), cats)
-example.__doc__ = f'''
-Example dataset
-
-.. rubric:: Description
-
-The data contains information about...
-
-.. rubric:: Format
-
-A data frame with {example.shape[0]} observations on {example.shape[1]} variables.
-
-======  =========================================
-Column  Description
-======  =========================================
-a       Variable a
-b       Variable b
-cat     Variable with categories
-======  =========================================
-
-.. rubric:: Source
-
-Author (year) Paper name
-'''
-
-
-del(cats)
-
-# * Minimum wage
-
-
-minimum_wage = pd.read_csv(data_dir / "minimum_wage.csv", sep=';')
-minimum_wage.__doc__ = f'''TBC'''
-minimum_wage = tp.from_pandas(minimum_wage)

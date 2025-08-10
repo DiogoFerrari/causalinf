@@ -13,7 +13,7 @@ nav:
     - Usage:
       - DiD: usage/did.md
       - IV: usage/iv.md
-      - Mathing: usage/matching.md
+      - Matching: usage/matching.md
       - Mediation: usage/mediation.md
       - RDD: usage/rdd.md
       - SoO: usage/soo.md

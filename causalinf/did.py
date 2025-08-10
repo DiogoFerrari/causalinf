@@ -21,14 +21,13 @@ class estimate():
         """
         Summarize DiD estimation 
         """
-        print(self.formula)
-        return None
+        pass
 
     def plot_trends(self):
-        print('ok')
+        pass
         
     def plot_effects(self):
-        print('ok')
+        pass
 
 
 

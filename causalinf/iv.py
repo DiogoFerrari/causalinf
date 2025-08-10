@@ -9,7 +9,6 @@ from .utils import (
     _get_stars
 )
 
-
 class estimate():
     
     def __init__(self, stage1, stage2, data,
