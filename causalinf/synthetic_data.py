@@ -8,7 +8,7 @@ class LSEM():
                  noise_std=1.0):
         np.random.seed(seed)
         # assert nx.is_directed_acyclic_graph(G.G), "Graph must be a DAG"
-        G = G.G
+        G = G.__create_nx__()
 
         data = pd.DataFrame(index=range(n))
         ordering = list(nx.topological_sort(G))
