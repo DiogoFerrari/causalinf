@@ -120,13 +120,25 @@ class DAG():
             self.__graph_str2dict__()
             self.__graph_dict2list__()
         elif isinstance(graph, dict):
-            self.__graph_dict__ = graph
+            self.__graph_dict_parse__(graph)
             self.__graph_dict2str__()
             self.__graph_dict2list__()
         elif isinstance(graph, list):
-            self.__graph_list__ = graph
+            self.__graph_list_parse__(graph)
             self.__graph_list2dict__()
             self.__graph_dict2str__()
+
+    def __graph_list_parse__(self, graph):
+        for e in graph:
+            if e not in self.__graph_list__:
+                self.__graph_list__ += [e]
+        
+    def __graph_dict_parse__(self, graph):
+        self.__graph_dict__ = {'directed':[], 'bidirected':[], 'undirected':[]}
+        for edge_type, edges in graph.items():
+            for edge in edges:
+                if edge not in self.__graph_dict__[edge_type]:
+                    self.__graph_dict__[edge_type] += [edge]
 
     def __graph_str_parse__(self, graph):
         self.__graph_str_original__ = graph
