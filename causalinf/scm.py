@@ -1,6 +1,7 @@
 import tidypolars4sci as tp
 import networkx as nx
-import re, itertools, math, inspect
+import re, itertools, math, inspect, textwrap
+from textwrap import dedent
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -107,6 +108,7 @@ class DAG():
         self.__create_dagitty__()
         # others
         self.data = data
+        self.__identification__ = None
 
     # building graph --------------------------------
     def __build_graph__(self, graph):
@@ -314,27 +316,6 @@ class DAG():
             self.nodes_parents[n2].update([n1])
         self.nodes_parents = dict(self.nodes_parents)
         
-    def __collect_edges_properties__(self):
-        self.directed   = self.__graph_dict__['directed']
-        self.bidirected = self.__graph_dict__['bidirected']
-        self.undirected = self.__graph_dict__['undirected']
-
-    def __collect_info_nodes_role__(self):
-        res = {}
-        for role, nodes in self.nodes_role.items():
-            for node in nodes:
-                self.nodes_info[node]['role'] = role
-
-    def __collect_info_nodes_position__(self):
-        res = {}
-        for node, position in self.nodes_position.items():
-            self.nodes_info[node]['position'] = position
-
-    def __collect_info_nodes_label__(self):
-        res = {}
-        for node, label in self.nodes_label.items():
-            self.nodes_info[node]['label'] = label
-
     def __collect_nodes_label__(self, nodes_label):
         nodes_label = nodes_label or {}
         for node in self.nodes:
@@ -356,7 +337,7 @@ class DAG():
             if role=='Outcome':
                 if isinstance(node, list) and len(node)==1:
                     node = node[0]
-                assert isinstance(node, str), "Check nodes_role. Node 'Outcome' must be a string"
+                assert isinstance(node, str), "Check nodes_role. Node 'Outcome' must be a string or a 1-element list."
 
             else:
                 assert isinstance(node, str) or isinstance(node, list), \
@@ -374,6 +355,28 @@ class DAG():
         self.outcome  = self.nodes_role.get('Outcome', None)
         self.latent   = self.nodes_role.get('Latent', None)
         self.observed = self.nodes_role.get('Observed', None)
+
+    def __collect_info_nodes_role__(self):
+        res = {}
+        for role, nodes in self.nodes_role.items():
+            for node in nodes:
+                self.nodes_info[node]['role'] = role
+
+    def __collect_info_nodes_position__(self):
+        res = {}
+        for node, position in self.nodes_position.items():
+            self.nodes_info[node]['position'] = position
+
+    def __collect_info_nodes_label__(self):
+        res = {}
+        for node, label in self.nodes_label.items():
+            self.nodes_info[node]['label'] = label
+
+    def __collect_edges_properties__(self):
+        self.directed   = self.__graph_dict__['directed']
+        self.bidirected = self.__graph_dict__['bidirected']
+        self.undirected = self.__graph_dict__['undirected']
+
 
     # R dagitty
     def __create_dagitty__(self):
@@ -482,14 +485,14 @@ class DAG():
         for node, label in nodes_label.items():
             self.nodes_label[node] = label
 
-    def set_nodes_role(self, nodes_role, keep_others=True):
-        if keep_others:
-            for role, nodes in self.nodes_role.items():
-                if role not in nodes_role.keys():
-                    nodes_role[role] = nodes
-
-        self.__build_graph__(self.__graph_str_parsed__, nodes_role)
-        return self
+    def set_nodes_role(self, nodes_role):
+        res = DAG(graph=self.__graph_str_parsed__,
+                  nodes_role=nodes_role,
+                  nodes_label=self.nodes_label,
+                  nodes_position=self.nodes_position,
+                  edge_label=self.edge_label,
+                  data=self.data)
+        return res
 
     def set_node_position(self, position):
         for node, p in position.items():
@@ -649,114 +652,48 @@ class DAG():
     # dagitty (R dependencies)
     def identification_analysis(self, exposure=None, outcome=None,
                                 adj_set = None,
-                                causal_probability='maybe'):
+                                causal_probability='maybe',
+                                assumptions_show=False,
+                                assumptions_verbose=False,
+                                silent=False):
         """
         causal_probability: str
             If 'always', always compute it; if 'maybe', compute it
             only if there is not identification by adjustment for
             total_effect_adj_set effect
         """
+        assert not outcome or isinstance(outcome, str), 'Outcome must be a string.'
+        assert not exposure or (isinstance(exposure, str) or isinstance(exposure, list)), 'Exposure must be a string or list.'
+
         exposure = exposure or self.exposure
-        outcome = outcome or self.outcome
+        outcome = outcome or self.outcome[0]
 
         assert exposure is not None, "Exposure must be provided."
         assert outcome is not None, "Outcome must be provided."
 
-        # identification by adjustment 
-        # ----------------------------
-        # total effect
-        total_effect_adj_set = dagitty.adjustmentSets(self.__dagitty__,
-                                                      exposure = exposure,
-                                                      outcome = outcome,
-                                                      effect='total',
-                                                      type='minimal'
-                                                      )
-        total_effect_adj_set = None if len(total_effect_adj_set)==0 else list(total_effect_adj_set.rx2['1'])
-        total_effect_adj_set = [''] if total_effect_adj_set==[] else total_effect_adj_set
-        total_identified = True if total_effect_adj_set is not None else False
-        # direct effect
-        direct_effect_adj_set = dagitty.adjustmentSets(self.__dagitty__,
-                                                       exposure = exposure,
-                                                       outcome = outcome,
-                                                       effect='direct'
-                                                       )
-        direct_effect_adj_set = None if len(direct_effect_adj_set)==0 else list(direct_effect_adj_set.rx2['1'])
-        direct_effect_adj_set = [''] if direct_effect_adj_set==[] else direct_effect_adj_set
-        direct_identified = True if direct_effect_adj_set is not None else False
+        self.__identification__ = identification(G=self,
+                                                 exposure=exposure,
+                                                 outcome=outcome,
+                                                 adj_set = adj_set,
+                                                 causal_probability=causal_probability)
+
+        if assumptions_show:
+            print(textwrap.dedent("""\
+            Assumptions for identification:
+            ------------------------------"""))
+            self.__identification__.get_assumptions('identification', verbose=assumptions_verbose)
+            print('\n')
+
+        return self.__identification__
         
-        def build_formula(identified, y, d, X):
-            if not identified:
-                f = ''
-            elif X is None or X[0]=='':
-                f = f"{y} ~ {d}"
-            else:
-                f = f"{y} ~ {d} + {' + '.join(X)}"
-            return f
-        def build_formula_latex(identified, y, d, X):
-            if not identified:
-                f = ""
-            elif X is None or X[0]=='':
-                f = f"{y} ~ \\beta_0 + \\beta_{{d}}{d}"
-            else:
-                beta_xX = [f"\\beta{{{x}}}{x}" for x in X]
-                f = f"{y} ~ \\beta_0 + \\beta_{{d}}{d} + {' + '.join(beta_xX)}"
-            return f
-            
-        res = (
-            tp.tibble({"Cause"  : [exposure],
-                       'Effect' : [outcome],
-                       'id_type': ['adjustement']
-                       })
-            .crossing(effect_type = ['Direct', 'Total'])
-            .mutate(identified = tp.case_when(tp.col("effect_type")=='Direct', direct_identified,
-                                              tp.col("effect_type")=='Total', total_identified),
-                    adj_set = tp.case_when(tp.col("effect_type")=='Direct', direct_effect_adj_set,
-                                           tp.col("effect_type")=='Total', total_effect_adj_set,
-                                           ),
-                    formula = tp.map(['identified', 'Effect', 'Cause', 'adj_set'], lambda vars: build_formula(*vars)),
-                    formula_latex = tp.map(['identified', 'Effect', 'Cause', 'adj_set'], lambda vars: build_formula_latex(*vars))
-                    )
-        )
+    @property
+    def identification(self):
+        if not self.__identification__:
+            self.identification_analysis(silent=True)
+        return self.__identification__
 
-        # causal probability  (only not possible to use adjustment or explicitly asked)
-        # ------------------
-        if not total_identified or causal_probability=='always':
-            X = ', '.join(self.get_nodes())
-            Y = outcome
-            D = ', '.join(exposure) if isinstance(exposure, list) else exposure
-            Z = ', '.join(adj_set) if isinstance(adj_set, list) else adj_set
-
-            p = f"p({X})"
-            q = f"p({Y} | do({D}))" if Z is None else f"p({Y} | do({D}), {Z})"
-            causal_probability = dosearch.dosearch(p, q, self.__dagitty__)
-            causal_probability = causal_probability.rx2['formula'][0] \
-                if bool(causal_probability.rx2['identifiable'][0]) else None
-
-            # formulas
-            if causal_probability is not None:
-                formula = causal_probability.replace('\\left(', ' ')\
-                                            .replace('\\right)', '')\
-                                            .replace('\\', '')
-                formula = f"{q} = {formula}"
-                formula_latex = f"{q} = {causal_probability}"
-            else:
-                formula = ''
-                formula_latex = ''
-            
-            res2 = (
-                tp.tibble({"Cause"           : [exposure],
-                           'Effect'          : [outcome],
-                           'id_type'         : ['do-calculus'],
-                           "effect_type"     : 'Total' if adj_set is None else f"Total (conditioned on {Z})",
-                           'identified'      : True if causal_probability is not None else False,
-                           'adj_set'         : None,
-                           'formula'         : formula,
-                           'formula_latex'   : formula_latex 
-                           })
-            )
-            res = res.bind_rows(res2)
-
-        return res
+    def assumptions(self, category=None, verbose=False):
+        self.identification.get_assumptions(category=category, verbose=verbose)
 
     # dagitty (R dependencies)
     def paths(self, exposure=None, outcome=None, adj_set=None, directed=False):
@@ -772,6 +709,21 @@ class DAG():
         are_open = list(paths_info.rx2['open'])
 
         return {path:{'open':is_open, 'adj_set':adj_set} for path, is_open in zip(paths, are_open)}
+
+    def mediators(self, as_string=False):
+        paths = self.paths(directed=True)
+        paths = [p.split('->') for p in paths]
+        exposure = self.exposure
+        outcome = self.outcome
+        res = []
+        for path in paths:
+            res += [[var.strip() for var in path if var.strip() not in  exposure + outcome]]
+        res = [l for l in res if len(l)>0]
+
+        if as_string:
+            res = f"[{', '.join([f"{{{', '.join(l) }}}" for l in res])}]"
+        return res
+        
 
     # dagitty (R dependencies)
     def equivalence_class(self):
@@ -821,13 +773,13 @@ class DAG():
         - Two CBNs are observational equivalence iff they are Markov equivalence.
 
         For SCM:
-        Without functional form assumptions, for observational equivalence:
+        Without functional form assumptions_show, for observational equivalence:
         - Necessary condition: both SCMs have the same set of conditional independencies
         - Sufficient condition: both SCMs are in the same markov equivalence class (Pearl, 2009)
         - Basically, two SCMs are observationally equivalent iff their causal graphs belong
           to the same Markov equivalence class — i.e., they share the same skeleton and v-structures.
 
-        With functional form assumptions
+        With functional form assumptions_show
         - Once you impose functional form restrictions on SCMs, such as linearity,
           Gaussian disturbance, or additive error, and so on, observational equivalence
           can be strictly finer. That is, Markov-equivalence is not a sufficient condition.
@@ -1306,6 +1258,40 @@ class DAG():
                 plt.tight_layout()
                 figs_res[fig_number] = [fig, axs]
         return figs_res
+
+    def plot_identification(self,
+                            id_info='summary',
+                            show_np = True,
+                            show_linear = True,
+                            show_do = True,
+                            kws_graph={},
+                            kws_identification={},
+                            figsize=[10, 6],
+                            ratio=[2.3, .7],
+                            *args,
+                            **kws
+                            ):
+        roles = ['Exposure', 'Outcome', 'Latent', 'Observed',
+                 'exposure', 'outcome', 'latent', 'observed']
+        for role in roles:
+            assert not kws_graph.get(role, None) and not kws_identification.get(role, None), (
+                f"Setting node role ({role}) not allowed in the plot kws. "+
+                f"To set the node role, create a new DAG or use set_node_role before plotting.")
+
+        if kws_identification:
+            self.identification_analysis(**kws_identification)
+            
+        return self.identification.plot(G=self,
+                                        id_info=id_info,
+                                        show_np = show_np,
+                                        show_linear = show_linear,
+                                        show_do = show_do,
+                                        figsize=figsize,
+                                        ratio=ratio,
+                                        kws_graph=kws_graph,
+                                        *args,
+                                        **kws
+                                        )
     
     # ancillary
     def __plot_create_nx__(self):
@@ -1712,6 +1698,524 @@ class DAG():
         return res
     # -------------------------------------------------
 
+class identification():
+
+    def __init__(self, *args, **kws):
+        self.identification = None
+        self.identification_analysis(self, *args, **kws)
+        self.__assumptions__()
+
+    def __assumptions__(self):
+        self.assumptions = {
+            "assumptions": {
+                # identification
+                "correct_dag": {
+                    "name"       : "Correct DAG",
+                    "usage"      : ["identification"],
+                    "definition" : "DAG structure matches the true causal relations, with no arrow omitted or unduly included",
+                    "scape"      : "Connects reality and the DAG model",
+                    "role"       : "Ensures adjustment sets and do-calculus give the correct identifiable causal effect.",
+                    "violation"  : "Biased/invalid causal effect estimates and wrong adjustment sets.",
+                    "notes"      : "A prerequisite for identifiability claims conditional on a DAG.",
+                    'required'   : 'yes',
+                    'testable'   : 'no',
+                },
+                "no_unmodeled_causes": {
+                    "name"       : "No unmodeled causes (causal sufficiency)",
+                    "usage"      : ["identification"],
+                    "definition" : ("All direct and indirect common causes of variables in the DAG are included in the DAG"+
+                                    " either as observed or latent nodes (no unmodeled causes)."),
+                    "scope"      : "Connects reality and the DAG model",
+                    "role"       : "Enables back-door/front-door adjustment or perform do-calculus on observables.",
+                    "violation"  : "Confounding bias; causal effects not identifiable.",
+                    "aliases"    : ["Causal Sufficiency"],
+                    'required'   : 'yes',
+                    'testable'   : 'no',
+                },
+                # identification and discovery
+                "causal_markov_condition": {
+                    "name"       : "Causal Markov Condition (CMC)",
+                    "usage"      : ['identification', 'discovery'],
+                    "definition" : "Each variable is independent of its non-descendants given its parents",
+                    "scope"      : "Connects the DAG and distribution of each variable",
+                    "role"       : "Links d-separation to conditional independencies, grounding do-calculus.",
+                    "violation"  : "Graph–distribution link breaks and identification results may be incorrect.",
+                    'required'   : 'yes',
+                    'testable'   : 'no',
+                },
+                # identification and estimation
+                "positivity": {
+                    "name"       : "Positivity (Overlap)",
+                    "usage"      : ['identification', "estimation", 'inference'],
+                    "definition" : ("Each treatment level has positive probability to occur at all relevant levels"+
+                                    " of the adjustment variables."),
+                    "scope"      : "Distribution",
+                    "role"       : "Required for g-formula, IPW, and many identification/estimation strategies.",
+                    "violation"  : "Effects undefined or non-estimable for regions of covariate space.",
+                    "aliases"    : ["Overlap", "Common Support"],
+                    "notes"      : "Check e(X|Z) bounds for binary treatment; diagnose with support plots.",
+                    'required'   : 'yes',
+                    'testable'   : 'no',
+                },
+
+                # discovery
+                "faithfulness": {
+                    "name"       : "Faithfulness (Stability)",
+                    "usage"      : ["discovery"],
+                    "definition" : "All and only the CIs in the data arise from d-separation in the DAG (no fine-tuned cancellations).",
+                    "scope"      : "Connects distribution of variables and the DAG",
+                    "role"       : "Not required if the DAG is known; crucial for learning structure from data.",
+                    "violation"  : "Multiple DAGs can explain the same CI pattern; discovery becomes ambiguous.",
+                    "aliases"    : ["Stability", "No-fine-tuning"],
+                    "notes"      : "Often assumed by PC/FCI; can fail in measure-zero parameter settings or symmetric systems.",
+                    'testable'   : 'no',
+                },
+
+            },
+        }
+
+    def get_assumptions(self, category=None, verbose=False):
+        """
+        Return a list of assumption entries (with keys) that include the given usage category.
+
+        Parameters
+        ----------
+        category : str
+            An assumption category such as 'identification', 'discovery', 'estimation', 'inference'.
+
+        Returns
+        -------
+        Print assumptions
+        If no matches are found, returns list of categories
+        """
+        category = (category or "").strip().lower()
+
+        # collect categories
+        categories = []
+        for assumption, details in self.assumptions['assumptions'].items():
+            categories += details['usage']
+        categories = set(categories)
+                
+        # collect
+        if category in categories:
+            result = []
+            for key, entry in self.assumptions.get("assumptions", {}).items():
+                if category in [u.lower() for u in entry.get("usage", [])]:
+                    result.append({ "key": key, **entry })
+
+            if verbose:
+                self.__get_assumptions_print_verbose__(result)
+            else:
+                self.__get_assumptions_print__(result)
+        else:
+            print('Categories available:')
+            [print(f"- {c}") for c in categories]
+
+        return None
+
+    def __get_assumptions_print__(self, assumptions):
+        for i, assump in enumerate(assumptions):
+            print(textwrap.dedent(f""" \
+            {i+1}. {assump['definition']}
+            """), end='')
+
+    def __get_assumptions_print_verbose__(self, assumptions):
+        for i, assump in enumerate(assumptions):
+            print(textwrap.dedent(f""" \
+            {i+1}. {assump['name']}
+               - Definition: {assump.get('definition', '')}
+               - Role: {assump.get('role', '')}
+               - Scope: {assump.get('scope', '')}
+               - Usage: {', '.join(assump.get('usage', ''))}
+               - Violation: {assump.get('violation', '')}
+            """), end='')
+
+    # dagitty (R dependencies)
+    def identification_analysis(self, *args, **kws):
+        """
+        causal_probability: str
+            If 'always', always compute it; if 'maybe', compute it
+            only if there is not identification by adjustment for
+            total_effect_adj_set effect
+        """
+        G=kws.get("G", None)
+        exposure=kws.get("exposure", None)
+        outcome=kws.get("outcome", None)
+        adj_set=kws.get("adj_set", None)
+        causal_probability=kws.get("causal_probability", 'maybe')
+
+        assert not outcome or isinstance(outcome, str), 'Outcome must be a string.'
+        assert not exposure or (isinstance(exposure, str) or isinstance(exposure, list)), 'Exposure must be a string or list.'
+
+        exposure = exposure or G.exposure
+        outcome = outcome or G.outcome[0]
+
+        assert exposure is not None, "Exposure must be provided."
+        assert outcome is not None, "Outcome must be provided."
+
+        # identification by adjustment 
+        # ----------------------------
+        adj = {}
+        for effect in ['direct', 'total']:
+            adj[effect] = self.__identification_analysis_adj__(G, exposure, outcome, effect)
+
+        # causal probability  (only not possible to use adjustment or explicitly asked)
+        # ------------------
+        total_identified = adj['total']['identified']
+        do = {}
+        if not total_identified or causal_probability=='always':
+            do['total'] = self.__identification_analysis_do__(G, exposure, outcome, adj_set)
+            
+        # collect results 
+        # ---------------
+        res = {'Adjustment variables':adj, 'do-calculus':do}
+        
+        self.identification = res 
+
+    def __identification_analysis_adj__(self, G, exposure, outcome, effect):
+        adj_set = dagitty.adjustmentSets(G.__dagitty__,
+                                         exposure = exposure,
+                                         outcome = outcome,
+                                         effect=effect
+                                         )
+
+        adj_set    = None if len(adj_set)==0 else list(adj_set.rx2['1'])
+        adj_set    = [''] if adj_set==[] else adj_set
+        identified = True if adj_set is not None else False
+        f, f_np, latex_parametric, latex_non_parametric = self.__identification_analysis_adj_formula__(identified, outcome,
+                                                                                                       exposure, adj_set)
+
+        # direct
+        has_mediators = len(G.mediators())>0
+        if effect=='direct':
+            tau_name = 'Average Controlled Direct Effect (ACDE)'
+            c     = 'ACDE'
+            d0    = "d'"
+            d1    = "d"
+            m     = ', m' if  has_mediators  else ""
+            Yi1_l = f'Y_i({d1+m})'
+            Yi0_l = f'Y_i({d0+m})'
+            Yi1   = Yi1_l.replace("_", '')
+            Yi0   = Yi0_l.replace("_", '')
+
+            adj   = True if adj_set and adj_set != [''] else False
+            Z     = ", Z" if adj else ''
+            Zstr  = f"Z = {', '.join(adj_set)}" if Z else None
+
+            med   = True if has_mediators else False
+            M     = ', M=m' if  med  else ""
+            Mstr  = f"M = {G.mediators(as_string=True)}" if med else None
+
+
+        tau = f"E[{Yi1} - {Yi0}]"
+        Esoo= f"E[{Yi1}] = E[Y | D={d1+M+Z}]"
+
+
+        # tau     = f"tau_{{{c}}}({d}) = {E} "
+        # tau_soo = f"tau_{{{c}}}^{{SoO}}({d}) = \\mathbb{E}_{Z}[Eid] - \\mathbb{E|_{Z}[E[Y | D=d', M=m, Z]]"
+
+        #     tau_latex   = "$\\tau_{\\text{ACDE}}(d, d', m) = \\mathbb{E}\\left[Y_i(d, m) - Y_i(d', m)\\right]$"
+        #     tau_soo_latex = ("$\\tau_{\\text{ACDE}}^{\\text{SoO}}(d, d', m) " +
+        #                      "= \\mathbb{E}_{{Z}}\\left[\\mathbb{E}[Y | D=d, M=m, Z]\\right]" +
+        #                      " - \\mathbb{E}_{{Z}}\\left[\\mathbb{E}[Y | D=d', M=m, Z]\\right]$")
+
+
+        # total
+        effect_name_total = 'Average Causal Effect (ACE)' if effect=='total' else None
+
+        tau_ace = "tau_{ACDE}^{SoO}(d, d') = \\mathbb{E}_{Z}[E[Y | D=d, Z]] - \\mathbb{E|_{Z}[E[Y | D=d', Z]]"
+
+
+        effect_name = tau_acde_name or effect_name_total
+        tau = tau_acde or tau_total
+
+        res = {'outcome'                : outcome,
+               'exposure'               : exposure,
+               "identified"             : identified,
+               "adj_set"                : adj_set,
+               "formula"                : f,
+               "formula_np"             : f_np,
+               "latex_parametric"       : latex_parametric,
+               "latex_non_parametric"   : latex_non_parametric,
+               "effect_name"            : effect_name,
+               'tau'              : tau,
+               'tau_latex'        : tau_latex,
+               }
+        return res
+
+    def __identification_analysis_adj_formula__(self, identified, outcome, exposure, adj):
+
+        if not identified:
+            f = None
+            f_np = None
+            latex_parametric = None
+            latex_non_parametric = None
+        else:
+            d = ' + '.join([exposure] if isinstance(exposure, str) else exposure)
+            X = ' + '.join(adj or [''])
+            Xnp = ', '.join(adj or [''])
+            y = outcome
+            f    = f"{y} ~ {d} + {X}"
+            f_np = f"{y} ~ f({d})" if not X else f"{y} ~ f({d}, {Xnp})"
+
+            d = [exposure] if isinstance(exposure, str) else exposure
+            beta_dTd = ' + '.join([f"\\beta_{{{di}}}{di}" for di in d])
+            beta_xTX = ' + '.join([f"\\beta_{{{x}}}{x}" for x in adj or ['']])
+            latex_parametric = f"E[{y} \mid \cdot] = \\beta_0 + {beta_dTd} + {beta_xTX}"
+
+            d = ', '.join([exposure] if isinstance(exposure, str) else exposure)
+            latex_non_parametric = f"E[{y} \mid \cdot] = f({d}, e)" if not X else f"{y} = f({d}, {Xnp}, e)"
+
+        return f, f_np, latex_parametric, latex_non_parametric
+
+    def __identification_analysis_do__(self, G, exposure, outcome, adj_set):
+        X = ', '.join(G.get_nodes())
+        Y = outcome
+        D = ', '.join(exposure) if isinstance(exposure, list) else exposure
+        Z = ', '.join(adj_set) if isinstance(adj_set, list) else adj_set
+
+        p = f"p({X})"
+        q = f"p({Y} | do({D}))" if Z is None else f"p({Y} | do({D}), {Z})"
+        causal_probability = dosearch.dosearch(p, q, G.__dagitty__)
+        causal_probability = causal_probability.rx2['formula'][0] \
+            if bool(causal_probability.rx2['identifiable'][0]) else None
+
+        # formulas
+        if causal_probability is not None:
+            formula = causal_probability.replace('\\left(', ' ')\
+                                        .replace('\\right)', '')\
+                                        .replace('\\', '')
+            formula = f"{q} = {formula}"
+            latex = f"{q} = {causal_probability}"
+        else:
+            formula = None
+            latex = None
+
+        identified = True if causal_probability is not None else False
+
+        effect_name = 'Average Causal Effect (ACE)' if not adj_set else 'Conditional Average Causal Effect (CACE)'
+
+        res = {'outcome'        : outcome,
+               'exposure'       : exposure,
+               "identified"     : identified,
+               "adj_set"        : adj_set,
+               "formula"        : formula,
+               "latex"          : latex,
+               "non_parametric" : latex,
+               "effect_name"    : effect_name,
+               }
+        return res
+
+    def details(self):
+        for id_type, results in self.identification.items():
+            if id_type!='do-calculus':
+                self.__repr_adj_details__(results) 
+            else:
+                self.__repr_do_details__(results) 
+        return None
+
+    def get_dict(self):
+        return self.identification
+
+    def plot(self, kws_graph, *args, **kws):
+
+        default_usetex = plt.rcParams["text.usetex"] 
+        plt.rcParams["text.usetex"] = True
+        plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
+
+        G = kws.get("G", None)
+        y_do = kws.get("y_do", True)
+        ratio = kws.get("ratio", True)
+        figsize = kws.get("figsize", [10, 6])
+        ratio = kws.get("ratio", [10, 6])
+
+        fig, axs = plt.subplots(nrows=2, ncols=1, figsize=figsize, tight_layout=True,
+                                gridspec_kw={'height_ratios': ratio})
+        # Graph 
+        # -----
+        ax = axs[0]
+        G.plot(ax=ax, **kws_graph)
+        ax = axs[1]
+
+        # identification 
+        # --------------
+        details = kws.get("id_info", 'summary')
+        kws.pop('details', None)
+        if details=='summary':
+            ax = self.__plot_summary__(ax=ax, *args, **kws)
+        else:
+            self.__plot_equations__(ax=ax, *args, **kws)
+            
+        plt.axis("off")
+        plt.tight_layout()
+        plt.show()
+        plt.rcParams["text.usetex"] = default_usetex
+
+        return plt, axs
+
+    def __plot_summary__(self, ax, *args, **kws):
+        G = kws.get("G", None)
+        y_do = kws.get("y_do", True)
+        ratio = kws.get("ratio", True)
+
+        show_np = kws.get("show_np", True)
+        show_linear = kws.get("show_linear", True)
+        show_do = kws.get("show_do", True)
+
+
+        # collect text 
+        # ------------
+        id = G.identification.get_dict()
+        adj = id['Adjustment variables']
+        do  = id['do-calculus']
+
+        # adjustment (non-parametric)
+        txt = ''
+        if adj['total']['identified'] or adj['direct']['identified']:
+            for effect in ['total', 'direct']:
+                if adj[effect]['identified']:
+                    txt += f"{effect.title()} effect: ${adj[effect]['latex_non_parametric']}$\n"
+                else:
+                    txt += "\\textit{(Not identified by adjustment)}\n"
+        else:
+            txt += "\\textit{(Not identified by adjustment)}\n"
+            non_parametric = "\\textbf{Identification by adjustment:}\n" + txt
+
+
+        # adjustment (non-parametric)
+        txt = ''
+        if adj['total']['identified'] or adj['direct']['identified']:
+            for effect in ['total', 'direct']:
+                if adj[effect]['identified']:
+                    txt += f"{effect.title()} effect: ${adj[effect]['latex_parametric']}$\n"
+                else:
+                    txt += "\\textit{(Not identified by adjustment)}\n"
+        else:
+            txt += "\\textit{(Not identified by adjustment)}\n"
+            parametric = "\\textbf{Identification by adjustment under linearity and no interaction:}\n" + txt
+
+        # do
+        txt = ''
+        if do:
+            if do['total']['identified']:
+                do = do['total']
+                if do['adj_set']:
+                    conditional = [do['adj_set']] if isinstance(do['adj_set'], str) else do['adj_set']
+                    conditional = f" (conditional on {', '.join(conditional)})"
+                else:
+                    conditional = ''
+                    txt += f"Total effect causal probability {conditional}:\n ${do['latex']}$" 
+            else:
+                txt += "Total effect causal probability: \n\\textit{(Not identified)}\n"
+        else:
+            txt += "\\textit{(Analysis not conducted. Identification by adjustment available.)}\n"
+            causal_probability = ("\\textbf{Identification by do-calculus:}\n" + txt)
+
+        # plot 
+        # ----
+        x_left = 0.01
+        x_right = 0.99
+        y_top = .9
+        y_bottom = .001
+        if show_np:
+            ax.text(x_left, y_top, s=non_parametric,
+                    ha='left', va='top', ma='left',
+                    fontdict=dict(weight='normal', style='normal',
+                                  color='black', fontsize=12, alpha=1),
+                    transform=ax.transAxes
+                    )
+        if show_linear:
+            x = x_right if show_np else x_left
+            ha = 'right' if show_np else 'left'
+            ma = 'right' if show_np else 'left'
+            ax.text(x, y_top, s=parametric,
+                    ha=ha, va='top', ma=ma,
+                    fontdict=dict(weight='normal', style='normal',
+                                  color='black', fontsize=12, alpha=1),
+                    transform=ax.transAxes
+                    )
+        if show_do:
+            y  = y_bottom if (show_linear or show_np) else y_top
+            va = 'bottom' if (show_linear or show_np) else 'top' 
+            ax.text(x_left, y, s=causal_probability,
+                    ha='left', va=va, ma='left',
+                    fontdict=dict(weight='normal', style='normal',
+                                  color='black', fontsize=12, alpha=1),
+                    transform=ax.transAxes
+                    )
+        if not (non_parametric or parametric or causal_probability):
+            txt = "\\textit{Direct and total effects not identifiable.}"
+            ax.text(x_left, y_top, s=txt,
+                    ha='left', va='top', ma='left',
+                    fontdict=dict(weight='normal', style='normal',
+                                  color='black', fontsize=12, alpha=1),
+                    transform=ax.transAxes
+                    )
+            
+        # Splines (axes lines)
+        for side in ['bottom', 'left', 'right', 'top']:
+            ax.spines[side].set_visible(True)
+            ax.spines[side].set_linewidth(1.3)
+            ax.tick_params(top=False, bottom=False, left=False, right=False,
+                           labeltop=False, labelbottom=False, labelleft=False, labelright=False)
+
+        return ax
+
+    def __tidy__(self):
+        pass
+    
+    def __str__(self):
+        self.__repr__()
+        return ''
+
+    def __repr__(self):
+        direct = self.identification['Adjustment variables']['direct']
+        total =  self.identification['Adjustment variables']['total']
+        do =  self.identification["do-calculus"]
+
+        print(f"Exposure (cause): {direct['exposure']}\n"+
+              f"Outcome (effect): {direct['outcome']}\n")
+
+        self.__repr_adj__(direct, total)
+        self.__repr_do__(do)
+        return ''
+
+    def __repr_adj__(self, direct, total):
+        txt = dedent("""
+        Identification method: Adjustment variables
+        ---------------------\
+        """)
+        for result in [direct, total]:
+            txt += dedent(f"""
+            Causal effect: {result['effect_name']}
+            Identified: {result['identified']}
+            Adjustment set: {result['adj_set']}
+            """)
+        print(txt)
+
+    def __repr_do__(self, result):
+        txt = dedent("""\
+        Identification method: do-calculus
+        ---------------------
+        """)
+        if result:
+            result = result['total']
+            txt += dedent(f"""\
+            Causal effect: {result['effect_name']}
+            Identified: {result['identified']}
+            Causal probability: {result['formula']}
+            """)
+        else:
+            txt += "Analysis not conducted. Identification by adjustment available."
+        print(txt)
+            
+    def __repr_adj_details__(self, results):
+        print("TBD")
+
+    def __repr_do_details__(self, results):
+        print("TBD")
+
+        
 class estimate():
     
     def __init__(self,
@@ -1731,6 +2235,7 @@ class estimate():
         
         model: str
             'auto' : use identification results.
+            'LSEM': use linear structural equation models
             'GLSEM': use generalied linear structural equation models
             'NPSEM': uses nonparametric structural equation estimation
              See 'Details'
@@ -1752,11 +2257,11 @@ class estimate():
         # self.__collect_info__(stage1, stage2)
         # self.__estimate__(data)
         # self.__get_diagnostics__()
+        pass
 
     def __estimate__(self, G):
         pass
         
-
     def __graph2sem__(self, parameter_fmt="(beta_{cause}.{effect})"):
         # regression lines
         reg = ''
@@ -1867,6 +2372,20 @@ class estimate():
         dag_str = "\n".join(sorted(f"{c} <- {p}" for c, p in edges))
         nodes_role = {"Latent": sorted(latents)} if latents else {}
         return dag_str, edge_label, nodes_role
-
-
-
+    
+    def __assumptions__(self):
+        assumptions = {
+            # estimation, and inference
+            "functional_form": {
+                "name"       : "Functional Form Assumptions",
+                "usage"      : ['estimation', 'inference'],
+                "definition" : ("Parametric/semi-parametric restrictions (e.g., linearity, additivity, "+
+                                "monotonicity, non-Gaussian noise)."),
+                "level"      : "Distributional parameterization",
+                "role"       : "Adds leverage for identification/orientation (e.g., LiNGAM) or consistent estimation.",
+                "violation"  : "Misspecification bias; identifiability/orientation results may fail.",
+                "examples"   : ["Linearity (LSEM)", "Additive noise (ANM)", "Non-Gaussian errors (LiNGAM)", "Monotonicity"],
+                "notes"      : "Helpful for both discovery (edge orientation) and identification (parameter identifiability)."
+            }
+            }
+            
