@@ -1,26 +1,76 @@
-from .tau import *
+from . import utils as ut
+from .models import lsem
 from .options import get_options
+from .tau import *
+# 
 import tidypolars4sci as tp
 import networkx as nx
 import re, itertools, math, inspect, textwrap
 from textwrap import dedent
 import numpy as np
+from scipy.stats import norm as dnorm
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from collections import defaultdict
+# for examples
+import difflib
 # R packages/dependencies
 from tools4sci.cypher import convert
 from rpy2.robjects.packages import importr
 from rpy2.robjects import NULL
-# for examples
-import difflib
 # 
 dagitty = importr("dagitty")
 dosearch = importr("dosearch")
 
 
-class DAG():
-    
+__all__ = ['DAG', 'estimate', 'examples']
+
+class DAG:
+    """
+    graph: (str, dict, list)
+        A string with the a graph, or a list or dictionary with the edges
+
+        If string, it can have different formats
+        Example:
+        '''
+        X1 -> Y
+        X1 -> Z -> Y
+        X1 <- X2
+        # This is equivalent to directed edges: X3 -> A and X -> B
+        # and X4 -> C and X4 -> D
+        X3 -> {A, B}
+        {C, D} <- X4
+        # Bidirected edges (this is a comment, which is also allowed)
+        X3 <-> X4
+        # Undirected edges 
+        X3 -- X4
+        # Mixing
+        X5 -- X6 -> X7
+        '''
+
+         If list, the edge types will be parsed based on their format:
+         [
+             ('X', 'Y'),                    # becomes X -> Y  (directed edge)
+             {'X', 'Z'},                    # becomes X -- Y  (undirected edge)
+             (('X1', 'X2'), ('X2', 'X1')),  # becomes X <-> Y (bidirected edge)
+         ]
+
+        If dictionary, it must contains the edges as elements and the
+        edge type (directed, undirected, bidirected) as keys 
+        Example:
+        {'directed'  : [('X', 'Y'), ...],  # list of tuples
+         'undirected': [{'X1', 'X2'}, ...] # list of dictionaries
+         'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] # list of 2-tuple tuples
+         }
+
+    SEM: a string with the structural equation model (SEM).
+         Parameter and path effects definition are allowed in the
+         SEM string. If parameters are provided,
+         they are used as 'edge_labels', except if the later is also
+         provided. 
+         See examples below.
+    """
+
     def __init__(self,
                  graph=None,
                  data=None,
@@ -31,56 +81,19 @@ class DAG():
                  # edges
                  edge_label=None
                  ):
-        """
-        graph: (str, dict, list)
-            A string with the a graph, or a list or dictionary with the edges
-
-            If string, it can have different formats
-            Example:
-            '''
-            X1 -> Y
-            X1 -> Z -> Y
-            X1 <- X2
-            # This is equivalent to directed edges: X3 -> A and X -> B
-            # and X4 -> C and X4 -> D
-            X3 -> {A, B}
-            {C, D} <- X4
-            # Bidirected edges (this is a comment, which is also allowed)
-            X3 <-> X4
-            # Undirected edges 
-            X3 -- X4
-            # Mixing
-            X5 -- X6 -> X7
-            '''
-
-             If list, the edge types will be parsed based on their format:
-             [
-                 ('X', 'Y'),                    # becomes X -> Y  (directed edge)
-                 {'X', 'Z'},                    # becomes X -- Y  (undirected edge)
-                 (('X1', 'X2'), ('X2', 'X1')),  # becomes X <-> Y (bidirected edge)
-             ]
-
-            If dictionary, it must contains the edges as elements and the
-            edge type (directed, undirected, bidirected) as keys 
-            Example:
-            {'directed'  : [('X', 'Y'), ...],  # list of tuples
-             'undirected': [{'X1', 'X2'}, ...] # list of dictionaries
-             'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] # list of 2-tuple tuples
-             }
-
-        SEM: a string with the structural equation model (SEM).
-             Parameter and path effects definition are allowed in the
-             SEM string. If parameters are provided,
-             they are used as 'edge_labels', except if the later is also
-             provided. 
-             See examples below.
-        """
         assert graph, "'graph' must be provided."
         assert nodes_position is None or isinstance(nodes_position, dict), (
             "nodes_position must be None or dict")
         assert nodes_label is None or isinstance(nodes_label, dict), (
             "nodes_label must be None or dict")
 
+        # deal with user provided roles in low case
+        key_roles = ['Outcome', 'Exposure', "Latent"]
+        for role in  key_roles:
+            if role.lower() in nodes_role.keys():
+                nodes_role[role] = nodes_role[role.lower()]
+                nodes_role.pop(role.lower())
+            
 
         # graph
         self.__graph_list__ = []
@@ -113,6 +126,954 @@ class DAG():
         # others
         self.data = data
         self.__identification__ = None
+
+    # manipulating graph  -----------------------------
+    def get_nodes(self, exclude_latent=False):
+        nodes = list(self.nodes)
+        latent_nodes = self.latent
+
+        if exclude_latent and latent_nodes:
+            nodes = [n for n in nodes if n not in latent_nodes]
+        return nodes
+
+    def set_node_label(self, nodes_label):
+        for node, label in nodes_label.items():
+            self.nodes_label[node] = label
+
+    def set_nodes_role(self, nodes_role):
+        res = DAG(graph=self.__graph_str_parsed__,
+                  nodes_role=nodes_role,
+                  nodes_label=self.nodes_label,
+                  nodes_position=self.nodes_position,
+                  edge_label=self.edge_label,
+                  data=self.data)
+        return res
+
+    def set_node_position(self, position):
+        for node, p in position.items():
+            self.position[node] = p
+
+    def edge_add(self, edge):
+        res = self
+        if not self.edge_exist(edge):
+            graph = self.__graph_list__.copy()
+            graph.append(edge)
+            res = self.__rebuild_graph__(graph)
+        return res
+
+    def edge_remove(self, edge):
+        removed = False
+        graph = self.__graph_list__.copy()
+
+        if edge in self.__graph_list__:
+            graph.remove(edge)
+            removed = True
+        elif self.__edge_type__(edge)=='bidirected':
+            edge = (edge[1], edge[0])
+            if edge in self.__graph_list__:
+                graph.remove(edge)
+                removed = True
+
+        if removed:
+            return self.__rebuild_graph__(graph)
+        else:
+            return  self
+
+    def edge_replace(self, remove, add):
+        res = self.edge_remove(remove)
+        res = res.edge_add(add)
+        return res
+
+    def edge_exist(self, edge, edges=None):
+        """
+        Check whether `edge` exists in `edges`,
+        robust to order of nodes for undirected and bidirected edges.
+        """
+        if edges is None:
+            edge_type = self.__edge_type__(edge)
+            edges = self.__getattribute__(edge_type)
+        edges = [edges] if not isinstance(edges, list) else edges
+        edge = self.__edge_frozen_format__(edge)
+        edges_in_list = {self.__edge_frozen_format__(e) for e in edges}
+        return edge in edges_in_list
+
+    def set_edge_label(self, edge_label):
+        for edge, label in edge_label.items():
+            self.edge_label[edge] = label
+
+    # computations --------------------------------------
+    # dagitty (R dependencies)
+    def dseparated(self, var1=None, var2=None, conditional=None):
+        assert var1 and isinstance(var1, str), "'var1' (a str) must be provided."
+        assert var2 and isinstance(var2, str), "'var2' (a str) must be provided."
+
+        if conditional is None:
+            conditional = NULL
+        res = dagitty.dseparated(self.__dagitty__, X = var1, Y = var2, Z=conditional)[0]
+        return res
+        
+    # dagitty (R dependencies)
+    def dseparation(self, var1, var2):
+        assert var1 and isinstance(var1, str), "'var1' (a str) must be provided."
+        assert var2 and isinstance(var2, str), "'var2' (a str) must be provided."
+
+        res = self.local_independencies()
+        if res.nrow>0:
+            res = (
+                res
+                .separate('term', into=['var1', 'var2|conditional'], sep='_||_', remove=False)
+                .separate('var2|conditional', into=['var2', 'conditional'], sep=' | ', remove=True)  # 
+                .mutate(var1 = tp.str_trim('var1'),
+                        var2 = tp.str_trim('var2'),
+                        conditional = tp.str_trim('conditional'),
+                        )
+                .replace_null({'conditional':''})
+                .filter(((tp.col("var1")==var1) & (tp.col('var2')==var2)) |
+                        ((tp.col("var2")==var1) & (tp.col('var1')==var2))
+                        )
+            )
+            res = res.pull('conditional')
+            res = [s.split(',') for s in res]
+            res = [[string.strip() for string in inner_list] for inner_list in res]
+        else:
+            print(f'Not possible to d-separate {var1} and {var2} in the graph.')
+            res = None
+        return res
+
+    # dagitty (R dependencies)
+    def local_independencies(self, data=None, alpha=0.05, include_sep_cols=False):
+        """
+        Given a networkx.DiGraph, return implied conditional independencies using dagitty (via R).
+
+        Parameters:
+            G (nx.DiGraph): Directed acyclic graph (must be a valid DAG)
+            data: tibble data frame from tidypolars4sci
+
+        Returns:
+            tibble dataframe from tidypolars4sci
+        """
+        if data is None:
+            data = self.data
+        # compute
+        if data is None:
+            inds = dagitty.impliedConditionalIndependencies(self.__dagitty__)
+            res = tp.tibble()
+            for ind in inds:
+                y = ind[0][0]
+                x = ind[1][0]
+                z = ind[2]
+                term = f"{y} _||_ {x}"
+                term = f"{term} | {', '.join(z)}" if z else term
+                tmp = tp.tibble({'term': [term],
+                                 "var1": [y],
+                                 "var2": [x],
+                                 "cond": [z]})
+                res = res.bind_rows(tmp)
+            inds = res
+        else:
+            inds = dagitty.localTests(self.__dagitty__, data=convert().tp2tibble(data), abbreviate_names=False)
+            z = dnorm.ppf(1-alpha/2)
+            inds = convert().tibble2tp(inds, rownames2col='term')\
+                         .rename({'p.value':"pvalue",
+                                  '2.5%':'lo',
+                                  '97.5%':'hi',
+                                  })\
+                         .mutate(se = ( tp.col('hi')-tp.col('lo') ) / (2*z) )
+            if inds.nrow>0:
+                inds = (
+                    inds
+                    .separate('term', into=['var1', 'var2_cond'], sep='_||_', remove=False)
+                    .separate('var2_cond', into=['var2', 'cond'], sep='|')
+                )
+
+        vars = ['term', 'estimate', 'se', 'lo', 'hi', 'pvalue']
+        if include_sep_cols:
+            vars += ['var1', 'var2', 'cond']
+        inds = inds.select(vars)
+
+        return inds
+        
+    # dagitty (R dependencies)
+    def identification_analysis(self, exposure=None, outcome=None,
+                                conditional = None,
+                                causal_probability='maybe',
+                                iv='maybe',
+                                verbose=True
+                                ):
+        """
+        causal_probability: str
+            If 'always', always compute it; if 'maybe', compute it
+            only if there is not identification by adjustment for
+            total_effect_adj_set effect
+
+        conditional: list or str
+            List of variables to condition the causal effect on        
+        """
+        assert not outcome or isinstance(outcome, str), 'Outcome must be a string.'
+        assert not exposure or (isinstance(exposure, str) or isinstance(exposure, list)), 'Exposure must be a string or list.'
+
+        assert outcome or self.outcome, "No outcome found."
+        assert exposure or self.exposure, "No exposure found."
+
+        exposure = exposure or self.exposure
+        outcome = outcome or self.outcome[0]
+        conditional = [conditional] if isinstance(conditional, str) else conditional
+
+        assert exposure is not None, "Exposure must be provided."
+        assert outcome is not None, "Outcome must be provided."
+
+        self.__identification__ = identification(G=self,
+                                                 exposure = exposure,
+                                                 outcome = outcome,
+                                                 conditional = conditional,
+                                                 causal_probability = causal_probability,
+                                                 iv = iv,
+                                                 verbose=verbose)
+        if verbose:
+            self.print('identification')
+
+        return None
+
+    def get_identified(self, by='parameter', include_all=False):
+        """
+        by : str
+           'parameter' or 'strategy'
+        """
+        if not self.__identification__:
+            self.identification_analysis()
+        res = self.__identification__.get_identified(by=by, include_all=include_all)
+        return res
+
+    def identification(self, print='default', parameter='ACE', *args, **kws):
+        if not self.__identification__:
+            self.identification_analysis(verbose=False)
+
+        identification = kws.get("identification", {})
+        identification["content"] = print
+        identification["parameter"] = parameter
+
+        self.print('identification', identification=identification)
+        return None
+
+    @property
+    def identification_dict(self):
+        if not self.__identification__:
+            self.identification_analysis()
+        res = self.__identification__.identification
+        return res
+
+    def print(self,
+              what = 'graph',
+              identification = dict(
+                  content='default',
+                  style='text',
+                  strategy = 'all',
+                  parameter = 'ACE',
+                  omit_DAG=True,
+                  print_assumptions=None,
+                  print_assumptions_verbose=None
+              )
+              ):
+        """
+        what : str
+            What to print
+            'graph', 'DAG', 'dag', 'identification'
+
+        identification : dict
+            Options to print identification results
+             - content
+             - style
+             - strategy
+             - parameter
+             - omit_DAG
+             - assumptions
+             - assumptions_verbose
+            
+        """
+        if what in ['graph', 'DAG', 'dag']:
+            print(self)
+        if what=='identification':
+            ops = identification.copy()
+            # defaults
+            pars = ["print_assumptions", "print_assumptions_verbose"]
+            for par in pars:
+                if ops.get(par, None) is None:
+                    ops[par] = get_options()[par]
+
+            if not self.__identification__:
+                self.identification_analysis()
+            self.__identification__.print(**identification)
+            self.__identification__.__assumptions_print__(category='identification', **ops)
+        return None
+        
+    # dagitty (R dependencies)
+    def paths(self, exposure=None, outcome=None, adj_set=None, directed=False):
+        exposure = exposure or self.exposure
+        outcome = outcome or self.outcome
+
+        assert exposure, "Exposure must be provided."
+        assert outcome, "Outcome must be provided."
+
+        adj = adj_set or NULL
+        paths_info = dagitty.paths(self.__dagitty__, exposure, to=outcome, Z=adj, directed=directed)
+        paths = list(paths_info.rx2['paths'])
+        are_open = list(paths_info.rx2['open'])
+
+        return {path:{'open':is_open, 'adj_set':adj_set} for path, is_open in zip(paths, are_open)}
+
+    def mediators(self, as_string=False):
+        paths = self.paths(directed=True)
+        paths = [p.split('->') for p in paths]
+        exposure = self.exposure
+        outcome = self.outcome
+        res = []
+        for path in paths:
+            res += [[var.strip() for var in path if var.strip() not in  exposure + outcome]]
+        res = [l for l in res if len(l)>0]
+        
+        if as_string:
+            res = f"[{', '.join([f"[{', '.join(l) }]" for l in res])}]"
+        return res
+        
+    # dagitty (R dependencies)
+    def equivalence_class(self):
+        """
+        Details
+        -------
+        A equivalence class of a DAG is a graph that replaces directional edges
+        by undirectional edges except in v-structures (triples X->Z<-Y where 
+        X and Y are not adjacent). Therefore, all Markov
+        equivalent DAGs will have the same equivalence class.
+        """
+        eq = dagitty.equivalenceClass(self.__dagitty__)
+        dag, _ = self.__dagitty2inputs__(eq)
+        res = self.__rebuild_graph__(dag)
+        return res
+
+    # dagitty (R dependencies)
+    def equivalent_dags(self):
+        eqs = dagitty.equivalentDAGs(self.__dagitty__)
+        res = []
+        for eq in eqs:
+            dag, _ = self.__dagitty2inputs__(eq)
+            res += [self.__rebuild_graph__(dag)]
+        return res
+
+    def observationally_equivalent(self, G):
+        """
+        Check if two DAGs are observationally equivalent by comparing their
+        markov equivalent classes. It applies to CBN or for
+        SCM when no functional form for the SCM equations were selected.
+        See details.
+
+        Details
+        -------
+        Observational equivalence is related to Markov equivalence.
+
+        Two DAGs are Markov equivalent iff
+        A. They have the same skeleton (same set of adjacencies, i.e. same undirected edges)
+        B. They have the same set of v-structures, which are triples X->Z<-Y where 
+           X and Y are not adjacent).
+
+        A equivalence class of a DAG is a graph that replaces directional edges
+        by undirectional edges except in v-structures. Therefore, all Markov
+        equivalent DAGs will have the same equivalence class.
+
+        For CBN:
+        - Two CBNs are observational equivalence iff they are Markov equivalence.
+
+        For SCM:
+        Without functional form assumptions_show, for observational equivalence:
+        - Necessary condition: both SCMs have the same set of conditional independencies
+        - Sufficient condition: both SCMs are in the same markov equivalence class (Pearl, 2009)
+        - Basically, two SCMs are observationally equivalent iff their causal graphs belong
+          to the same Markov equivalence class — i.e., they share the same skeleton and v-structures.
+
+        With functional form assumptions_show
+        - Once you impose functional form restrictions on SCMs, such as linearity,
+          Gaussian disturbance, or additive error, and so on, observational equivalence
+          can be strictly finer. That is, Markov-equivalence is not a sufficient condition.
+          Example:
+          a. Linear Gaussian SEMs assumption:
+             - All DAGs in the same equivalence class remain indistinguishable.
+               Markov equivalence = observational equivalence.
+               Reason: any covariance matrix that one DAG can generate can also
+               be generated by another DAG in its equivalence class, via suitable parameter choice.
+
+          b. Linear non-Gaussian models (LiNGAM)
+             - Orientations become testable because independent non-Gaussian noise
+               'pins down' which variable must be the parent, breaking Markov equivalence.
+                Example: X->Y and X <- Y: In Gaussian case: indistinguishable.
+                         In non-Gaussian: identifiable.
+
+          c. Additive Noise Models (ANMs)
+             - If the true relation is Y = f(X) + e with independent noise e,
+               then typically the 'wrong' orientation X = g(Y) + e'
+               cannot hold with independent noise. So direction becomes identifiable.
+
+        In summary, generally SCMs (no distributional restrictions), Markov equivalence
+        does imply observational equivalence. But once you impose restrictions
+        (linear, Gaussian, additive, etc.), observational equivalence can be strictly finer.
+        That is, if one assumes functional forms or noise properties, one may be able to 
+        distinguish DAGs inside a Markov equivalence class. Some Markov-equivalent DAGs
+        become distinguishable. Then, the test of equivalence depends on the
+        functional form assumption adopted, so it is case-by-case.
+
+        References
+        ----------
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge Univ Press.
+        """
+        # check if same equivalence class
+        G1_eq = self.equivalence_class()
+        G2_eq = G.equivalence_class()
+        diff = G1_eq.edge_differences(G2_eq)
+        obs_eq = True
+        for g, edges in diff.items():
+            obs_eq &= all([len(e)==0 for e in edges.values()])
+        return obs_eq 
+
+    def assumptions(self, category=None, verbose=False):
+        if not self.__identification__:
+            self.identification_analysis()
+        return self.__identification__.assumptions(category=category, verbose=verbose)
+
+    # # estimation
+    # def estimate(self,
+    #              formula=None,
+    #              data=None,
+    #              model='auto',
+    #              family = 'auto',
+    #              conditional = None,
+    #              se_cluster=None,
+    #              se_robust=None,
+    #              # 
+    #              model_kws={},
+    #              sem=None,
+    #              # 
+    #              weights=1,
+    #              *args, **kws):
+    #     self.fit = estimate(
+    #              G=self,
+    #              formula=formula,
+    #              data=data,
+    #              model=model,
+    #              family = family,
+    #              conditional = conditional,
+    #              se_cluster=se_cluster,
+    #              se_robust=se_robust,
+    #              # 
+    #              model_kws=model_kws,
+    #              weights=1,
+    #              *args,
+    #              **kws
+    #     )
+    # -------------------------------------------------
+
+    # plots -------------------------------------------
+    def plot(self,
+             # nodes
+             graph_style = 'default',
+             nodes_label=None,
+             nodes_position=None,
+             # node
+             node_subset=None,
+             node_shape=None,
+             node_size = None,
+             node_color = None,
+             node_border_color=None,
+             node_border_style=None,
+             node_border_width=None,
+             node_latent_show=True,
+             # node label
+             show_labels = True,
+             use_labels = True,
+             node_label_box=True,
+             node_label_fontsize=None,
+             node_label_fontweight='normal',
+             node_label_adj_x=0,
+             node_label_adj_y=0,
+             node_label_box_style="square",
+             node_label_box_margin=.5,
+             # edges
+             edge_subset=None,
+             edge_color=None,
+             edge_style=None,
+             edge_arc = None,
+             edge_linewidth = None,
+             edge_head_size = None,
+             edge_head_style = None,
+             edge_margin_tail=None,
+             edge_margin_head=None,
+             # edges labels
+             edge_label=None,
+             edge_label_color_background='white',
+             edge_label_color_border='white',
+             edge_label_size=None,
+             edge_label_color=None,
+             edge_label_alpha=None,
+             edge_label_rotate=None,
+             edge_label_position=None,
+             edge_label_sig_level=0.05,
+             edge_label_pvalue=None,
+             edge_label_font_family = None,
+             # legend
+             legend_show=True,
+             legend_title='Nodes',
+             legend_title_align='left',
+             legend_title_weight='bold',
+             legend_title_size=12,
+             legend_omit_cases=['Observed'],
+             legend_keys=None,
+             legend_loc='best',
+             legend_fontsize=10,
+             legend_frame=False,
+             legend_kws={},
+             #
+             title = None,
+             title_loc = 'left',
+             title_kws = {},
+             # 
+             figsize = [6, 4],
+             usetex = True,
+             ax=None,
+             *args,
+             **kws
+             ):
+        """
+        Draw a custom DAG with support for:
+          - Latent variables
+          - Curved edges
+          - Colored and dotted arcs
+          - Optional arc representation for latent confounding
+          - Custom node labels
+
+        Parameters:
+            G (nx.DiGraph): The input DAG with optional edge attributes 'style', 'color', 'curved'.
+            nodes_position (dict): Optional node positions for layout.
+            nodes_role (dict): Optional dict with keys 'latent', 'exposure', 'outcome' listing node names.
+            use_arc (bool): If True, draw dotted arcs between children of latent confounders instead of drawing latent nodes.
+            nodes_label (dict): Optional dict mapping node names to display labels.
+            show_labels  (str or None; Default='label'): One of 'label', 'name', or 'none'.
+                If 'label', use labels if provided; If 'name', always use node name; If 'none',
+                don't omit labels and names of nodes altogether.
+            node_label_adj_x (float or dict): displaces the labels in the x direction. If dict, the keys
+                should be the node labels or name, and displacement will be applied only to those points
+                specified in the dict. If float, the same displacement is applied to all nodes.
+            node_label_adj_x (float or dict): same as node_label_adj_y, but for the y axis
+            graph_style (str): specific styles for nodes and arrows
+                  - 'default': nodes in circles with labels in their middle
+                  - 'rectangle': nodes in rectangles with labels in their middle
+                  - 'pearl': nodes as dots with labels next to them (use node_label_adj_x and node_label_adj_y
+                             to adjust the location of the labels)
+                  All features can be overwrittied by specifying the value of the parameters for the plot.
+        """
+        default_usetex = plt.rcParams["text.usetex"] 
+        plt.rcParams["text.usetex"] = usetex
+        plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
+
+        # collect arguments
+        pars = dict(locals())      # {'node_position':..., 'arg2':..., 'args':(...), 'kws':{...}}
+        args = pars.pop('args') # extra positional
+        kws  = pars.pop('kws')  # extra keyword
+
+        # figure 
+        # ------
+        G_draw = self.__plot_create_nx__()
+        if ax is None:
+            fig, ax = plt.subplots(figsize=figsize, tight_layout=True)
+        plt.sca(ax)
+
+        # styles
+        # ------
+        nodes_style, labels_style, edges_style = self.__plot_get_style__(graph_style)
+
+        # nodes 
+        # -----
+        node_subset    = self.__plot_nodes_subset__(node_subset, node_latent_show)
+        nodes_position = self.__plot_nodes_positions__(G_draw, nodes_position)
+        for role, nodes in node_subset.items():
+            fig_nodes = nx.draw_networkx_nodes(
+                G_draw,
+                nodes_position,
+                nodelist=nodes,
+                ax=ax,
+                # 
+                node_size  = self.__plot_collect_aes__(role, node_size, nodes_style[role]['node_size']),
+                node_color = self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
+                node_shape = self.__plot_collect_aes__(role, node_shape, nodes_style[role]['node_shape']),
+                linewidths = self.__plot_collect_aes__(role, node_border_width,
+                                                       nodes_style[role]['node_border_width']),
+                edgecolors = self.__plot_collect_aes__(role, node_border_color,
+                                                       nodes_style[role]['node_border_color']),
+                alpha      = None,
+                cmap       = None,
+                vmin       = None,
+                vmax       = None,
+                label      = None,
+                margins    = None, 
+                hide_ticks = True
+            )
+            fig_nodes.set_linestyle(self.__plot_collect_aes__(role, node_border_style,
+                                                              nodes_style[role]['node_border_style']))
+
+        # nodes labels 
+        # ------------
+        if show_labels:
+            nodes = set(itertools.chain.from_iterable(node_subset.values()))
+            nodes_label = self.nodes_label | (nodes_label or {})
+            adj_x = self.__plot_label_adj__(node_label_adj_x, nodes_label)
+            adj_y = self.__plot_label_adj__(node_label_adj_y, nodes_label)
+            for node in nodes:
+                label = nodes_label.get(node, node) if use_labels else node
+                role  = self.nodes_info[node]['role']
+                x, y  = nodes_position[node] if nodes_position and nodes_position[node] else\
+                    self.nodes_info[node]['position'] 
+
+                bbox = None
+                if node_label_box and graph_style=='rectangle':
+                    bbox = {
+                        "boxstyle": f"{node_label_box_style},pad={node_label_box_margin}",
+                        "fc": self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
+                        "ec": self.__plot_collect_aes__(role, node_border_color,
+                                                        nodes_style[role]['node_border_color']),
+                        "lw": self.__plot_collect_aes__(role, node_border_width,
+                                                       nodes_style[role]['node_border_width']),
+                        "linestyle": self.__plot_collect_aes__(role, node_border_style,
+                                                               nodes_style[role]['node_border_style']),
+                        "alpha": 1}
+
+                weight = self.__plot_collect_aes__(role, node_label_fontweight,
+                                                   labels_style[role]['node_label_fontweight'])
+                label = f"\\textbf{{{label}}}" if weight == 'bold' else label
+                plt.text(x + adj_x[node],
+                         y + adj_y[node],
+                         label,
+                         fontweight = weight,
+                         fontsize   = self.__plot_collect_aes__(role, node_label_fontsize,
+                                                                labels_style[role]['node_label_fontsize']),
+                         ha = 'center',
+                         va = 'center',
+                         bbox = bbox)
+
+        # edges and edges labels
+        # ----------------------
+        nodes = set(itertools.chain.from_iterable(node_subset.values()))
+        for edge_type in ['directed', 'bidirected', 'undirected']:
+            style = self.__plot_collect_aes__(edge_type, edge_style, edges_style['edge_style'][edge_type])
+            color = self.__plot_collect_aes__(edge_type, edge_color, edges_style['edge_color'][edge_type])
+            arc   = self.__plot_collect_aes__(edge_type, edge_arc, edges_style['edge_arc'][edge_type])
+            width = self.__plot_collect_aes__(edge_type, edge_linewidth, edges_style['edge_linewidth'][edge_type])
+            arrow_head_size = self.__plot_collect_aes__(edge_type, edge_head_size, edges_style['edge_head_size'][edge_type])
+            arrow_head_style = self.__plot_collect_aes__(edge_type, edge_head_style, edges_style['edge_head_style'][edge_type])
+            edge_margin_tail = self.__plot_edge_margin__(edge_margin_tail, edges_style["edge_margin_tail"][edge_type])
+            edge_margin_head = self.__plot_edge_margin__(edge_margin_head, edges_style["edge_margin_head"][edge_type])
+
+            for edge in self.__getattribute__(edge_type):
+                edge = tuple(edge)
+                if edge_type!='bidirected':
+                    u, v = edge
+                else:
+                    u, v = edge[0][0], edge[0][1]
+
+                # collect edges to show if edge_subset 
+                show_edge = True
+                if edge_subset:
+                    e = set(edge) if edge_type=='undirected' else edge
+                    show_edge = self.edge_exist(e, edge_subset.get(edge_type, []))
+
+                if u in nodes and v in nodes and show_edge:
+                    # edge
+                    nx.draw_networkx_edges(
+                        G_draw,
+                        nodes_position,
+                        edgelist            = [(u, v)],
+                        style               = style,
+                        edge_color          = color,
+                        connectionstyle     = f"arc3,rad={arc}",
+                        arrows              = True,
+                        arrowstyle          = arrow_head_style,
+                        arrowsize           = arrow_head_size,
+                        min_source_margin   = edge_margin_tail.get(edge, 0),
+                        min_target_margin   = edge_margin_head.get(edge, 0),
+                        width               = width,
+                        ax=ax)
+
+                    # edge label
+                    edge_label = edge_label or self.edge_label
+                    label = edge_label.get(edge, '')
+                    rotate = edge_label_rotate if edge_label_rotate is not None else True # must keep "is not None" here
+                    nx.draw_networkx_edge_labels(
+                        G_draw,
+                        pos             = nodes_position,
+                        connectionstyle = f"arc3,rad={arc}",
+                        edge_labels     = {(u, v): label},
+                        bbox=dict(facecolor=edge_label_color_background, edgecolor=edge_label_color_border),
+                        # 
+                        alpha      = self.__plot_edge_label_feature__('alpha', edge, edge_label_alpha, None, edge_label_sig_level,
+                                                                      edge_label_pvalue=edge_label_pvalue),
+                        font_size  = self.__plot_edge_label_feature__('size' , edge, edge_label_size, 15),
+                        font_color = self.__plot_edge_label_feature__('color', edge, edge_label_color, label=label),
+                        rotate     = self.__plot_edge_label_feature__('rotate', edge, edge_label_rotate, default=rotate),
+                        label_pos  = self.__plot_edge_label_feature__('position', edge, edge_label_position, .5),
+                        font_family=edge_label_font_family,
+                        ax         = ax
+                    )
+
+        # legend 
+        # ------
+        if legend_show:
+            keys = []
+            for role, _ in node_subset.items():
+                if role not in legend_omit_cases:
+                    if role=='Latent' and node_latent_show:
+                        marker = ''
+                        linecolor = self.__plot_collect_aes__(role, node_border_color,
+                                                              nodes_style[role]['node_border_color']) 
+                    else:
+                        marker = 'o'
+                        linecolor='white'
+                    keys += [
+                        Line2D(
+                            [0], [0],
+                            marker=marker,
+                            color=linecolor,
+                            label=role,
+                            markersize=10,
+                            markeredgecolor=self.__plot_collect_aes__(role, node_border_color,
+                                                                      nodes_style[role]['node_border_color']),
+                            markerfacecolor=self.__plot_collect_aes__(role, node_color,
+                                                                      nodes_style[role]['node_color']),
+                            linestyle=self.__plot_collect_aes__(role, node_border_style,
+                                                                nodes_style[role]['node_border_style'])
+                        )
+                    ]
+                if keys: 
+                    legend = plt.legend(handles        = keys,
+                                        title          = legend_title,
+                                        title_fontsize = legend_title_size,
+                                        alignment      = legend_title_align,
+                                        # title_weight   = legend_title_weight,
+                                        loc            = legend_loc,
+                                        fontsize       = legend_fontsize,
+                                        frameon        = legend_frame,
+                                        **legend_kws
+                                        )
+                    if legend_title_weight=='bold' and legend_title:
+                        legend.set_title(title=f'\\textbf{{{legend_title}}}', prop={'weight': 'bold'})
+
+        # title 
+        # -----
+        if title:
+            plt.title(label=title, loc=title_loc, **title_kws)
+
+        plt.axis("off")
+        plt.tight_layout()
+        plt.show()
+        plt.rcParams["text.usetex"] = default_usetex
+
+        return plt, ax
+    
+    def plot_paths(self, exposure=None, outcome=None, adj_set=None, directed=False,
+                   show_full_dag = True,
+                   use_labels=True,
+                   title_fontsize = 10,
+                   figsize=(16, 9),
+                   path_color='black',
+                   **plot_kws
+                   ):
+        adj_set = [adj_set] if isinstance(adj_set, str) else adj_set
+
+        paths = self.paths(exposure=exposure, outcome=outcome, adj_set=adj_set, directed=directed)
+        npaths = len(paths)
+        ncols = int(math.ceil(math.sqrt(npaths)))
+        nrows = int(math.ceil(npaths / ncols))
+        fig, axs = plt.subplots(nrows, ncols, figsize=figsize, tight_layout=True)
+        if ncols >1 or nrows>1:
+            axs=axs.flatten()
+        else:
+            axs = [axs]
+        [ax.axis('off') for ax in axs]
+        # 
+
+        pos = self.nodes_position
+        roles = self.nodes_role
+        nodes_label = self.nodes_label
+        edge_label = self.edge_label
+        for i, (path, info) in enumerate(paths.items()):
+            ax = axs[i]
+
+            show_labels=True
+            if show_full_dag:
+                self.plot(ax=ax, edge_color ='lightgray', **plot_kws)
+                show_labels=False
+
+            # G2 = DAG(path, nodes_role=roles, nodes_position=pos, nodes_label=nodes_label)
+            G2 = self.__rebuild_graph__(path)
+            G2.plot(ax=ax, edge_linewidth=3, show_labels=show_labels,
+                    edge_color=path_color, use_labels=use_labels, **plot_kws)
+            adj = info['adj_set']
+            if adj:
+                adj = [self.nodes_label.get(x, x) for x in adj] if use_labels else adj
+                adj = ', '.join(adj)
+            else:
+                adj = ""
+            title = rf"Path is \textbf{{{'open' if info['open'] else 'closed'}}}; Adjustment set: "+"\{"+adj+"\}"
+            ax.set_title(title, loc='left', fontsize=title_fontsize)
+            ax.axis('on')
+            plt.tight_layout()
+
+        return axs
+
+    def plot_equivalent_dags(self,
+                             use_labels=True,
+                             show_labels=True,
+                             edge_difference_color='red',
+                             title_fontsize = 10,
+                             title_original_graph = 'Original Graph',
+                             title_equivalent_graph = "Equivalent DAG",
+                             show_footnote = True,
+                             figsize=(16, 9),
+                             max_per_figure = 9,
+                             max_eq_dags= 27,
+                             **plot_kws
+                             ):
+        # collecting equivalent DAGs
+        eq_dags = self.equivalent_dags()
+        n_eq_dags = len(eq_dags)
+        if n_eq_dags == 0:
+            return None
+
+        if n_eq_dags > max_eq_dags:
+            print(f"\n**Note:**\n"+
+                  f"---------\n"
+                  f"Maximun number of equivalent DAGs to plot is set to {max_eq_dags}"+
+                  f" by default, but there are {n_eq_dags} equivalent DAGs. Some equivalent DAGs"+
+                  f" will be omitted. To change it, set 'max_eq_dags'.\n")
+
+        max_eq_dags = np.min([n_eq_dags, max_eq_dags])
+        figs = dict(self.__chunked_ranges__(max_eq_dags, max_per_figure))
+
+        print(f"Total of equivalent DAGs: {n_eq_dags}\n"+
+              f"Plotting {max_eq_dags} equivalent DAG(s)\n"
+              f"Generating {len(figs.keys())} figure(s) with a maximum of {max_per_figure} panels per figure\n")
+        figs_res = {}
+        
+        for fig_number, panels in figs.items():
+
+            # figure
+            ncols = int(math.ceil(math.sqrt(max_per_figure)))
+            nrows = int(math.ceil(max_per_figure / ncols))
+            fig, axs = plt.subplots(nrows, ncols, figsize=figsize, tight_layout=True)
+            if ncols >1 or nrows>1:
+                axs=axs.flatten()
+            else:
+                axs = [axs]
+            [ax.axis('off') for ax in axs]
+
+            # panels
+            for panel, panel_number in enumerate(panels):
+                print(f"Creating plot {panel_number+1} of {n_eq_dags}...", end='')
+                ax = axs[panel]
+                eq_dag = eq_dags[panels[panel]]
+                # baseline plot
+                eq_dag.plot(ax=ax, edge_linewidth=1,
+                            show_labels=show_labels,
+                            use_labels=use_labels,
+                            title=title_equivalent_graph,
+                            title_fontsize=title_fontsize,
+                            **plot_kws)
+                # superimpose edges highlighing the differences
+                edges = self.edge_differences(eq_dag)['G2']
+                nodes = self.__collect_nodes_from_edges__(edges)
+                eq_dag.plot(ax=ax, edge_linewidth=3,
+                            node_subset = nodes,
+                            edge_subset = edges,
+                            show_labels=show_labels,
+                            edge_color=edge_difference_color,
+                            use_labels=use_labels,
+                            title=title_equivalent_graph,
+                            title_fontsize=title_fontsize,
+                            **plot_kws)
+                if show_footnote:
+                    # footnote
+                    xcoord=1
+                    ycoord=1.07
+                    yoffset=-.1
+                    fn = f"Equivalent DAG: {panel_number+1} of {n_eq_dags}"
+                    ax.annotate(fn, xy=(xcoord,yoffset), xytext=(xcoord,yoffset),
+                                xycoords='axes fraction', size=11, ha='right',
+                                style='italic', alpha=.6)
+                print('done!')
+                ax.axis('on')
+                plt.tight_layout()
+                figs_res[fig_number] = [fig, axs]
+        return figs_res
+
+    def plot_identification(self,
+                            content='default', # detailed, default
+                            effect='total', #total, direct, or do, only if if_info=full
+                            show_np = True,
+                            show_linear = True,
+                            show_do = True,
+                            kws_graph={},
+                            kws_identification={},
+                            kws_detailed = None,
+                            figsize = None,
+                            ratio   = None,
+                            ncols   = None,
+                            nrows   = None,
+                            title_dag = None,
+                            title_info = None,
+                            txt_line_height=.55,
+                            *args,
+                            **kws
+                            ):
+        """
+        txt_line_height: float
+            height of the lines for the text. Not used if figsize is set.
+        kws_detailed : dict
+            Example: 
+           {'parameter':'ACE'
+             'strategy':'SoO'}
+        """
+        roles = ['Exposure', 'Outcome', 'Latent', 'Observed',
+                 'exposure', 'outcome', 'latent', 'observed']
+        for role in roles:
+            assert not kws_graph.get(role, None) and not kws_identification.get(role, None), (
+                f"Setting node role ({role}) not allowed in the plot kws. "+
+                f"To set the node role, create a new DAG or use set_node_role before plotting.")
+
+        if not self.__identification__ or kws_identification:
+            self.identification_analysis(**kws_identification, verbose=False)
+        
+        # defaults for kws_detailed
+        kws_detailed = kws_detailed or {}
+        strategy = kws_detailed.get('strategy', 'SoO')
+        parameter = kws_detailed.get('parameter', None)
+        if not parameter:
+            parameter = next(iter(self.__identification__.identification[strategy]))
+        kws_detailed['strategy'] = strategy
+        kws_detailed['parameter'] = parameter
+
+        return self.__identification__.plot(G=self,
+                                            info=content,
+                                            effect=effect,
+                                            show_np = show_np,
+                                            show_linear = show_linear,
+                                            show_do = show_do,
+                                            figsize=figsize,
+                                            ratio=ratio,
+                                            ncols=ncols,
+                                            nrows=nrows,
+                                            kws_graph=kws_graph,
+                                            kws_detailed = kws_detailed,
+                                            txt_line_height=txt_line_height,
+                                            title_dag = title_dag,
+                                            title_info = title_info,
+                                            *args,
+                                            **kws
+                                            )
+    
 
     # building graph --------------------------------
     def __build_graph__(self, graph):
@@ -180,7 +1141,6 @@ class DAG():
 
         self.__graph_str_parsed__ = "\n".join(self.__graph_str_parsed__)
         return None
-
 
     def __graph_str_parse_inline_paths__(self, dag):
         # Split the path string by spaces to separate nodes and arrows
@@ -479,82 +1439,6 @@ class DAG():
                 start = end + 1
                 idx += 1
 
-    # manipulating graph  -----------------------------
-    # nodes 
-    def get_nodes(self, exclude_latent=False):
-        nodes = list(self.nodes)
-        latent_nodes = self.latent
-
-        if exclude_latent and latent_nodes:
-            nodes = [n for n in nodes if n not in latent_nodes]
-        return nodes
-
-    def set_node_label(self, nodes_label):
-        for node, label in nodes_label.items():
-            self.nodes_label[node] = label
-
-    def set_nodes_role(self, nodes_role):
-        res = DAG(graph=self.__graph_str_parsed__,
-                  nodes_role=nodes_role,
-                  nodes_label=self.nodes_label,
-                  nodes_position=self.nodes_position,
-                  edge_label=self.edge_label,
-                  data=self.data)
-        return res
-
-    def set_node_position(self, position):
-        for node, p in position.items():
-            self.position[node] = p
-
-    # edges 
-    def edge_add(self, edge):
-        res = self
-        if not self.edge_exist(edge):
-            graph = self.__graph_list__.copy()
-            graph.append(edge)
-            res = self.__rebuild_graph__(graph)
-        return res
-
-    def edge_remove(self, edge):
-        removed = False
-        graph = self.__graph_list__.copy()
-
-        if edge in self.__graph_list__:
-            graph.remove(edge)
-            removed = True
-        elif self.__edge_type__(edge)=='bidirected':
-            edge = (edge[1], edge[0])
-            if edge in self.__graph_list__:
-                graph.remove(edge)
-                removed = True
-
-        if removed:
-            return self.__rebuild_graph__(graph)
-        else:
-            return  self
-
-    def edge_replace(self, remove, add):
-        res = self.edge_remove(remove)
-        res = res.edge_add(add)
-        return res
-
-    def edge_exist(self, edge, edges=None):
-        """
-        Check whether `edge` exists in `edges`,
-        robust to order of nodes for undirected and bidirected edges.
-        """
-        if edges is None:
-            edge_type = self.__edge_type__(edge)
-            edges = self.__getattribute__(edge_type)
-        edges = [edges] if not isinstance(edges, list) else edges
-        edge = self.__edge_frozen_format__(edge)
-        edges_in_list = {self.__edge_frozen_format__(e) for e in edges}
-        return edge in edges_in_list
-
-    def set_edge_label(self, edge_label):
-        for edge, label in edge_label.items():
-            self.edge_label[edge] = label
-
     def __edge_frozen_format__(self, edge):
         """
         Convert an edge into a canonical, hashable form.
@@ -625,742 +1509,9 @@ class DAG():
                     if edge not in G2.__getattribute__(edge_type):
                         res1[edge_type] += [edge]
         return res1
+
     # -------------------------------------------------
 
-    # computations --------------------------------------
-    # dagitty (R dependencies)
-    def local_independencies(self, data=None):
-        """
-        Given a networkx.DiGraph, return implied conditional independencies using dagitty (via R).
-
-        Parameters:
-            G (nx.DiGraph): Directed acyclic graph (must be a valid DAG)
-
-        Returns:
-            List[str]: Implied conditional independencies, e.g., "X _|_ Y | Z"
-        """
-
-        data = data or self.data
-        # compute
-        if data is None:
-            inds = dagitty.impliedConditionalIndependencies(self.__dagitty__)
-            inds = [str(i).strip() for i in inds]
-            inds = tp.tibble({"term":inds})
-        else:
-            inds = dagitty.localTests(self.__dagitty__, data=convert().tp2tibble(data))
-            inds = convert().tibble2tp(inds, rownames2col='term')\
-                         .rename({'p.value':"pvalue",
-                                  '2.5%':'conf.low',
-                                  '97.5%':'conf.hitg',
-                                  })
-       #         .unnest("parsed"))
-
-        return inds
-        
-    # dagitty (R dependencies)
-    def identification_analysis(self, exposure=None, outcome=None,
-                                conditional = None,
-                                causal_probability='maybe',
-                                iv='maybe',
-                                verbose=True
-                                ):
-        """
-        causal_probability: str
-            If 'always', always compute it; if 'maybe', compute it
-            only if there is not identification by adjustment for
-            total_effect_adj_set effect
-
-        conditional: list
-            List of variables to condition the causal effect on        
-        """
-        assert not outcome or isinstance(outcome, str), 'Outcome must be a string.'
-        assert not exposure or (isinstance(exposure, str) or isinstance(exposure, list)), 'Exposure must be a string or list.'
-
-        exposure = exposure or self.exposure
-        outcome = outcome or self.outcome[0]
-
-        assert exposure is not None, "Exposure must be provided."
-        assert outcome is not None, "Outcome must be provided."
-
-        self.__identification__ = identification(G=self,
-                                                 exposure = exposure,
-                                                 outcome = outcome,
-                                                 conditional = conditional,
-                                                 causal_probability = causal_probability,
-                                                 iv = iv,
-                                                 verbose=verbose)
-
-        return None
-
-    def identification_get_identified(self, by='parameter'):
-        """
-        by : str
-           'parameter' or 'strategy'
-        """
-        if not self.__identification__:
-            self.identification_analysis()
-        res = self.__identification__.identification_get_identified(by=by)
-        return res
-
-    def print(self,
-              what = 'graph',
-              identification = dict(
-                  content='default',
-                  style='text',
-                  strategy = 'all',
-                  parameter = 'all',
-                  omit_DAG=True,
-                  print_assumptions=None,
-                  print_assumptions_verbose=None
-              )
-              ):
-        """
-        what : str
-            What to print
-            'graph', 'DAG', 'dag', 'identification'
-
-        identification : dict
-            Options to print identification results
-             - content
-             - style
-             - strategy
-             - parameter
-             - omit_DAG
-             - assumptions
-             - assumptions_verbose
-            
-        """
-        if what in ['graph', 'DAG', 'dag']:
-            print(self)
-        if what=='identification':
-            ops = identification.copy()
-            # defaults
-            pars = ["print_assumptions", "print_assumptions_verbose"]
-            for par in pars:
-                if ops.get(par, None) is None:
-                    ops[par] = get_options()[par]
-
-            if not self.__identification__:
-                self.identification_analysis()
-            self.__identification__.print(**identification)
-            self.__identification__.__assumptions_print__(category='identification', **ops)
-        return None
-        
-    # dagitty (R dependencies)
-    def paths(self, exposure=None, outcome=None, adj_set=None, directed=False):
-        exposure = exposure or self.exposure
-        outcome = outcome or self.outcome
-
-        assert exposure, "Exposure must be provided."
-        assert outcome, "Outcome must be provided."
-
-        adj = adj_set or NULL
-        paths_info = dagitty.paths(self.__dagitty__, exposure, to=outcome, Z=adj, directed=directed)
-        paths = list(paths_info.rx2['paths'])
-        are_open = list(paths_info.rx2['open'])
-
-        return {path:{'open':is_open, 'adj_set':adj_set} for path, is_open in zip(paths, are_open)}
-
-    def mediators(self, as_string=False):
-        paths = self.paths(directed=True)
-        paths = [p.split('->') for p in paths]
-        exposure = self.exposure
-        outcome = self.outcome
-        res = []
-        for path in paths:
-            res += [[var.strip() for var in path if var.strip() not in  exposure + outcome]]
-        res = [l for l in res if len(l)>0]
-        
-        if as_string:
-            res = f"[{', '.join([f"[{', '.join(l) }]" for l in res])}]"
-        return res
-        
-    # dagitty (R dependencies)
-    def equivalence_class(self):
-        """
-        Details
-        -------
-        A equivalence class of a DAG is a graph that replaces directional edges
-        by undirectional edges except in v-structures (triples X->Z<-Y where 
-        X and Y are not adjacent). Therefore, all Markov
-        equivalent DAGs will have the same equivalence class.
-        """
-        eq = dagitty.equivalenceClass(self.__dagitty__)
-        dag, _ = self.__dagitty2inputs__(eq)
-        res = self.__rebuild_graph__(dag)
-        return res
-
-    # dagitty (R dependencies)
-    def equivalent_dags(self):
-        eqs = dagitty.equivalentDAGs(self.__dagitty__)
-        res = []
-        for eq in eqs:
-            dag, _ = self.__dagitty2inputs__(eq)
-            res += [self.__rebuild_graph__(dag)]
-        return res
-
-    def observationally_equivalent(self, G):
-        """
-        Check if two DAGs are observationally equivalent by comparing their
-        markov equivalent classes. It applies to CBN or for
-        SCM when no functional form for the SCM equations were selected.
-        See details.
-
-        Details
-        -------
-        Observational equivalence is related to Markov equivalence.
-
-        Two DAGs are Markov equivalent iff
-        A. They have the same skeleton (same set of adjacencies, i.e. same undirected edges)
-        B. They have the same set of v-structures, which are triples X->Z<-Y where 
-           X and Y are not adjacent).
-
-        A equivalence class of a DAG is a graph that replaces directional edges
-        by undirectional edges except in v-structures. Therefore, all Markov
-        equivalent DAGs will have the same equivalence class.
-
-        For CBN:
-        - Two CBNs are observational equivalence iff they are Markov equivalence.
-
-        For SCM:
-        Without functional form assumptions_show, for observational equivalence:
-        - Necessary condition: both SCMs have the same set of conditional independencies
-        - Sufficient condition: both SCMs are in the same markov equivalence class (Pearl, 2009)
-        - Basically, two SCMs are observationally equivalent iff their causal graphs belong
-          to the same Markov equivalence class — i.e., they share the same skeleton and v-structures.
-
-        With functional form assumptions_show
-        - Once you impose functional form restrictions on SCMs, such as linearity,
-          Gaussian disturbance, or additive error, and so on, observational equivalence
-          can be strictly finer. That is, Markov-equivalence is not a sufficient condition.
-          Example:
-          a. Linear Gaussian SEMs assumption:
-             - All DAGs in the same equivalence class remain indistinguishable.
-               Markov equivalence = observational equivalence.
-               Reason: any covariance matrix that one DAG can generate can also
-               be generated by another DAG in its equivalence class, via suitable parameter choice.
-
-          b. Linear non-Gaussian models (LiNGAM)
-             - Orientations become testable because independent non-Gaussian noise
-               'pins down' which variable must be the parent, breaking Markov equivalence.
-                Example: X->Y and X <- Y: In Gaussian case: indistinguishable.
-                         In non-Gaussian: identifiable.
-
-          c. Additive Noise Models (ANMs)
-             - If the true relation is Y = f(X) + e with independent noise e,
-               then typically the 'wrong' orientation X = g(Y) + e'
-               cannot hold with independent noise. So direction becomes identifiable.
-
-        In summary, generally SCMs (no distributional restrictions), Markov equivalence
-        does imply observational equivalence. But once you impose restrictions
-        (linear, Gaussian, additive, etc.), observational equivalence can be strictly finer.
-        That is, if one assumes functional forms or noise properties, one may be able to 
-        distinguish DAGs inside a Markov equivalence class. Some Markov-equivalent DAGs
-        become distinguishable. Then, the test of equivalence depends on the
-        functional form assumption adopted, so it is case-by-case.
-
-        References
-        ----------
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge Univ Press.
-        """
-        # check if same equivalence class
-        G1_eq = self.equivalence_class()
-        G2_eq = G.equivalence_class()
-        diff = G1_eq.edge_differences(G2_eq)
-        obs_eq = True
-        for g, edges in diff.items():
-            obs_eq &= all([len(e)==0 for e in edges.values()])
-        return obs_eq 
-
-    def assumptions(self, category=None, verbose=False):
-        return self.__identification__.assumptions(category=category, verbose=verbose)
-    # -------------------------------------------------
-
-    # plots -------------------------------------------
-    def plot(self,
-             # nodes
-             graph_style = 'default',
-             nodes_label=None,
-             nodes_position=None,
-             # node
-             node_subset=None,
-             node_shape=None,
-             node_size = None,
-             node_color = None,
-             node_border_color=None,
-             node_border_style=None,
-             node_border_width=None,
-             node_latent_show=True,
-             # node label
-             show_labels = True,
-             use_labels = True,
-             node_label_box=True,
-             node_label_fontsize=None,
-             node_label_fontweight='normal',
-             node_label_adj_x=0,
-             node_label_adj_y=0,
-             node_label_box_style="square",
-             node_label_box_margin=.5,
-             # edges
-             edge_subset=None,
-             edge_color=None,
-             edge_style=None,
-             edge_arc = None,
-             edge_linewidth = None,
-             edge_head_size = None,
-             edge_head_style = None,
-             edge_margin_tail=None,
-             edge_margin_head=None,
-             # edges labels
-             edge_label=None,
-             edge_label_size=None,
-             edge_label_color=None,
-             edge_label_alpha=None,
-             edge_label_rotate=None,
-             edge_label_position=None,
-             edge_label_sig_level=0.05,
-             edge_label_pvalue=None,
-             # legend
-             legend_show=True,
-             legend_title='Nodes',
-             legend_title_align='left',
-             legend_title_weight='bold',
-             legend_title_size=12,
-             legend_omit_cases=['Observed'],
-             legend_keys=None,
-             legend_loc='best',
-             legend_fontsize=10,
-             legend_frame=False,
-             legend_kws={},
-             #
-             title = None,
-             title_loc = 'left',
-             title_kws = {},
-             # 
-             figsize = [6, 4],
-             usetex = True,
-             ax=None,
-             *args,
-             **kws
-             ):
-        """
-        Draw a custom DAG with support for:
-          - Latent variables
-          - Curved edges
-          - Colored and dotted arcs
-          - Optional arc representation for latent confounding
-          - Custom node labels
-
-        Parameters:
-            G (nx.DiGraph): The input DAG with optional edge attributes 'style', 'color', 'curved'.
-            nodes_position (dict): Optional node positions for layout.
-            nodes_role (dict): Optional dict with keys 'latent', 'exposure', 'outcome' listing node names.
-            use_arc (bool): If True, draw dotted arcs between children of latent confounders instead of drawing latent nodes.
-            nodes_label (dict): Optional dict mapping node names to display labels.
-            show_labels  (str or None; Default='label'): One of 'label', 'name', or 'none'.
-                If 'label', use labels if provided; If 'name', always use node name; If 'none',
-                don't omit labels and names of nodes altogether.
-            node_label_adj_x (float or dict): displaces the labels in the x direction. If dict, the keys
-                should be the node labels or name, and displacement will be applied only to those points
-                specified in the dict. If float, the same displacement is applied to all nodes.
-            node_label_adj_x (float or dict): same as node_label_adj_y, but for the y axis
-            graph_style (str): specific styles for nodes and arrows
-                  - 'default': nodes in circles with labels in their middle
-                  - 'rectangle': nodes in rectangles with labels in their middle
-                  - 'pearl': nodes as dots with labels next to them (use node_label_adj_x and node_label_adj_y
-                             to adjust the location of the labels)
-                  All features can be overwrittied by specifying the value of the parameters for the plot.
-        """
-        default_usetex = plt.rcParams["text.usetex"] 
-        plt.rcParams["text.usetex"] = usetex
-        plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
-
-
-        # collect arguments
-        pars = dict(locals())      # {'node_position':..., 'arg2':..., 'args':(...), 'kws':{...}}
-        args = pars.pop('args') # extra positional
-        kws  = pars.pop('kws')  # extra keyword
-
-        # figure 
-        # ------
-        G_draw = self.__plot_create_nx__()
-        if ax is None:
-            fig, ax = plt.subplots(figsize=figsize, tight_layout=True)
-        plt.sca(ax)
-
-        # styles
-        # ------
-        nodes_style, labels_style, edges_style = self.__plot_get_style__(graph_style)
-
-        # nodes 
-        # -----
-        node_subset    = self.__plot_nodes_subset__(node_subset, node_latent_show)
-        nodes_position = self.__plot_nodes_positions__(G_draw, nodes_position)
-        for role, nodes in node_subset.items():
-            fig_nodes = nx.draw_networkx_nodes(
-                G_draw,
-                nodes_position,
-                nodelist=nodes,
-                ax=ax,
-                # 
-                node_size  = self.__plot_collect_aes__(role, node_size, nodes_style[role]['node_size']),
-                node_color = self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
-                node_shape = self.__plot_collect_aes__(role, node_shape, nodes_style[role]['node_shape']),
-                linewidths = self.__plot_collect_aes__(role, node_border_width,
-                                                       nodes_style[role]['node_border_width']),
-                edgecolors = self.__plot_collect_aes__(role, node_border_color,
-                                                       nodes_style[role]['node_border_color']),
-                alpha      = None,
-                cmap       = None,
-                vmin       = None,
-                vmax       = None,
-                label      = None,
-                margins    = None, 
-                hide_ticks = True
-            )
-            fig_nodes.set_linestyle(self.__plot_collect_aes__(role, node_border_style,
-                                                              nodes_style[role]['node_border_style']))
-
-        # nodes labels 
-        # ------------
-        if show_labels:
-            nodes = set(itertools.chain.from_iterable(node_subset.values()))
-            nodes_label = self.nodes_label | (nodes_label or {})
-            adj_x = self.__plot_label_adj__(node_label_adj_x, nodes_label)
-            adj_y = self.__plot_label_adj__(node_label_adj_y, nodes_label)
-            for node in nodes:
-                label = nodes_label.get(node, node) if use_labels else node
-                role  = self.nodes_info[node]['role']
-                x, y  = nodes_position[node] if nodes_position and nodes_position[node] else\
-                    self.nodes_info[node]['position'] 
-
-                bbox = None
-                if node_label_box and graph_style=='rectangle':
-                    bbox = {
-                        "boxstyle": f"{node_label_box_style},pad={node_label_box_margin}",
-                        "fc": self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
-                        "ec": self.__plot_collect_aes__(role, node_border_color,
-                                                        nodes_style[role]['node_border_color']),
-                        "lw": self.__plot_collect_aes__(role, node_border_width,
-                                                       nodes_style[role]['node_border_width']),
-                        "linestyle": self.__plot_collect_aes__(role, node_border_style,
-                                                               nodes_style[role]['node_border_style']),
-                        "alpha": 1}
-
-                weight = self.__plot_collect_aes__(role, node_label_fontweight,
-                                                   labels_style[role]['node_label_fontweight'])
-                label = f"\\textbf{{{label}}}" if weight == 'bold' else label
-                plt.text(x + adj_x[node],
-                         y + adj_y[node],
-                         label,
-                         fontweight = weight,
-                         fontsize   = self.__plot_collect_aes__(role, node_label_fontsize,
-                                                                labels_style[role]['node_label_fontsize']),
-                         ha = 'center',
-                         va = 'center',
-                         bbox = bbox)
-
-        # edges and edges labels
-        # ----------------------
-        nodes = set(itertools.chain.from_iterable(node_subset.values()))
-        for edge_type in ['directed', 'bidirected', 'undirected']:
-            style = self.__plot_collect_aes__(edge_type, edge_style, edges_style['edge_style'][edge_type])
-            color = self.__plot_collect_aes__(edge_type, edge_color, edges_style['edge_color'][edge_type])
-            arc   = self.__plot_collect_aes__(edge_type, edge_arc, edges_style['edge_arc'][edge_type])
-            width = self.__plot_collect_aes__(edge_type, edge_linewidth, edges_style['edge_linewidth'][edge_type])
-            arrow_head_size = self.__plot_collect_aes__(edge_type, edge_head_size, edges_style['edge_head_size'][edge_type])
-            arrow_head_style = self.__plot_collect_aes__(edge_type, edge_head_style, edges_style['edge_head_style'][edge_type])
-            edge_margin_tail = self.__plot_edge_margin__(edge_margin_tail, edges_style["edge_margin_tail"][edge_type])
-            edge_margin_head = self.__plot_edge_margin__(edge_margin_head, edges_style["edge_margin_head"][edge_type])
-
-            for edge in self.__getattribute__(edge_type):
-                edge = tuple(edge)
-                if edge_type!='bidirected':
-                    u, v = edge
-                else:
-                    u, v = edge[0][0], edge[0][1]
-
-                # collect edges to show if edge_subset 
-                show_edge = True
-                if edge_subset:
-                    e = set(edge) if edge_type=='undirected' else edge
-                    show_edge = self.edge_exist(e, edge_subset.get(edge_type, []))
-
-                if u in nodes and v in nodes and show_edge:
-                    # edge
-                    nx.draw_networkx_edges(
-                        G_draw,
-                        nodes_position,
-                        edgelist            = [(u, v)],
-                        style               = style,
-                        edge_color          = color,
-                        connectionstyle     = f"arc3,rad=-{arc}",
-                        arrows              = True,
-                        arrowstyle          = arrow_head_style,
-                        arrowsize           = arrow_head_size,
-                        min_source_margin   = edge_margin_tail.get(edge, 0),
-                        min_target_margin   = edge_margin_head.get(edge, 0),
-                        width               = width,
-                        ax=ax)
-
-                    # edge label
-                    edge_label = edge_label or self.edge_label
-                    label = edge_label.get(edge, '')
-                    rotate = edge_label_rotate if edge_label_rotate is not None else True # must keep "is not None" here
-                    nx.draw_networkx_edge_labels(
-                        G_draw,
-                        pos             = nodes_position,
-                        connectionstyle = f"arc3,rad=-{arc}",
-                        edge_labels     = {(u, v): label},
-                        # 
-                        alpha      = self.__plot_edge_label_feature__('alpha', edge, edge_label_alpha, None, edge_label_sig_level,
-                                                                      edge_label_pvalue=edge_label_pvalue),
-                        font_size  = self.__plot_edge_label_feature__('size' , edge, edge_label_size, 15),
-                        font_color = self.__plot_edge_label_feature__('color', edge, edge_label_color, label=label),
-                        rotate     = self.__plot_edge_label_feature__('rotate', edge, edge_label_rotate, default=rotate),
-                        label_pos  = self.__plot_edge_label_feature__('position', edge, edge_label_position, .5),
-                        ax         = ax
-                    )
-
-        # legend 
-        # ------
-        if legend_show:
-            keys = []
-            for role, _ in node_subset.items():
-                if role not in legend_omit_cases:
-                    if role=='Latent' and node_latent_show:
-                        marker = ''
-                        linecolor = self.__plot_collect_aes__(role, node_border_color,
-                                                              nodes_style[role]['node_border_color']) 
-                    else:
-                        marker = 'o'
-                        linecolor='white'
-                    keys += [
-                        Line2D(
-                            [0], [0],
-                            marker=marker,
-                            color=linecolor,
-                            label=role,
-                            markersize=10,
-                            markeredgecolor=self.__plot_collect_aes__(role, node_border_color,
-                                                                      nodes_style[role]['node_border_color']),
-                            markerfacecolor=self.__plot_collect_aes__(role, node_color,
-                                                                      nodes_style[role]['node_color']),
-                            linestyle=self.__plot_collect_aes__(role, node_border_style,
-                                                                nodes_style[role]['node_border_style'])
-                        )
-                    ]
-                if keys: 
-                    legend = plt.legend(handles        = keys,
-                                        title          = legend_title,
-                                        title_fontsize = legend_title_size,
-                                        alignment      = legend_title_align,
-                                        # title_weight   = legend_title_weight,
-                                        loc            = legend_loc,
-                                        fontsize       = legend_fontsize,
-                                        frameon        = legend_frame,
-                                        **legend_kws
-                                        )
-                    if legend_title_weight=='bold' and legend_title:
-                        legend.set_title(title=f'\\textbf{{{legend_title}}}', prop={'weight': 'bold'})
-
-        # title 
-        # -----
-        if title:
-            plt.title(label=title, loc=title_loc, **title_kws)
-
-        plt.axis("off")
-        plt.tight_layout()
-        plt.show()
-        plt.rcParams["text.usetex"] = default_usetex
-
-        return plt, ax
-
-    def plot_paths(self, exposure=None, outcome=None, adj_set=None, directed=False,
-                   show_full_dag = True,
-                   use_labels=True,
-                   title_fontsize = 10,
-                   figsize=(16, 9),
-                   path_color='black',
-                   **plot_kws
-                   ):
-        adj_set = [adj_set] if isinstance(adj_set, str) else adj_set
-
-        paths = self.paths(exposure=exposure, outcome=outcome, adj_set=adj_set, directed=directed)
-        npaths = len(paths)
-        ncols = int(math.ceil(math.sqrt(npaths)))
-        nrows = int(math.ceil(npaths / ncols))
-        fig, axs = plt.subplots(nrows, ncols, figsize=figsize, tight_layout=True)
-        if ncols >1 or nrows>1:
-            axs=axs.flatten()
-        else:
-            axs = [axs]
-        [ax.axis('off') for ax in axs]
-        # 
-
-        pos = self.nodes_position
-        roles = self.nodes_role
-        nodes_label = self.nodes_label
-        edge_label = self.edge_label
-        for i, (path, info) in enumerate(paths.items()):
-            ax = axs[i]
-
-            show_labels=True
-            if show_full_dag:
-                self.plot(ax=ax, edge_color ='lightgray', **plot_kws)
-                show_labels=False
-
-            # G2 = DAG(path, nodes_role=roles, nodes_position=pos, nodes_label=nodes_label)
-            G2 = self.__rebuild_graph__(path)
-            G2.plot(ax=ax, edge_linewidth=3, show_labels=show_labels,
-                    edge_color=path_color, use_labels=use_labels, **plot_kws)
-            adj = info['adj_set']
-            if adj:
-                adj = [self.nodes_label.get(x, x) for x in adj] if use_labels else adj
-                adj = ', '.join(adj)
-            else:
-                adj = ""
-            title = rf"Path is \textbf{{{'open' if info['open'] else 'closed'}}}; Adjustment set: "+"\{"+adj+"\}"
-            ax.set_title(title, loc='left', fontsize=title_fontsize)
-            ax.axis('on')
-            plt.tight_layout()
-
-        return axs
-
-    def plot_equivalent_dags(self,
-                             use_labels=True,
-                             show_labels=True,
-                             edge_difference_color='red',
-                             title_fontsize = 10,
-                             title_original_graph = 'Original Graph',
-                             title_equivalent_graph = "Equivalent DAG",
-                             show_footnote = True,
-                             figsize=(16, 9),
-                             max_per_figure = 9,
-                             max_eq_dags= 27,
-                             **plot_kws
-                             ):
-        # collecting equivalent DAGs
-        eq_dags = self.equivalent_dags()
-        n_eq_dags = len(eq_dags)
-        if n_eq_dags == 0:
-            return None
-
-        if n_eq_dags > max_eq_dags:
-            print(f"\n**Note:**\n"+
-                  f"---------\n"
-                  f"Maximun number of equivalent DAGs to plot is set to {max_eq_dags}"+
-                  f" by default, but there are {n_eq_dags} equivalent DAGs. Some equivalent DAGs"+
-                  f" will be omitted. To change it, set 'max_eq_dags'.\n")
-
-        max_eq_dags = np.min([n_eq_dags, max_eq_dags])
-        figs = dict(self.__chunked_ranges__(max_eq_dags, max_per_figure))
-
-        print(f"Total of equivalent DAGs: {n_eq_dags}\n"+
-              f"Plotting {max_eq_dags} equivalent DAG(s)\n"
-              f"Generating {len(figs.keys())} figure(s) with a maximum of {max_per_figure} panels per figure\n")
-        figs_res = {}
-        
-        for fig_number, panels in figs.items():
-
-            # figure
-            ncols = int(math.ceil(math.sqrt(max_per_figure)))
-            nrows = int(math.ceil(max_per_figure / ncols))
-            fig, axs = plt.subplots(nrows, ncols, figsize=figsize, tight_layout=True)
-            if ncols >1 or nrows>1:
-                axs=axs.flatten()
-            else:
-                axs = [axs]
-            [ax.axis('off') for ax in axs]
-
-            # panels
-            for panel, panel_number in enumerate(panels):
-                print(f"Creating plot {panel_number+1} of {n_eq_dags}...", end='')
-                ax = axs[panel]
-                eq_dag = eq_dags[panels[panel]]
-                # baseline plot
-                eq_dag.plot(ax=ax, edge_linewidth=1,
-                            show_labels=show_labels,
-                            use_labels=use_labels,
-                            title=title_equivalent_graph,
-                            title_fontsize=title_fontsize,
-                            **plot_kws)
-                # superimpose edges highlighing the differences
-                edges = self.edge_differences(eq_dag)['G2']
-                nodes = self.__collect_nodes_from_edges__(edges)
-                eq_dag.plot(ax=ax, edge_linewidth=3,
-                            node_subset = nodes,
-                            edge_subset = edges,
-                            show_labels=show_labels,
-                            edge_color=edge_difference_color,
-                            use_labels=use_labels,
-                            title=title_equivalent_graph,
-                            title_fontsize=title_fontsize,
-                            **plot_kws)
-                if show_footnote:
-                    # footnote
-                    xcoord=1
-                    ycoord=1.07
-                    yoffset=-.1
-                    fn = f"Equivalent DAG: {panel_number+1} of {n_eq_dags}"
-                    ax.annotate(fn, xy=(xcoord,yoffset), xytext=(xcoord,yoffset),
-                                xycoords='axes fraction', size=11, ha='right',
-                                style='italic', alpha=.6)
-                print('done!')
-                ax.axis('on')
-                plt.tight_layout()
-                figs_res[fig_number] = [fig, axs]
-        return figs_res
-
-    def plot_identification(self,
-                            info='default', # detailed, default
-                            effect='total', #total, direct, or do, only if if_info=full
-                            show_np = True,
-                            show_linear = True,
-                            show_do = True,
-                            kws_graph={},
-                            kws_identification={},
-                            kws_detailed = {"parameter":'ACE',
-                                            'strategy': 'SoO'},
-                            figsize = None,
-                            ratio   = None,
-                            ncols   = None,
-                            nrows   = None,
-                            txt_line_height=.55,
-                            *args,
-                            **kws
-                            ):
-        """
-        txt_line_height: float
-            height of the lines for the text. Not used if figsize is set.
-        """
-        roles = ['Exposure', 'Outcome', 'Latent', 'Observed',
-                 'exposure', 'outcome', 'latent', 'observed']
-        for role in roles:
-            assert not kws_graph.get(role, None) and not kws_identification.get(role, None), (
-                f"Setting node role ({role}) not allowed in the plot kws. "+
-                f"To set the node role, create a new DAG or use set_node_role before plotting.")
-
-        if not self.__identification__ or kws_identification:
-            self.identification_analysis(**kws_identification, verbose=False)
-        
-        return self.__identification__.plot(G=self,
-                                            info=info,
-                                            effect=effect,
-                                            show_np = show_np,
-                                            show_linear = show_linear,
-                                            show_do = show_do,
-                                            figsize=figsize,
-                                            ratio=ratio,
-                                            ncols=ncols,
-                                            nrows=nrows,
-                                            kws_graph=kws_graph,
-                                            kws_detailed = kws_detailed,
-                                            txt_line_height=txt_line_height,
-                                            *args,
-                                            **kws
-                                            )
-    
     # ancillary
     def __plot_create_nx__(self):
         G = nx.MultiDiGraph()  # allows multiple edges & types
@@ -1404,15 +1555,14 @@ class DAG():
 
     def __plot_label_adj__(self, node_label_adj, nodes_label):
         if isinstance(node_label_adj, dict):
-            adj = {node:node_label_adj.get(node, 0) for node in self.get_nodes(exclude_latent=False)}
-            
+            adj = {node:node_label_adj.get(node, 0)
+                   for node in self.get_nodes(exclude_latent=False)}
         elif isinstance(node_label_adj, (float, int)):
-            adj = {node:node_label_adj for node in self.get_nodes(exclude_latent=False)}
-
+            adj = {node:node_label_adj
+                   for node in self.get_nodes(exclude_latent=False)}
         # same for if labels are used
         for node, label in nodes_label.items():
             adj[label] = adj[node]
-        
         return adj
 
     # styles
@@ -1500,7 +1650,7 @@ class DAG():
                            "undirected": "orange"
                            },
             "edge_arc": {"directed": 0,
-                         "bidirected": .33,
+                         "bidirected": -.33,
                          "undirected": 0,
                          },
             "edge_linewidth": {"directed": 1.5,
@@ -1598,7 +1748,7 @@ class DAG():
                            "undirected": "orange"
                            },
             "edge_arc": {"directed": 0,
-                         "bidirected": .33,
+                         "bidirected": -.33,
                          "undirected": 0,
                          },
             "edge_linewidth": {"directed": 1.5,
@@ -1696,7 +1846,7 @@ class DAG():
                            "undirected": "orange"
                            },
             "edge_arc": {"directed": 0,
-                         "bidirected": .33,
+                         "bidirected": -.33,
                          "undirected": 0,
                          },
             "edge_linewidth": {"directed": 1.5,
@@ -1765,7 +1915,7 @@ class DAG():
                 res = 1
         return res
 
-class identification():
+class identification:
 
     def __init__(self, *args, **kws):
         self.identification = None
@@ -1821,13 +1971,13 @@ class identification():
                     "definition" : ("DAG structure matches the true causal relations: " +
                                     "(a) A directed arrow from a variable A to a variable B means that there is a causal " +
                                     "effect of A on B, which may or may not be zero; (b) Absence of an arrow from a variable C " +
-                                    "to a variable D means certainty that C does not cause D; (c) A bidirected arrow between " +
+                                    "to a variable D implies certainty that C does not cause D; (c) A bidirected arrow between " +
                                     "a variable E and a variable F means that they share a common unobserved or latent cause." 
                                     ),
-                    "scope"      : "Connects reality and the DAG model",
-                    "role"       : "Ensures adjustment sets and do-calculus give the correct identifiable causal effect.",
-                    "violation"  : "Biased/invalid causal effect estimates and wrong adjustment sets.",
-                    "notes"      : "A prerequisite for identifiability claims conditional_on on a DAG.",
+                    "scope"      : "Connection between reality and the DAG model",
+                    "role"       : "Ensures adjustment sets and do-calculus yield the correct identifiable causal effect.",
+                    "violation"  : "Biased or invalid causal effect estimates and incorrect adjustment sets.",
+                    "notes"      : "A prerequisite for identifiability claims conditional on a DAG.",
                     'required'   : 'yes',
                     'testable'   : 'no',
                 },
@@ -1849,7 +1999,7 @@ class identification():
                     "usage"      : ['identification', 'discovery'],
                     "definition" : "Each variable is independent of its non-descendants given its parents",
                     "scope"      : "Connects the DAG and the conditional distribution of each variable",
-                    "role"       : "Links d-separation to conditional_on independencies, grounding do-calculus.",
+                    "role"       : "Links d-separation to conditional independencies, grounding do-calculus.",
                     "violation"  : "Graph–distribution link breaks and identification results may be incorrect.",
                     'required'   : 'yes',
                     'testable'   : 'no',
@@ -1858,11 +2008,11 @@ class identification():
                 "positivity": {
                     "name"       : "Positivity (Overlap)",
                     "usage"      : ['identification', "estimation", 'inference'],
-                    "definition": ("Each treatment level has a positive probability of occurring, including for at all relevant levels" +
+                    "definition": ("Each treatment level has a positive probability of occurring, including at all relevant levels" +
                                    " of the adjustment variables if they are used for identification."),
                     "scope"      : "Variables' distributions",
-                    "role"       : "Required for g-formula, IPW, and many identification/estimation strategies.",
-                    "violation"  : "Effects undefined or non-estimable for regions of covariate space.",
+                    "role"       : "Required for the g-formula, IPW, and many identification and estimation strategies.",
+                    "violation"  : "Effects are undefined or non-estimable in certain regions of the covariate space.",
                     "aliases"    : ["Overlap", "Common Support"],
                     "notes"      : "Check e(X|Z) bounds for binary treatment; diagnose with support plots.",
                     'required'   : 'yes',
@@ -1885,7 +2035,7 @@ class identification():
 
     def __assumptions_print__(self, print_assumptions=True, category=None, *args, **kws):
         if print_assumptions:
-            print(dedent("""\
+            print(dedent("""
             Assumptions for identification:
             ------------------------------"""))
             assumptions = self.assumptions(category=category, verbose=kws.get("print_assumptions_verbose", False))
@@ -1951,18 +2101,18 @@ class identification():
         # instrumental variable (IV)
         # ---------------------
         IV = {}
-        effect = f'{c}ACE'
+        effect = f'{c}ACE' 
         total_identified = adj[effect]['identified']
-        conduct = not total_identified or iv=='always'
+        conduct = (not total_identified or iv=='always') and not conditional# conditional effect not available for IV
         print(f"Searching for identification by instrumental variables skipped.") if verbose and not conduct else None
         print(f"Searching for identification by instrumental variables...", end='') if verbose and conduct else None
-        IV[effect] = self.__identification_analysis_iv__(G, exposure, outcome, conditional, conduct=conduct)
+        IV[effect] = self.__identification_analysis_iv__(G, exposure, outcome, conditional, conduct=conduct, conditional=conditional)
         print(f"done!") if verbose and conduct else None
 
         # causal probability  (condjuct only if not possible to use adjustment or if explicitly asked)
         # ------------------
         do = {}
-        effect = f'ACE' # no condtional effect available
+        effect = f'{c}ACE'
         total_identified = adj[effect]['identified']
         iv_identified = IV[effect]['identified']
         conduct = (not total_identified and not iv_identified) or causal_probability=='always'
@@ -1993,12 +2143,13 @@ class identification():
                                          effect = effect_type,
                                          )
         # None: not identifiable; []: No adjustment needed; ['<var<'...]: adjustments
+        adj_set_all = convert().rlist2list(adj_set)
         adj_set    = None if len(adj_set)==0 else list(adj_set.rx2['1'])
         adj_set    = [''] if adj_set==[] else adj_set
         identified = True if adj_set is not None else False
         
         # mediators (total effect should not adjust for mediators)
-        has_mediators = len(G.mediators())>0 and effect=='direct'
+        has_mediators = len(G.mediators())>0 and effect=='ACDE'
         Mi = set(itertools.chain.from_iterable(G.mediators()))
         Mi = [m for m in Mi if m in (adj_set or [''])]
 
@@ -2026,19 +2177,21 @@ class identification():
             variables |= {'Mi':Mi} if has_mediators else {}
             variables |= {'Xi':Xi} if adj else {}
             variables |= {'Ci':Ci} if conditional else {}
-            where = 'where'
+            where += 'where'
             for var_code, vars in variables.items():
                 vars = vars if isinstance(vars, list) else [vars]
                 where += f"\n  {var_code}: {VARIABLES['variables'][var_code]} ({', '.join(vars)})"
 
         # use adjustements:
-        adjusted = identified and len(adj_set)>0
+        adjusted = identified and adj
 
         # results
         result = adj_set
         result_str = ''
         if identified:
-            result_str = f"Adjustments: {{{', '.join(result)}}}"
+            adj_set_all = ' or '.join([f"{{{s}}}" for s in [', '.join(l) for l in adj_set_all]])
+            result_str = f"Adjustments: {adj_set_all}"
+            # result_str = f"Adjustments: {{{', '.join(result)}}}"
         else:
             result_str = "Not identifiable by adjustment."
             
@@ -2047,7 +2200,7 @@ class identification():
             'conducted'     : True,
             "identified"    : identified,
             'result'        : result,
-            'result str'    : result_str,
+            'result str'    : result_str.replace("{}", "None"),
             'adjusted'      : adjusted,
             # variables
             'outcome'       : outcome,
@@ -2163,7 +2316,7 @@ class identification():
             where = ''
             if identified:
                 variables = {'Yi':outcome, 'Di':exposure}
-                variables |= {'Ci':Ci} if conditional else {}
+                variables |= {'Ci':conditional} if conditional else {}
                 where = 'where'
                 for var_code, vars in variables.items():
                     vars = vars if isinstance(vars, list) else [vars]
@@ -2208,8 +2361,8 @@ class identification():
         }
         return res
 
-    def __identification_analysis_iv__(self, G, exposure, outcome, adj_set, conduct=False):
-        if conduct:
+    def __identification_analysis_iv__(self, G, exposure, outcome, adj_set, conduct=False, conditional=None):
+        if conduct and not conditional:
             assert len(exposure)==1, "IV method only works with a single exposure. Currently exposures: {exposure}"
             # identification
             result = dagitty.instrumentalVariables(G.__dagitty__, exposure=exposure, outcome=outcome)
@@ -2232,19 +2385,23 @@ class identification():
         
         # result_str
         # Note: results={'Z': {'adjustments': ['Z1']}, 'Z2': {'adjustments': []}, 'Z4': {'adjustments': ['Z1', 'Z3']}}
-        if conduct:
-            if identified:
-                result_str = ''
-                txt = []
-                for iv, adj in result.items():
-                    adjs = adj['adjustments']
-                    Xs = f'(if adjusted by {', '.join(adjs)})' if len(adjs)>0 else ''
-                    txt += [f"{iv} {Xs}"]
-                result_str = "Instrument: " + f' or \n'.join(txt)
-            else:
-                result_str = 'No instrument available in the DAG.'
+        if conditional:
+            result_str = "Identification analysis for conditional average effects not available for IV."
         else:
-            result_str = 'Not conducted. Identification by adjustment available.'
+            if conduct:
+                if identified:
+                    result_str = ''
+                    txt = []
+                    for iv, adj in result.items():
+                        adjs = adj['adjustments']
+                        Xs = f'(if adjusted by {', '.join(adjs)})' if len(adjs)>0 else ''
+                        txt += [f"{iv} {Xs}"]
+                    result_str = "Instrument: " + f' or \n'.join(txt)
+                else:
+                    result_str = 'No instrument available in the DAG.'
+            else:
+                result_str = 'Not conducted. Identification by adjustment available.'
+
             
 
         # collect which variables used their code Mi, Zi, from tau.VARIABLES
@@ -2452,11 +2609,11 @@ class identification():
                 tau_zd = equations_info['First stage'][1][pr][0].format(i=1)
                 divided_by = "-"*np.max([len(tau_zd), len((tau_zy))])
                 if pr=='latex':
-                    beta[pr] = f"\\displaystyle \\frac{{{tau_zy}}}{{{tau_zd}}}"
+                    beta[pr] = f"\\displaystyle \\frac{{{tau_zy}}}{{{tau_zd}}} = \\beta_1"
                     
                 else:
                     beta[pr] = dedent(f"""\
-                    {tau_zy}
+                    {tau_zy}  = b1
                     {divided_by}
                     {tau_zd}\
                     """)
@@ -2487,44 +2644,52 @@ class identification():
                 res[causal_effect][strategy] = result
         return res
 
-    def identification_get_identified(self, by='parameter'):
+    def get_identified(self, by='parameter', include_all=False):
         res = None
         if by == 'parameter':
-            res = self.__identification_get_identified_parameter__()
+            res = self.__identification_get_identified_parameter__(include_all=include_all)
         if by == 'strategy':
-            res = self.__identification_get_identified_strategy__()
+            res = self.__identification_get_identified_strategy__(include_all=include_all)
         return res
 
-    def __identification_get_identified_parameter__(self):
+    def __identification_get_identified_parameter__(self, include_all=False):
         id = self.__identification_organize_by_causal_effect__()
         identified = {}
         for effect, strategies in id.items():
             strategy_identifies = []
             for strategy, result in strategies.items():
-                if result['identified']:
+                if result['identified'] or include_all:
                     strategy_identifies += [strategy]
             if strategy_identifies:
                 identified[effect] = strategy_identifies
         return identified
     
-    def __identification_get_identified_strategy__(self):
+    def __identification_get_identified_strategy__(self, include_all=False):
         id = self.identification
         identified = {}
         for strategy, effects in id.items():
             effect_identified = []
             for effect, result in effects.items():
-                if result['identified']:
+                if result['identified'] or include_all:
                     effect_identified += [effect]
             if effect_identified:
                 identified[strategy] = effect_identified
         return identified
 
+    def __repr__(self):
+        print(self.print())
+        return ""
+
     def print(self, content='default', style='text', strategy=None, parameter=None,
               omit_DAG=True, *args, **kws):
+        parameter = parameter or list(self.identification['SoO'].keys())[0]
+        conditional = list(self.identification['SoO'].values())[0]['conditional on']
         print(dedent(f"""
-        Exposure: {', '.join(self.identification['SoO']['ACE']['exposure'])}
-        Outcome: {self.identification['SoO']['ACE']['outcome']}\
+        Exposure: {', '.join(self.identification['SoO'][parameter]['exposure'])}
+        Outcome: {self.identification['SoO'][parameter]['outcome']}\
         """))
+        if conditional:
+            print(f"Conditional on: {conditional}")
 
         if content=='detailed':
             txt = self.__print_detailed__(style=style, strategy=strategy, parameter=parameter, *args, **kws)
@@ -2540,10 +2705,6 @@ class identification():
             
         return None
     
-    def __repr__(self):
-        print(self.__print_default__())
-        return ""
-
     def __print_default__(self, *args, **kws):
         id = self.__identification_organize_by_causal_effect__()
         style = kws.get("style", 'text')
@@ -2562,8 +2723,8 @@ class identification():
                 strategy_name = IDENTIFICATION[strategy]['name']
                 conducted     = result['conducted']
                 identified    = result['identified']
-                do_latex      = strategy=='do' and style=='latex'
-                result        = result[style]['Non-parametric'] if do_latex else result['result str']
+                do_latex      = strategy=='do' and style=='latex' and identified
+                result        = "Causal probability: "+result[style]['Non-parametric'] if do_latex else result['result str']
 
                 # identation/spaces
                 result = result.replace('\n', '\n'+' '*28)
@@ -2577,11 +2738,12 @@ class identification():
         return txt
 
     def __print_concise__(self, omit_DAG=True, table=False):
+        conditional = list(self.identification['SoO'].values())[0]['conditional on']
         methods = self.identification.keys()
-        causal_effects = ['ACE', 'ACDE']
         res = {}
         for method in methods:
             res[method] = {}
+            causal_effects = self.identification[method].keys()
             for causal_effect in causal_effects:
                 available = self.identification[method].get(causal_effect, False)
 
@@ -2594,50 +2756,53 @@ class identification():
                     elif conducted and not identified:
                         res[method][causal_effect] = 'No'
                     elif not conducted:
-                        res[method][causal_effect] = 'NC**'
+                        res[method][causal_effect] = 'NA/NC**'
                 else:
-                    res[method][causal_effect] = 'NA**'
+                    res[method][causal_effect] = 'NA/NC**'
 
-        s1 = f"{res['SoO']['ACE']:<4}"
-        s2 = f"{res['SoO']['ACDE']:<4}"
-        s3 =  f"{res['IV']['ACE']:<6}"
-        s4 =  f"{res['IV']['ACDE']:<6}"
-        s5 =  f"{res['do']['ACE']}"
-        s6 =  f"{res['do']['ACDE']}"
+        c = "c" if conditional else ""
+        c_spelled = "Conditional " if conditional else ""
+        space = " "*len(c_spelled)
+        # 
+        s1 = f"{res['SoO'][f'{c}ACE']:<4}"
+        s2 = f"{res['SoO'][f'{c}ACDE']:<4}"
+        s3 =  f"{res['IV'][f'{c}ACE']:<6}"
+        s4 = "NA/NC**"                     # s4 =  f"{res['IV'][f'{c}ACDE']:<6}"
+        s5 =  f"{res['do'][f'{c}ACE']}"
+        s6 = "NA/NC**"                             # s6 =  f"{res['do'][f'{c}ACDE']}"
         footnote = """\
         Notes:
         *  For path effects (indirect effects), use SEM estimation
-        ** NC: Identification analysis not conducted
-        NA: Identification analysis not available\
+        ** NA/NC: Identification analysis not available or not conducted\
         """
         if not table:
             txt = dedent(f"""
-            ===============================================================
-                                                         Identified?
-            Causal Effects*                           SoO  IV   do-calculus 
-            ===============================================================
-            Averave Causal Effect (ACE)              {s1}  {s3}    {s5}
-            Averave Controlled Direct Effect (ACDE)  {s2}  {s4}    {s6}
-            ===============================================================
+            ==============================================================================
+            {space}                                              Identified?
+            {c_spelled}Causal Effects*                           SoO  IV   do-calculus 
+            ==============================================================================
+            {c_spelled}Averave Causal Effect ({c}ACE)              {s1}  {s3}    {s5}
+            {c_spelled}Averave Controlled Direct Effect ({c}ACDE)  {s2}  {s4}    {s6}
+            ==============================================================================
             Notes:
             *  For path effects (indirect effects), use SEM estimation
-            ** NC: Identification analysis not conducted
-               NA: Identification analysis not available
+            ** NA/NC: Identification analysis not available or not conducted
             """)
             if not omit_DAG:
                 print(dedent(f"""
-                ===============================================================
+                ===========================================================================
                 {G}
                 """))
         else:
-            txt = {'columns': ["Causal Effects*", "SoO", "IV", "do-calculus"],
-                    'rows': [["Averave Causal Effect, (ACE)", s1, s3, s5],
-                             ["Averave Controlled Direct Effect (ACDE)", s2, s4, s6]],
+            txt = {'columns': [f"{c_spelled}Causal Effects*", "SoO", "IV", "do-calculus"],
+                    'rows': [[f"{c_spelled}Averave Causal Effect, ({c}ACE)", s1, s3, s5],
+                             [f"{c_spelled}Averave Controlled Direct Effect ({c}ACDE)", s2, s4, s6]],
                     "footnote" : footnote
                    }
         return txt
 
     def __print_detailed__(self, *args, **kws):
+        conditional = list(self.identification['SoO'].values())[0]['conditional on']
         id = self.identification
 
         style = kws.get("style", 'text')
@@ -2652,30 +2817,38 @@ class identification():
             for effect_abv in parameters:
                 adj        = id[strategy][effect_abv].get('adjusted', False)
                 identified = id[strategy][effect_abv].get("identified", False)
-                result     = id[strategy][effect_abv].get(f"result str",'Analysis not conducted for {effect_abv}')
                 tau_par    = id[strategy][effect_abv].get(style, {'Parametric tau':''})['Parametric tau']
                 E_id_np    = id[strategy][effect_abv].get(style, {'Non-parametric':''})['Non-parametric']
                 E_id_par   = id[strategy][effect_abv].get(style, {'Parametric(*)':''})['Parametric(*)']
-                where      =  (IDENTIFICATION[strategy][effect_abv]['where'][adj] +
+                where      =  (#IDENTIFICATION[strategy][effect_abv]['where'][adj] +
+                               IDENTIFICATION[strategy].get(effect_abv, {'where':{adj:''}})['where'][adj] +
                                id[strategy][effect_abv].get('where', ''))
+                if strategy=='do' and identified:
+                    result = id[strategy][effect_abv][style].get(f"Non-parametric",'Analysis not conducted for {effect_abv}')
+                else:
+                    result = id[strategy][effect_abv].get(f"result str",'Analysis not conducted for {effect_abv}')
 
                 effect_name = PARAMETER[effect_abv]['name']
                 tau         = PARAMETER[effect_abv]['parameter']
                 tau_delta1  = tau.replace('d,', 'd+1,').replace('d\'', 'd')
                 beta        = f"{tau_delta1} = {tau_par}" if E_id_par else ''
                 E           = PARAMETER[effect_abv]['definition']
-                E_id        = IDENTIFICATION[strategy][effect_abv][adj]
+                # E_id        = IDENTIFICATION[strategy][effect_abv][adj]
+                E_id        = IDENTIFICATION[strategy].get(effect_abv, {adj:""})[adj]
 
                 if style=='latex':
                     tau_def = f"{_print2latex(tau)} = {_print2latex(E)}"
                     tau_id = f"{_print2latex(tau)} = {_print2latex(E_id)}"
                     where  = _print2latex(where).replace('\\\\', '\\\\&')
                     beta   = _print2latex(beta)
+                    E_id_np  = "Non-parametric: " + E_id_np
+                    E_id_par = "Parametric(*): "+ E_id_par
                 else:
                     tau_def = f"{tau} = {E}"
                     tau_id  = f"{tau} = {E_id}"
                     # adjusting spaces/identation
                     result   = result.replace("\n", "\n"+" "*34)
+                    tau_id  = tau_id.replace("\n", '\n'+" "*41)
                     E_id_np  = "Non-parametric: " + E_id_np.replace("\n", '\n'+" "*24)
                     E_id_par = "  Parametric(*) : "+ E_id_par.replace("\n", '\n'+" "*4)
                     E_id     = E_id.replace("\n", '\n'+" "*41)
@@ -2714,8 +2887,9 @@ class identification():
         strategies_available = list(self.identification)
 
         to_print = {}
-        if not parameters and not strategies :
-            to_print = self.identification_get_identified(by='strategy')
+        if not parameters and not strategies:
+            for strategy, effect in self.identification.items():
+                to_print[strategy] = list(effect.keys())
 
         elif parameters and not strategies:
             for parameter in parameters:
@@ -2761,6 +2935,8 @@ class identification():
         effect = kws.get("effect", True)
         y_do = kws.get("y_do", True)
 
+        title_dag = kws.get("title_dag", None)
+
         txt, table = self.__plot_get_txt__(*args, **kws)
         figsize, ratio = self.__plot_get_figsize_and_ratio__(txt, table, *args, **kws)
         nrows, ncols   = self.__plot_get_ncols_nrows__(*args, **kws)
@@ -2770,7 +2946,7 @@ class identification():
         # Graph 
         # -----
         ax = axs[0]
-        G.plot(ax=ax, **kws_graph)
+        G.plot(ax=ax, title=title_dag, **kws_graph)
         ax = axs[1]
 
         # identification info
@@ -2786,11 +2962,18 @@ class identification():
         return plt, axs
     
     def __plot_info__(self, ax, txt, table, *args, **kws):
+        conditional = list(self.identification['SoO'].values())[0]['conditional on']
+        conditional = [conditional] if conditional and isinstance(conditional, str) else conditional
+        conditional_info = f"(Effects conditional on {', '.join(conditional)})" if conditional else conditional
+        
         content = kws.get("info", 'default')
         G = kws.get("G", None)
         y_info = kws.get("y_info", (1.07 if content!='detailed' else 1))
         ratio = kws.get("ratio", True)
         fontsize = kws.get("fontsize", 12)
+
+        title_info = kws.get("title_info", '')
+        title_info = title_info or ""
 
         show_np = kws.get("show_np", True)
         show_linear = kws.get("show_linear", True)
@@ -2810,10 +2993,10 @@ class identification():
             columns = txt['columns']
 
             table_row_heights = kws.get("table_row_heights", [.17, .17, .17])
-            table_col_sizes = kws.get("table_col_sizes", [.4, .1, .1, .1])
+            table_col_sizes = kws.get("table_col_sizes", [.5, .1, .1, .1])
             table_fontsize = kws.get("table_fontsize", fontsize)
 
-            ax.set_title("Identified?", fontsize=13, loc='left', pad=10)
+            title_info = "Identified?"
             table = ax.table(
                 cellText=rows,
                 colLabels=columns,
@@ -2830,11 +3013,14 @@ class identification():
                     cell.set_width(table_col_sizes[col])
                     cell.set_height(table_row_heights[row])
 
-            ax.text(0.01, .0, s=txt['footnote'].replace('NA', '** NA'),
+            ax.text(0.01, .0, s=txt['footnote'],
                     ha='left', va='bottom', ma='left',
                     fontdict=dict(weight='normal', style='normal',
                                   color='black', fontsize=fontsize, alpha=1),
                     transform=ax.transAxes)
+
+        title_info = title_info + f" {conditional_info}" if conditional else title_info
+        ax.set_title(title_info, fontsize=13, loc='left', pad=10)
 
         # Splines (axes lines)
         borders = False if table else True
@@ -2847,25 +3033,28 @@ class identification():
         return ax
 
     def __plot_get_figsize_and_ratio__(self, txt, table, *args, **kws):
-        num_lines = 10 if table else sum(1 for line in txt.splitlines() if line.strip())
-        height_per_line = kws.get("txt_line_height", .55)
-        fig_height = max(2, num_lines * height_per_line)  # set minimum height if desired
-
-        figsize = kws.get("figsize", None) or [11.5, np.max([fig_height, 5])]
-        
         # ratio
         content = kws.get("info", 'default')
         if content=='default':
             rh = kws.get("ratio", None) or [1/2, 1/2]
             rw = [1]
+            fig_width = 10
         elif content=='concise':
             rh = kws.get("ratio", None) or [2/3, 1/3]
             rw = [1]
+            fig_width = 10
         elif content=='detailed':
             rw = ratio = kws.get("ratio", None) or [1/2, 1/2]
             rh = [1]
+            fig_width = 13
         ratio = {'width_ratios': rw,
                  'height_ratios': rh}
+
+        num_lines = 10 if table else sum(1 for line in txt.splitlines() if line.strip())
+        height_per_line = kws.get("txt_line_height", .55)
+        
+        fig_height = max(2, num_lines * height_per_line)  # set minimum height if desired
+        figsize = kws.get("figsize", None) or [fig_width, np.max([fig_height, 5])]
 
         return figsize, ratio
 
@@ -2874,7 +3063,7 @@ class identification():
         table = False
         if content=='default':
             txt = self.__print_default__(style='latex')
-            txt = re.sub(r'^(Average.*)\n[-]{2,}.*\n', r'\\textbf{\\underline{\1}}\n', txt, flags=re.MULTILINE)
+            txt = re.sub(r'^(Conditional.*|Average.*)\n[-]{2,}.*\n', r'\\textbf{\\underline{\1}}\n', txt, flags=re.MULTILINE)
         elif content=='concise':
             table = True
             txt = self.__print_concise__(table=table)
@@ -2911,71 +3100,146 @@ class identification():
         self.__repr__()
         return ''
 
-class estimate():
-    
+class estimate:
+    """
+    Estimate a structural causal model.
+
+
+    formula : str or None (optional)
+        A structural equation model
+           Ex: y ~ d + x1 + z1
+               x2 ~ z1 + z2
+        where y, d, Z's, and X's are variables in the data
+
+    model: str
+        Used only if formula is not provided
+        'auto' : use LSEM
+        'LSEM': use linear structural equation models. 
+        'GLSEM': use generalied linear structural equation models
+        'NPSEM': uses nonparametric structural equation estimation
+                 In this case, it uses GAM.
+
+    family : str 
+        Defines the family of the outcome variable distribution:
+        'auto', 'gaussian', 'logit', 'multinomial'
+        If 'auto', it detects the type of the outcome and
+        automatically set the distribution family using:
+        - binary: logit
+        - categorical: multinomial
+        - continuous: gaussian
+        For linear probability model, set family='gaussian' when
+        using binary outcomes
+
+    conditional: str, list, or None (optional)
+        Used only if formula is not provided
+        Names of the variables for conditional average effects estimation.
+        Note that this is not adjustment variables, but a variables
+        to condition the estimation
+
+    kws: dict (optional)
+        Used in SoO and IV:
+
+    se_cluster : str with the name of the variable to cluster the std. errors
+        Ignored if se_robust is used
+
+    se_robust : boolean
+       If true, use Sandwich estimator, robust to mild non-normality
+       See lavaan estimator = "MLR"
+    """
     def __init__(self,
                  G,
+                 formula=None,
+                 data=None,
                  model='auto',
+                 family = 'auto',
+                 conditional = None,
+                 se_cluster=None,
+                 se_robust=None,
+                 # 
                  model_kws={},
-                 # auto
-                 model_auto_binary='LPM',
-                 # LSEM
                  sem=None,
                  # 
+                 weights=1,
                  *args,
                  **kws
                  ):
-        """
-        G : a SCM object
+        assert data is not None, 'Data must be provided.'
+        data = ut.data2tibble(data)
+        self.model = "LSEM" if model=='auto' else model
+        self.formula = formula or self._graph2sem(G)
+        self.family = family
+        # 
+        self.outcome = G.outcome[0]
+        self.exposure =G.exposure
+        self.conditional = conditional
+        #
+        self.se_cluster = se_cluster
+        self.se_robust = se_robust
+
+        if self.model in 'LSEM':
+            self._lsem(G, data=data, weights=weights, *args, **kws)
+
+    @ut.copy_docstring(lsem)
+    def _lsem(self, G, data, weights, *args, **kws):
+        est =  lsem(formula=self.formula,
+                    data=data,
+                    weights=weights,
+                    se_cluster=self.se_cluster,
+                    se_robust=self.se_robust,
+                    *args, **kws)
+        self.fit = est.fit
+        self.est = est.est
+
+    @property
+    def causalinf(self):
+        print(self)
         
-        model: str
-            'auto' : use identification results.
-            'LSEM': use linear structural equation models
-            'GLSEM': use generalied linear structural equation models
-            'NPSEM': uses nonparametric structural equation estimation
-             See 'Details'
+    @ut.copy_docstring(ut.summary)
+    def summary(self, *args, **kws):
+        formula = ("\n" + self.formula).replace('\n', '\n        ')
+        kws |= {'formula': kws.get("formula", formula)}
 
-        Details
-        -------
-
-        For model='auto' 
-          Outcome type is automatically
-          Both total and direct effects are estimated
-          if both are identified.
-
-        For model='GLSEM' 
-        For model='NPSEM' 
-
-        """
-        # self.__cov_type__ = cov_type
-        # self.__clusters__ = clusters
-        # self.__collect_info__(stage1, stage2)
-        # self.__estimate__(data)
-        # self.__get_diagnostics__()
-        pass
-
-    def __estimate__(self, G):
-        pass
+        latex_replace = {"~~": "\\\\leftrightarrow ", "~" : "\\\\leftarrow "}
+        kws |= {'latex_replace': kws.get("latex_replace", latex_replace)}
+                                              
+        res = ut.summary(
+            model = self,
+            id_strategy='SCM',
+            *args, **kws
+        )
+        return res.res
         
-    def __graph2sem__(self, parameter_fmt="(beta_{cause}.{effect})"):
+    def get_fit_statsitics(self, stats):
+        res = self.est['fit_stats'].get(stats, None)
+        if res is None:
+            print(f'Statistics {stats} not available.')
+        return res
+
+    # ---------------------------------
+    def _graph2sem(self, G, parameter_fmt="(beta_{cause}.{effect})"):
         # regression lines
         reg = ''
-        for y, pa_y in self.nodes_parents.items():
-            pa_y = " + ".join([f"(beta_{v}{y})*{v}" for v in pa_y])
-            reg += f"{y} ~ beta_0{y} + {pa_y} + e_{y}\n"
+        for y, pa_y in G.nodes_parents.items():
+            pa_y = " + ".join([f"(beta_{v}.{y})*{v}" for v in pa_y])
+            reg += f"{y} ~ (beta_0{y})*1 + {pa_y}\n"
+        reg = f"# LSEM:\n{reg}"
 
         # correlations
-        corr = "\n".join([f"{n1[0]} ~~ {n2[0]}" for n1, n2 in self.bidirected])
-        corr = "\n".join([f"{n1} ~~ {n2}" for n1, n2 in self.undirected])
+        corr = "\n".join([f"{n1[0]} ~~ {n2[0]}" for n1, n2 in G.bidirected])
+        corr += "\n".join([f"{n1} ~~ {n2}" for n1, n2 in G.undirected])
+        if corr:
+            corr = f"# Correlations:\n{corr}"
 
-        # if self.exposure and self.outcome:
-        #     # indirect effects
-        #     self.__graph2sem_indirect_effect__(G, parameter_fmt)
+        # indirect effects
+        if G.exposure and G.outcome:
+            ind = self._graph2sem_indirect_effect(G, parameter_fmt)
+        else:
+            ind = ''
         
-        
-        sem = f"# LSEM:\n{reg}#Correlations\n{corr}"
+        sem = f"{reg}{corr}{ind}"
+        return sem
 
-    def __graph2sem_indirect_effect__(self, parameter_fmt):
+    def _graph2sem_indirect_effect(self, G, parameter_fmt):
         """
         edges    : list of (u, v) directed edges
         exposure, outcome : compute indirect paths from exposure to outcome
@@ -2983,23 +3247,23 @@ class estimate():
         returns  : list of (path_nodes, effect_str)
         """
         # build adjacency
-        edges = self.directed
-        exposure = self.exposure
-        outcome = self.outcome
+        edges = G.directed
+        exposure = G.exposure[0]
+        outcome = G.outcome[0]
 
         adj = defaultdict(list)
         for u, v in edges:
             adj[u].append(v)
 
         # enumerate simple paths (DFS)
-        results = []
+        ind_effects = []
 
         # recursive function
         def dfs(node, visited, path):
             if node == outcome and len(path) >= 3:  # indirect: at least 2 edges
                 # build product beta terms for edges along the path
                 terms = [parameter_fmt.format(cause=path[i], effect=path[i+1]) for i in range(len(path)-1)]
-                results.append( (path[:], " * ".join(terms)) )
+                ind_effects.append( (path[:], " * ".join(terms)) )
                 return
             for nxt in adj[node]:
                 if nxt in visited:       # avoid cycles
@@ -3010,80 +3274,22 @@ class estimate():
                 path.pop()
                 visited.remove(nxt)
 
+        # this wil fill in the info and save it in the variable ind_effects
         dfs(exposure, {exposure}, [exposure])
-        return results
 
-    def __parse_sem__(self, SEM: str):
-        """
-        Parse a SEM description and return:
-          dag          : str   (each line  'child <- parent')
-          edge_label   : dict  {(child,parent): label}
-          nodes_role    : dict  {'Latent': [ ... ]}
-        """
-        sem = SEM
-        edge_label, edges, latents = {}, set(), set()
-        lines = [l.strip() for l in sem.splitlines()
-                 if l.strip() and not l.lstrip().startswith('#')]
+        res = ''
+        if ind_effects:
+            for ind in ind_effects:
+                parameter = f"beta_{'.'.join(ind[0])}"
+                res += f"{parameter} := {ind[1]}"
+            res = f"# Indirect effects:\n{res}"
 
-        for ln in lines:
-            # ---------- structural equation ------------------------------------
-            if "~" in ln and "=~" not in ln and ":=" not in ln:
-                lhs, rhs = map(str.strip, ln.split("~", 1))
+        return res
 
-                # Pass-1: variables that belong to *true* interactions (≥2 factors)
-                vars_in_interact = set()
-                for term in rhs.split('+'):
-                    term = term.strip()
-                    m = re.match(r"\([^)]+\)\s*\*\s*(.*)", term)  # strip (par) *
-                    rest = m.group(1) if m else term
-                    factors = [f.strip() for f in rest.split('*')
-                               if f.strip() and not re.fullmatch(r"[0-9.]+", f)]
-                    if len(factors) > 1:                 # <- only real interactions
-                        vars_in_interact.update(factors)
-
-                # Pass-2: build edges / labels
-                for term in rhs.split('+'):
-                    term = term.strip()
-                    m = re.match(r"\(([^)]+)\)\s*\*\s*(.*)", term)
-                    par, rest = m.groups() if m else (None, term)
-                    factors = [f.strip() for f in rest.split('*')
-                               if f.strip() and not re.fullmatch(r"[0-9.]+", f)]
-
-                    for f in factors:
-                        edges.add((lhs, f))
-
-                    if par and len(factors) == 1 and factors[0] not in vars_in_interact:
-                        edge_label[(lhs, factors[0])] = par
-
-            # ---------- latent definition --------------------------------------
-            elif "=~" in ln:
-                latent, rhs = map(str.strip, ln.split("=~", 1))
-                latents.add(latent)
-                for term in rhs.split('+'):
-                    for f in map(str.strip, term.split('*')):
-                        if f and not re.fullmatch(r"[0-9.]+", f):
-                            edges.add((latent, f))
-
-        dag_str = "\n".join(sorted(f"{c} <- {p}" for c, p in edges))
-        nodes_role = {"Latent": sorted(latents)} if latents else {}
-        return dag_str, edge_label, nodes_role
-    
-    def __assumptions__(self):
-        assumptions = {
-            # estimation, and inference
-            "functional_form": {
-                "name"       : "Functional Form Assumptions",
-                "usage"      : ['estimation', 'inference'],
-                "definition" : ("Parametric/semi-parametric restrictions (e.g., linearity, additivity, "+
-                                "monotonicity, non-Gaussian noise)."),
-                "level"      : "Distributional parameterization",
-                "role"       : "Adds leverage for identification/orientation (e.g., LiNGAM) or consistent estimation.",
-                "violation"  : "Misspecification bias; identifiability/orientation results may fail.",
-                "examples"   : ["Linearity (LSEM)", "Additive noise (ANM)", "Non-Gaussian errors (LiNGAM)", "Monotonicity"],
-                "notes"      : "Helpful for both discovery (edge orientation) and identification (parameter identifiability)."
-            }
-            }
-            
+    def __repr__(self):
+        self.summary(style="full")
+        return ''
+               
 class examples:
     """
     Registry of example DAGs.
@@ -3113,13 +3319,25 @@ class examples:
     def _get_examples(which=None, *args, **kws):
         all_examples = {
             "Not identifiable" : examples._example_not_identifiable(*args, **kws),
-            "One confounding"  : examples._example_one_confounding(*args, **kws),
-            "Two confoundings" : examples._example_two_confoundings(*args, **kws),
+            "One confounder"  : examples._example_one_confounder(*args, **kws),
+            "Two confounders" : examples._example_two_confounder(*args, **kws),
             "Front-door"       : examples._example_front_door(*args, **kws),
             "IV with 1 instrument"  : examples._example_iv_1_instrument(*args, **kws),
             "IV with 3 instruments"  : examples._example_iv_3_instruments(*args, **kws),
-            "SoO, IV, and do identified with 1 confounder": examples._example_soo_iv_do_one_counfounder__(*args, **kws),
+            "SoO, IV, and do identified with 1 confounder": examples._example_soo_iv_do_one_counfounder(*args,
+                                                                                                        **kws),
+            "Mediation: 2 sequential 1 confounder" : examples._example_mediation_2_sequential_1_confounder(*args,
+                                                                                                           **kws),
             # "Back-door": self._back_door(),
+            # Pearl's book
+            "Pearl Example 1.1 (a)"  : examples._example_pearl_fig_1_1_a(*args, **kws),
+            "Pearl Example 1.1 (b)"  : examples._example_pearl_fig_1_1_b(*args, **kws),
+            "Pearl Example 1.2"  : examples._example_pearl_fig_1_2(*args, **kws),
+            "Pearl Example 1.3 (a)"  : examples._example_pearl_fig_1_3_a(*args, **kws),
+            "Pearl Example 1.3 (b)"  : examples._example_pearl_fig_1_3_b(*args, **kws),
+            "Pearl Example 3.1"  : examples._example_pearl_fig_3_1(*args, **kws),
+            "Pearl Example 3.4"  : examples._example_pearl_fig_3_4(*args, **kws),
+            "Pearl Example 3.5"  : examples._example_pearl_fig_3_5(*args, **kws),
         }
         res = all_examples[which] if which else all_examples
         return res
@@ -3150,7 +3368,7 @@ class examples:
         labels = None
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
 
-    def _example_one_confounding(*args, **kws):
+    def _example_one_confounder(*args, **kws):
         dag = """
         D  -> Y
         Z1 -> {D, Y}
@@ -3160,7 +3378,7 @@ class examples:
         labels = {'Z1':"$Z_1$"}
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
 
-    def _example_two_confoundings(*args, **kws):
+    def _example_two_confounder(*args, **kws):
         dag = """
         D  -> Y
         Z1 -> {D, Y}
@@ -3245,7 +3463,7 @@ class examples:
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
                     edge_label=edge_labels)
 
-    def _example_soo_iv_do_one_counfounder__(*args, **kws):
+    def _example_soo_iv_do_one_counfounder(*args, **kws):
         dag  = """
         Z  -> D -> Y
         D <- X1 -> Y
@@ -3265,3 +3483,229 @@ class examples:
                   }
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
                     edge_label=edge_labels)
+
+    def _example_mediation_2_sequential_1_confounder(*args, **kws):
+        dag  = """
+        D -> M1 -> M2 -> Y
+        D -> Y
+        D  <- Z -> Y
+        """
+        pos = {'D' : (0 , 0),
+               'M1': (.5, 1),
+               'M2': ( 1, 1),
+               'Y' : (1.5 , 0),
+               'Z': (.75, -1),
+               }
+        roles = {'Exposure': "D",
+                 'Outcome' : "Y",
+                 }
+        labels = {"M1":'$M_1$',
+                  "M2":'$M_2$',
+                  }
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
+
+    def _example_pearl_fig_1_1_a(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        W -> Z -> Y
+        Z <-> X -> Y
+        """
+        pos = {'Z': ( 0, 0),
+               'X': ( 1, 0),
+               "Y": ( .5,-1),
+               'W': ( 0, 1),
+               }
+        roles = {'Exposure': "X",
+                 'Outcome' : "Y"
+                 }
+        edge_labels = None
+        labels = None
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+
+    def _example_pearl_fig_1_1_b(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        Z -> {W, Z, Y}
+        Y -> X
+        """
+        pos = {'Z': ( 0, 0),
+               'X': ( 1, 0),
+               "Y": ( .5,-1),
+               'W': ( 0, 1),
+               }
+        roles = {'Exposure': "Z",
+                 'Outcome' : "Y"
+                 }
+        edge_labels = None
+        labels = None
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+
+    def _example_pearl_fig_1_2(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        X1 -> {X2, X3} -> X4 -> X5
+        """
+        pos = {"X1": ( 0, 0),
+               "X2": ( 1, -1),
+               "X3": ( -1,-1),
+               "X4": ( 0, -2),
+               "X5": ( 0, -3),
+               }
+        roles = {'Exposure': "X1",
+                 'Outcome' : "X5"
+                 }
+        edge_labels = None
+        labels = {"X1" : 'X1 (Season)',
+                  "X2" : "X2 (Rain)",
+                  "X3" : "X3 (Sprinkler)",
+                  "X4" : 'X4 (Wet)',
+                  "X5" : 'X5 (Slippery)'
+                  }
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+
+    def _example_pearl_fig_1_3_a(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        X -> Z1 <- Z2 <- Z3 <- Y
+        Z1 <-> Z3
+        """
+        pos = {"X":  (0 ,0),
+               "Z1": (1 ,0),
+               "Z2": (2 ,0),
+               "Z3": (3 ,0),
+               "Y" : (4 ,0),
+               }
+        roles = {'Exposure': "X",
+                 'Outcome' : "Y"
+                 }
+        edge_labels = None
+        labels = None
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+        
+    def _example_pearl_fig_1_3_b(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        X -> Z2 -> Z1 -> X
+        Y -> Z2
+        """
+        pos = {"X":  (0 ,0),
+               "Z1": (1 ,1),
+               "Z2": (2 ,0),
+               "Y" : (3 ,0),
+               }
+        roles = {'Exposure': "X",
+                 'Outcome' : "Y"
+                 }
+        edge_labels = None
+        labels = None
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+
+    def _example_pearl_fig_3_1(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        X -> {Z2, Y}
+        Z2 -> {Z3, Y}
+        Z3 -> Y
+        Z1 -> Z2
+        B -> Z3
+        Z0 -> {X, Z1, B}
+        """
+        pos = {"X":  (0 ,0),
+               "Z0": (1 ,1),
+               "Z1": (1 ,.5),
+               "Z2": (1 ,0),
+               "Z3": (2 ,0),
+               "B":  (1.5 ,.5),
+               "Y" : (1 ,-.5),
+               }
+        roles = {'Exposure': "X",
+                 'Outcome' : "Y",
+                 'Latent'  : ['Z0', 'B']
+                 }
+        edge_labels = None
+        labels = {"Z0": "$Z_0$",
+                  "Z1": "$Z_1$",
+                  "Z2": "$Z_2$",
+                  "Z3": "$Z_3$",
+                  }
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+        
+    def _example_pearl_fig_3_4(*args, **kws):
+        """
+        Source:
+        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        """
+        dag  = """
+        X1 -> {X3, X4}
+        X2 -> {X4, X5}
+        X3 -> Xi
+        X4 -> {Xi, Xj}
+        X5 -> Xj
+        X6 -> Xj
+        Xi -> X6
+        """
+        pos = {"Xi":  (0, 0),
+               'Xj':  (2, 0),
+               "X1":  (0, 2),
+               "X2":  (2, 2),
+               "X3":  (0, 1),
+               "X4":  (1, 1),
+               "X5":  (2, 1),
+               "X6":  (1, 0),
+               }
+        roles = {'Exposure': "Xi",
+                 'Outcome' : "Xj",
+                 }
+        edge_labels = None
+        labels = {"Xi": "$X_i$",
+                  "Xj": "$X_j$",
+                  "X1": "$X_1$",
+                  "X2": "$X_2$",
+                  "X3": "$X_3$",
+                  "X4": "$X_4$",
+                  "X5": "$X_5$",
+                  "X6": "$X_6$",
+                  }
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels,
+                    edge_label=edge_labels)
+
+    def _example_pearl_fig_3_5(*args, **kws):
+        dag  = """
+        U -> {X, Y}
+        X  -> Z -> Y
+        """
+        pos = {'X': (0 , 0),
+               'Z': (.5, 0),
+               'Y': (1 , 0),
+               'U': (.5, 1),
+               }
+        roles = {'Exposure': "X",
+                 'Outcome' : "Y",
+                 "Latent"  : "U"
+                 }
+        labels = None
+        return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)

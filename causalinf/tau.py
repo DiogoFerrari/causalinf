@@ -21,7 +21,7 @@ def _print2latex(expression, add_alignement_char=False):
         'i': '_i',
         "Ex[": '\\mathbb{E}_{X}[',
         'E[': '\\mathbb{E}[',
-        '|': '\\mid',
+        '|': '\\mid ',
         '[': '\\left[',
         ']': '\\right]',
         '(': '\\left(',
@@ -133,7 +133,7 @@ PARAMETER = {
     },
     "cACE" : {
         'name'       : "Conditional Average Causal Effect",
-        "parameter"  : "tau_{ACE}(d, d')",
+        "parameter"  : "tau_{cACE}(d, d')",
         "definition" : "E[Yi(d) - Yi(d') | Ci]",
     },
     "ACDE" : {
@@ -143,7 +143,7 @@ PARAMETER = {
     },
     "cACDE" : {
         'name'       : "Conditional Average Controlled Direct Effect",
-        "parameter"  : "tau_{ACE}(d, d', m)",
+        "parameter"  : "tau_{cACDE}(d, d', m)",
         "definition" : "E[Yi(d, m) - Yi(d', m) | Ci]",
     },
     "LATE" : {
@@ -170,8 +170,8 @@ IDENTIFICATION = {
         },
         "ACDE" : {
             'parameter' : _par2id('ACDE', "SoO"),
-            False       : "E[Yi | Di=d, Mi] - E[Yi | Di=d', Mi]",
-            True        : "Ex[E[Yi | Di=d, Mi, Xi]] - Ex[E[Yi | Di=d', Mi, Xi]]",
+            False       : "E[Yi | Di=d, Mi=m] - E[Yi | Di=d', Mi=m]",
+            True        : "Ex[E[Yi | Di=d, Mi=m, Xi]] - Ex[E[Yi | Di=d', Mi=m, Xi]]",
             'where'     : {False: '', True: ''}
         },
         "cACDE" : {

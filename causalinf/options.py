@@ -5,6 +5,7 @@ from contextlib import contextmanager
 
 @dataclass(frozen=True)
 class Options:
+    print_fit_stats: bool = False
     print_assumptions: bool = False
     print_assumptions_verbose: bool = False
 
