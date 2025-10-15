@@ -536,37 +536,6 @@ class DAG:
         if not self.__identification__:
             self.identification_analysis()
         return self.__identification__.assumptions(category=category, verbose=verbose)
-
-    # # estimation
-    # def estimate(self,
-    #              formula=None,
-    #              data=None,
-    #              model='auto',
-    #              family = 'auto',
-    #              conditional = None,
-    #              se_cluster=None,
-    #              se_robust=None,
-    #              # 
-    #              model_kws={},
-    #              sem=None,
-    #              # 
-    #              weights=1,
-    #              *args, **kws):
-    #     self.fit = estimate(
-    #              G=self,
-    #              formula=formula,
-    #              data=data,
-    #              model=model,
-    #              family = family,
-    #              conditional = conditional,
-    #              se_cluster=se_cluster,
-    #              se_robust=se_robust,
-    #              # 
-    #              model_kws=model_kws,
-    #              weights=1,
-    #              *args,
-    #              **kws
-    #     )
     # -------------------------------------------------
 
     # plots -------------------------------------------
@@ -575,6 +544,7 @@ class DAG:
              graph_style = 'default',
              nodes_label=None,
              nodes_position=None,
+             estimates=None,
              # node
              node_subset=None,
              node_shape=None,
@@ -649,6 +619,8 @@ class DAG:
 
         Parameters:
             G (nx.DiGraph): The input DAG with optional edge attributes 'style', 'color', 'curved'.
+            estimates: obj
+                A LSEM object from the cass causalinf.scm.estimate
             nodes_position (dict): Optional node positions for layout.
             nodes_role (dict): Optional dict with keys 'latent', 'exposure', 'outcome' listing node names.
             use_arc (bool): If True, draw dotted arcs between children of latent confounders instead of drawing latent nodes.
@@ -667,6 +639,9 @@ class DAG:
                              to adjust the location of the labels)
                   All features can be overwrittied by specifying the value of the parameters for the plot.
         """
+        assert estimates is None or isinstance(estimates, estimate), (
+            "'estimates' must be either None or an object of causalinf.scm.estimate ")
+
         default_usetex = plt.rcParams["text.usetex"] 
         plt.rcParams["text.usetex"] = usetex
         plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
@@ -675,6 +650,10 @@ class DAG:
         pars = dict(locals())      # {'node_position':..., 'arg2':..., 'args':(...), 'kws':{...}}
         args = pars.pop('args') # extra positional
         kws  = pars.pop('kws')  # extra keyword
+
+        # use estimates as labels
+        if estimates is not None:
+            edge_label, edge_label_pvalue = self.__plot_collect_labels_estimate__(estimates)
 
         # figure 
         # ------
@@ -1565,16 +1544,41 @@ class DAG:
             adj[label] = adj[node]
         return adj
 
+    def __plot_collect_labels_estimate__(self, estimates, show_sig=True, show_se=False, show_ci=False):
+        tab = (estimates.est.parameters
+               .separate('term',  ['_to', '_from'], '~', remove=False)
+               .mutate(_to = tp.str_trim('_to'),
+                       _from = tp.str_trim('_from')
+                       )
+               .filter(tp.col("_from")!='')
+               .filter(tp.col("_to")!='')
+               .drop_null('_from', '_to')
+               )
+        digits = 4
+        ests = {}
+        pvalues = {}
+        for row in tab.iterrows():
+            est = round(row['estimate'], digits)
+            ests |= {(row['_from'], row['_to']): est}
+
+            pvalue = row['pvalue']
+            pvalues |= {(row['_from'], row['_to']): pvalue}
+
+        return ests, pvalues
+
     # styles
     def __plot_get_style__(self, graph_style):
         if graph_style=='default':
             aes = self.__plot_get_style_default__()
         
-        if graph_style=='rectangle':
+        elif graph_style=='rectangle':
             aes = self.__plot_get_style_rectangle__()
 
-        if graph_style=='pearl':
+        elif graph_style=='pearl':
             aes = self.__plot_get_style_pearl__()
+
+        else:
+            aes = self.__plot_get_style_default__()
 
         return aes
     
@@ -3118,33 +3122,18 @@ class estimate:
         'GLSEM': use generalied linear structural equation models
         'NPSEM': uses nonparametric structural equation estimation
                  In this case, it uses GAM.
+    
+    se_cluster : str
+        Name of the variable to cluster the std. errors. 
 
-    family : str 
-        Defines the family of the outcome variable distribution:
-        'auto', 'gaussian', 'logit', 'multinomial'
-        If 'auto', it detects the type of the outcome and
-        automatically set the distribution family using:
-        - binary: logit
-        - categorical: multinomial
-        - continuous: gaussian
-        For linear probability model, set family='gaussian' when
-        using binary outcomes
+    se : str or None
+       See the documentation of the specific model used. Example:
+       causalinf.models.lsem (for LSEM)
 
-    conditional: str, list, or None (optional)
-        Used only if formula is not provided
-        Names of the variables for conditional average effects estimation.
-        Note that this is not adjustment variables, but a variables
-        to condition the estimation
-
-    kws: dict (optional)
-        Used in SoO and IV:
-
-    se_cluster : str with the name of the variable to cluster the std. errors
-        Ignored if se_robust is used
-
-    se_robust : boolean
-       If true, use Sandwich estimator, robust to mild non-normality
-       See lavaan estimator = "MLR"
+    Specific models
+    ---------------
+    For documentation of model-specific arguments, see models. Example:
+    - causalinf.models.lsem (for LSEM)
     """
     def __init__(self,
                  G,
@@ -3152,9 +3141,8 @@ class estimate:
                  data=None,
                  model='auto',
                  family = 'auto',
-                 conditional = None,
                  se_cluster=None,
-                 se_robust=None,
+                 se=None,
                  # 
                  model_kws={},
                  sem=None,
@@ -3169,12 +3157,12 @@ class estimate:
         self.formula = formula or self._graph2sem(G)
         self.family = family
         # 
+        self.G = G
         self.outcome = G.outcome[0]
         self.exposure =G.exposure
-        self.conditional = conditional
         #
         self.se_cluster = se_cluster
-        self.se_robust = se_robust
+        self.se = se
 
         if self.model in 'LSEM':
             self._lsem(G, data=data, weights=weights, *args, **kws)
@@ -3184,8 +3172,8 @@ class estimate:
         est =  lsem(formula=self.formula,
                     data=data,
                     weights=weights,
+                    se=self.se,
                     se_cluster=self.se_cluster,
-                    se_robust=self.se_robust,
                     *args, **kws)
         self.fit = est.fit
         self.est = est.est
@@ -3215,7 +3203,10 @@ class estimate:
             print(f'Statistics {stats} not available.')
         return res
 
-    # ---------------------------------
+    @ut.copy_docstring(DAG.plot)
+    def plot(self, *args, **kws):
+        self.G.plot(estimates=self, *args, **kws)
+
     def _graph2sem(self, G, parameter_fmt="(beta_{cause}.{effect})"):
         # regression lines
         reg = ''

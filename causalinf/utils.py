@@ -43,8 +43,10 @@ def get_stars(pvalue=None, sig_levels=None, outcome='symbols', latex=False):
     sorted_levels = sorted(sig_levels.values())
 
     if outcome=='codes':
-        res =  "; ".join([f"{star} p<{pvalue}" for star, pvalue in sig_levels.items()])
-        res = res.replace("<", ' \\textless ') if latex else res
+        if not latex:
+            res =  "; ".join([f"{star} p<{pvalue}" for star, pvalue in sig_levels.items()])
+        else:
+            res =  "; ".join([f"{star} $p<{pvalue}$" for star, pvalue in sig_levels.items()])
     else:
         pvalue = pvalue[0]
         if pvalue is not None:
@@ -61,12 +63,13 @@ def get_stars(pvalue=None, sig_levels=None, outcome='symbols', latex=False):
         res = symbol
     return res
 
-def detect_variable_type(data, variables=None) -> dict:
+def detect_variable_type(data, variables=None, ncats_threshold=5) -> dict:
     """
     Classifies all columns in a Polars DataFrame.
 
     Args:
-        df: The input Polars DataFrame.
+        data: The input Polars DataFrame.
+        variables : name of the variables to detect type
 
     Returns:
         A dictionary mapping column names to their classified types.
@@ -75,7 +78,7 @@ def detect_variable_type(data, variables=None) -> dict:
     cols = [cols] if isinstance(cols, str) else cols
     df = data.to_polars()
     classifications = {
-        col: _detect_variable_type_ancillary(df[col])
+        col: detect_variable_type_ancillary(df[col], ncats_threshold=ncats_threshold)
         for col in cols
     }
     return classifications
@@ -88,8 +91,8 @@ def detect_variable_type_ancillary(s: pl.Series, ncats_threshold: int = 5) -> st
     s = s.drop_nulls()
     
     # 1. Check for Ordered Categorical type first
-    if isinstance(s.dtype, pl.Enum) and s.dtype.is_ordered():
-        return 'ordered'
+    if isinstance(s.dtype, pl.Enum):# and s.dtype.is_ordered():
+        return 'ordinal'
     
     # 2. Check for binary columns
     # This captures booleans and any column with exactly two unique values.
@@ -118,7 +121,7 @@ def get_family(data, outcome):
         family = 'logit'
     elif outcome_type == 'categorical':
         family = 'multinomial'
-    elif outcome_type == 'ordered':
+    elif outcome_type == 'ordinal':
         family = 'probit'
     elif outcome_type == 'continuous':
         family = 'gaussian'
@@ -185,9 +188,9 @@ def printDF(tab, rows=1000, cols=1000, col_width=1000):
     if isinstance(tab, pl.DataFrame):
         with pl.Config(tbl_rows=rows,
                        tbl_cols=cols,
-                       tbl_width_chars=col_width,
                        tbl_hide_dataframe_shape=True,
                        tbl_hide_column_data_types=True,
+                       tbl_width_chars=1000,
                        fmt_str_lengths=col_width,
                        tbl_formatting='NOTHING'
                        ):
@@ -203,6 +206,14 @@ def copy_docstring(from_func):
         to_func.__doc__ = from_func.__doc__
         return to_func
     return decorator
+
+def invert_dict(input_dict):
+    inverted = {}
+    for key, value in input_dict.items():
+        if value not in inverted:
+            inverted[value] = []
+        inverted[value].append(key)
+    return inverted
 
 class summary:
     """
@@ -257,9 +268,7 @@ class summary:
         table in the format of the extensions provided. Available are
         xls, xlsx, and csv.
         If None, it will not save copies of the output.
-    digits, digits_fit: (int)
-        Digits to show in the estimates and fit statistics, respectively.
-
+    
 
     show_fit (bool or list)
         If False, omit fit statistics; If True, shows the stats listed in
@@ -272,6 +281,12 @@ class summary:
         significance level indicators (sig), whenever available,
         appears alongside the parameter estimates. This is ignored
         when output='text' and compare='None'
+
+    digits, digits_fit: (int)
+        Digits to show in the estimates and fit statistics, respectively.
+
+    col_width: int
+        Length of the column widths in the printed summary
 
     latex_kws :
         Keywords from tibble.to_latex()
@@ -290,6 +305,8 @@ class summary:
                  show_fit = True,
                  digits = 4,
                  digits_fit = 2,
+                 col_width = 1000,
+                 col_width_term = 20,
                  # latex args
                  latex_kws=None,
                  fn = None,
@@ -314,30 +331,35 @@ class summary:
         self.fn = fn
         self.save_style = save_style
         self.save_copies = save_copies
+        self.col_width = col_width
+        self.col_width_term = col_width_term
 
         self.outcome = model.outcome
         self.exposure = model.exposure
 
         self.collect_models(model, model_name, compare)
         self.merge_models()
+        self.collect_info()
 
         # # implicit parameters
         self.id_strategy = kws.get("id_strategy", '')
         self.formula = kws.get("formula", '')
         self.latex_replace = kws.get("latex_replace", None) ## for latex only
+        self.estimator = model.est.fit['Estimator']
+        self.footnote_added = False # used to avoid duplicating footnote entries
 
         # keep this order
         self._save(fn=self.fn, silent=False)
         self._save_copies()
         self._output(self.style)
 
-
     def collect_models(self, model, model_name, compare):
         assert isinstance(compare, list | dict | None), "'compare' must be a list of dict."
         model = {model_name: {'parameters': self.collect_summary_tidy_formatted(model.est.parameters, model_name),
                               'parameters_full': self.collect_summary_tidy(model.est.parameters),
                               'fit':model.est.fit,
-                              'fit_tidy':model.est.fit_tidy(colname=model_name, digits=self.digits_fit)
+                              'fit_tidy':model.est.fit_tidy(colname=model_name, digits=self.digits_fit),
+                              'info':model.est.info
                               }}
         if not compare:
             compare = {}
@@ -351,7 +373,8 @@ class summary:
             compare = {model_name:{'parameters':self.collect_summary_tidy_formatted(model.est.parameters, model_name),
                                    'parameters_full': self.collect_summary_tidy(model.est.parameters),
                                    'fit': model.est.fit,
-                                   'fit_tidy':model.est.fit_tidy(colname=model_name, digits=self.digits_fit)
+                                   'fit_tidy':model.est.fit_tidy(colname=model_name, digits=self.digits_fit),
+                                   'info':model.est.info
                                    } for model_name, model in compare.items()}
 
         models = model | compare
@@ -402,18 +425,21 @@ class summary:
             concise = self.merge_models_concise(concise, summary['parameters'], fit_stats)
             full = self.merge_models_full(full, summary['parameters_full'], model_name, fit_stats)
         self.merged = {'concise':concise, 'full':full}
-        
+
     def merge_models_concise(self, base, to_merge, fit_stats):
         if self.show_fit:
             to_merge = to_merge.bind_rows(fit_stats)
 
         if base.nrow>0:
             base = base.full_join(to_merge, on='term', suffix='_right')
-            merged = base.mutate(term = tp.case_when(tp.col('term')!=tp.col('term_right'),
-                                                   tp.col('term')+tp.col('term_right'),
-                                                   True, tp.col('term')
-                                                   ))\
-                       .drop('term_right')
+            merged = (base
+                      .replace_null({'term':'', 'term_right':''})
+                      .mutate(term = tp.case_when(tp.col('term')!=tp.col('term_right'),
+                                                  tp.col('term')+tp.col('term_right'),
+                                                  True, tp.col('term')
+                                                  ))
+                      .drop('term_right')
+                      )
         else:
             merged = to_merge
 
@@ -432,6 +458,12 @@ class summary:
         merged = base.bind_rows(to_merge)
         return merged
 
+    def collect_info(self):
+        info = []
+        for model_name, model_info in self.models.items():
+            info += [f"{model_name}: {model_info['info']}"]
+        self.info = '; '.join(info)
+        
     def _output(self, style):
         self.res_latex = self._output_latex(style)
         self.res_tibble = self._output_tibble(style)
@@ -459,12 +491,15 @@ class summary:
         Summary:
         --------\
         """))
-        # tab.print()
-        printDF(tab.to_polars().with_columns(pl.all().cast(pl.Utf8)).fill_null('--'))
+        tab = tab.mutate(term = tp.map(['term'], lambda col: [*col][0][:self.col_width_term]))
+        printDF(tab.to_polars().with_columns(pl.all().cast(pl.Utf8)).fill_null('--'),
+                col_width=self.col_width)
         print(line)
         print(get_stars(outcome='codes'))
+        if self.info is not None:
+            print(self.info)
 
-        return None
+        return ''
 
     def _output_tibble(self, style):
         return  self.merged[style]
@@ -476,9 +511,10 @@ class summary:
         footnotes = latex_kws.get("footnotes", {'l':[]})
         for align, note in footnotes.items():
             note = note if isinstance(note, list) else [note]
-            if align=='l':
-                footnotes[align] =  note + [ut.get_stars(outcome='codes', latex=True)]
-        latex_kws['footnotes'] = footnotes
+            if align=='l' and not self.footnote_added:
+                footnotes[align] =  note + [self.info] + [ut.get_stars(outcome='codes', latex=True)]
+            self.footnote_added = True
+        latex_kws['footnotes'] = footnotes 
 
         if not latex_kws.get("align", None):
             ncols = tab.ncol
@@ -497,7 +533,7 @@ class summary:
         else:
             res = 'concise'
         return res
-            
+
     def _save(self, fn, silent=False, *args, **kws):
         excel = ['.xls', '.xlsx']
         if fn:
