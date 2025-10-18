@@ -273,7 +273,7 @@ class DAG:
         else:
             inds = dagitty.localTests(self.__dagitty__, data=convert().tp2tibble(data), abbreviate_names=False)
             z = dnorm.ppf(1-alpha/2)
-            inds = convert().tibble2tp(inds, rownames2col='term')\
+            inds = convert().rtibble2tp(inds, rownames2col='term')\
                          .rename({'p.value':"pvalue",
                                   '2.5%':'lo',
                                   '97.5%':'hi',
@@ -541,7 +541,7 @@ class DAG:
     # plots -------------------------------------------
     def plot(self,
              # nodes
-             graph_style = 'default',
+             graph_style = None,
              nodes_label=None,
              nodes_position=None,
              estimates=None,
@@ -664,6 +664,7 @@ class DAG:
 
         # styles
         # ------
+        graph_style = graph_style or get_options()['graph_style']
         nodes_style, labels_style, edges_style = self.__plot_get_style__(graph_style)
 
         # nodes 
@@ -988,6 +989,10 @@ class DAG:
                 figs_res[fig_number] = [fig, axs]
         return figs_res
 
+    @ut.copy_docstring(DAG.plot)
+    def plot_equivalence_class(self, *args, **kws):
+        self.equivalence_class().plot(*args, **kws)
+
     def plot_identification(self,
                             content='default', # detailed, default
                             effect='total', #total, direct, or do, only if if_info=full
@@ -1053,7 +1058,6 @@ class DAG:
                                             **kws
                                             )
     
-
     # building graph --------------------------------
     def __build_graph__(self, graph):
         # Always convert to dict first, and from dict to other formats
@@ -1343,7 +1347,7 @@ class DAG:
     # R dagitty
     def __dagitty2inputs__(self, dag_dagitty):
         dag_str = ''
-        dag_df = convert().tibble2tp(dagitty.edges(dag_dagitty))
+        dag_df = convert().rtibble2tp(dagitty.edges(dag_dagitty))
         for a, b, e, *_ in dag_df.to_polars().iter_rows():
             dag_str += f"{a} {e} {b}\n"
 
@@ -3223,14 +3227,14 @@ class estimate:
 
         # indirect effects
         if G.exposure and G.outcome:
-            ind = self._graph2sem_indirect_effect(G, parameter_fmt)
+            ind = self._graph2sem_indirect_and_total_effects(G, parameter_fmt)
         else:
             ind = ''
         
         sem = f"{reg}{corr}{ind}"
         return sem
 
-    def _graph2sem_indirect_effect(self, G, parameter_fmt):
+    def _graph2sem_indirect_and_total_effects(self, G, parameter_fmt):
         """
         edges    : list of (u, v) directed edges
         exposure, outcome : compute indirect paths from exposure to outcome
@@ -3246,10 +3250,15 @@ class estimate:
         for u, v in edges:
             adj[u].append(v)
 
-        # enumerate simple paths (DFS)
+        dir_effect = []
+        tot_effect = []
         ind_effects = []
 
-        # recursive function
+        # direct effect
+        if outcome in adj[exposure]:
+            dir_effect = parameter_fmt.format(cause=exposure, effect=outcome)
+
+        # enumerate simple paths (DFS) recursive function
         def dfs(node, visited, path):
             if node == outcome and len(path) >= 3:  # indirect: at least 2 edges
                 # build product beta terms for edges along the path
@@ -3264,16 +3273,23 @@ class estimate:
                 dfs(nxt, visited, path)
                 path.pop()
                 visited.remove(nxt)
-
         # this wil fill in the info and save it in the variable ind_effects
         dfs(exposure, {exposure}, [exposure])
 
         res = ''
+        ind_effect_str = ''
         if ind_effects:
-            for ind in ind_effects:
-                parameter = f"beta_{'.'.join(ind[0])}"
-                res += f"{parameter} := {ind[1]}"
-            res = f"# Indirect effects:\n{res}"
+            for i, ind in enumerate(ind_effects):
+                parameter = f"Indirect_effect_{i+1}" # f"beta_{'.'.join(ind[0])}"
+                ind_effect_str += f"{parameter} := {ind[1]}\n"
+                tot_effect += [parameter]
+            res += f"# Indirect effects:\n{ind_effect_str}"
+        if dir_effect:
+            parameter = "Direct_effect"
+            res += f"# Direct effect:\n{parameter} := {dir_effect}"
+            tot_effect += [parameter]
+        if tot_effect:
+            res += f"\n# Total effect:\nTotal_effect := {' + '.join(tot_effect)}"
 
         return res
 

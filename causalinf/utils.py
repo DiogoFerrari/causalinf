@@ -253,6 +253,10 @@ class summary:
         - 'full' when compare=None and output='text'
         - 'concise' otherwise
 
+    omit (str)
+        A regular expression to match elements in the column terms.
+        Matched cases will be omitted.
+
     save_style  (str)
        Same as 'style', but to save the summary in a files based on
        'fn' and 'save_copies'
@@ -299,6 +303,7 @@ class summary:
                  compare=None,
                  output = 'text',
                  style = None,
+                 omit = None,
                  show_sig = True,
                  show_se =  False,
                  show_ci =  True,
@@ -321,6 +326,7 @@ class summary:
         self.model_name = model_name
         self.output = output
         self.style = style or self.get_style(compare, output)
+        self.omit = omit
         self.digits = digits
         self.digits_fit = digits_fit
         self.show_sig=show_sig
@@ -392,6 +398,11 @@ class summary:
                     # ci = tp.map(['lo', 'hi'], lambda col: f"({col[0]}, {col[1]})")
                     )
         )
+        if self.omit:
+            parameters = (
+                parameters
+                .filter(~tp.col("term").str.contains(self.omit))
+            )
         return parameters
 
     def collect_summary_tidy_formatted(self, parameters, model_name):
@@ -479,6 +490,9 @@ class summary:
     def _output_text(self, style):
         tab = self.merged[style].to_pandas().fillna('--')
         tab = self.merged[style]
+        if 'Id' in tab.names:
+            if tab.pull('Id').unique().len()==1:
+                tab = tab.drop('Id')
 
         line = "="*80
         print(dedent(f"""
