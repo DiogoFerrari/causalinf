@@ -1,23 +1,47 @@
 
 # Project information
-site_name: causalinf - User guide
+site_name: Causal Inference (causalinf)
 site_url: https://www.diogoferrari.com/causalinf
 repo_url: https://github.com/DiogoFerrari/causalinf
 repo_name: causalinf
 use_directory_urls: true
 
 nav:
-  - User Guide:
-    - Overview: index.md
-    - Installation: usage/installation.md
-    - Usage:
-      - DiD: usage/did.md
-      - IV: usage/iv.md
-      - Matching: usage/matching.md
-      - Mediation: usage/mediation.md
-      - RDD: usage/rdd.md
-      - SoO: usage/soo.md
-      - SCM: usage/scm.md
+  - Overview: index.md
+  - Installation:
+    - <font color="#a41034">Installation</font>: usage/installation.md
+  - Methods:
+    - <font color="#a41034">Overview</font>: methods/overview.md
+    - <font color="#a41034">GCM (Graphical Causal Models)</font>:
+      - Introduction: methods/gcm/introduction.md
+      - Build: methods/gcm/build.md
+      - Visualize: methods/gcm/plot.md
+      - Check Assumptions: methods/gcm/assumptions.md
+      - Identification Analysis: methods/gcm/identification.md
+    - <font color="#a41034">SCM (Structural Causal Models)</font>: methods/scm.md
+      # - Assumptions: methods/scm/assumptions.md
+      # - Estimate: methods/scm/estimate.md
+      # - Report: methods/scm/report.md
+    - <font color="#a41034">CBN (Causal Bayesian Networds)</font>: methods/cbn.md
+      # - Assumptions: methods/cbn/assumptions.md
+      # - Estimate: methods/cbn/estimate.md
+      # - Report: methods/cbn/report.md
+    - <font color="#a41034">SoO (Selection on Observables)</font>:
+      - Estimate: methods/soo/estimate.md
+      - Report: methods/soo/report.md
+    - <font color="#a41034">DiD (Difference-in-Differences)</font>:
+      - Estimate: methods/did/estimate.md
+      - Report: methods/did/report.md
+    - <font color="#a41034">IV (Instrumental Variables)</font>:
+      - Estimate: methods/iv/estimate.md
+      - Report: methods/iv/report.md
+    - <font color="#a41034"> RD (Regression discontinuity)</font>:
+      - Estimate: methods/rd/estimate.md
+      - Report: methods/rd/report.md
+  - Case Studies:
+    - <font color="#a41034">Overview</font>: case-studies/overview.md
+    - <font color="#a41034">DiD</font>:
+      - Minimal Wage Effect: case-studies/did-card1994minimum.md
   - API Reference: api.md
   - Releases: releases.md
 
@@ -40,25 +64,27 @@ theme:
       icon: material/brightness-4
       name: Switch to light mode
   logo: _css/causalinf-icon.png
-  features:
-    - navigation.tracking
-    - navigation.tracking
-    - navigation.instant
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.footer
-    - navigation.indexes
-    - content.tabs.link
-    - content.code.copy
   icon:
     repo: fontawesome/brands/github
   features:
+    # - toc.integrate  # combine right ToC into the left ToC
+    - toc.follow
+    - content.tabs.link
     - content.code.copy
+    - content.code.select
+    - content.code.copy
+    - content.code.annotate
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.path
-    - toc.integrate 
-    - navigation.sections
+    # - navigation.expand # start headings expanded
+    # - navigation.sections # if used, won't collapse the headings of right-side menu
+    - navigation.prune # fold the headings on the right-side that are not the focus
+    - navigation.tracking
+    - navigation.instant
+    - navigation.footer
+    - navigation.indexes
+
 
 # Preview controls
 strict: true
@@ -101,9 +127,24 @@ markdown_extensions:
   - pymdownx.superfences
   - md_in_html
   - pymdownx.blocks.caption
-  - pymdownx.superfences
+  # - pymdownx.superfences
+  # - pymdownx.tabbed:
+  #     alternate_style: true
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: vegalite
+          class: vegalite
+          format: !!python/name:mkdocs_charts_plugin.fences.fence_vegalite
+  - toc:
+      # permalink: true  # Adds a permalink icon to each heading
+      # permalink_title: Anchor link to this section for reference
+      # title: On this page # Custom title for the TOC
+      toc_depth: 4
 
 extra_javascript: 
-    - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  - https://cdn.jsdelivr.net/npm/vega@5
+  - https://cdn.jsdelivr.net/npm/vega-lite@5
+  - https://cdn.jsdelivr.net/npm/vega-embed@6

@@ -1,11 +1,16 @@
-
+---
+hide:
+  - toc
+  - navigation
+---
 
   <div class="image">
     <!-- <img src="https://github.com/DiogoFerrari/causalinf/blob/master/docs/causalinf.png?raw=True" alt="Description" style="max-width: 500px; margin-left: 10px"> -->
     <!-- <img src="./causalinf.png" alt="Description" style="max-width: 1000px; margin-left: 0px"> -->
 	<!-- NOTE: style="max-width: 100%; height: auto;"  makes the image auto-shrink for smartphones-->
+<div align="center">
     <img src="./_css/causalinf.png" alt="" style="max-width: 100%; height: auto;">
-
+</div>
   </div>
   
   
@@ -35,20 +40,25 @@
 <!-- dprint-ignore-end -->
 
 
- **causalinf** is a package for causal inference in Python. It provides a set of submodules for causal inference using different methods and identification strategies. They include:
+ **causalinf** is a module for **causal inference in Python**. It provides a set of submodules with implementation of different methods for causal inference. They include:
 
-1. Difference-in-Differences (**DiD**)
-2. Regression Discontinuity Design (**RDD**)
-3. Instrumental Variables (**IV**)
-4. Mediation analysis (**MA**)
-4. Matching Methods (**MM**)
-5. Selection on Observables (**SoO**)
-6. Structural Causal Models (**SCM**)
 
-For each method, a set of core functionalities are provided for: 
+1. [Graphical Causal Models](./methods/gcm/introduction) (**GCM**)
+       1. [Structural Causal Models](./methods/scm/) (**SCM**)
+	   2. [Causal Bayesian Networds](./methods/cbn/) (**CBN**)
+2. Selection on Observables (**SoO**)
+3. Difference-in-Differences (**DiD**)
+4. Instrumental Variables (**IV**)
+5. Regression Discontinuity (**RD**)
+6. Mediation analysis (**MA**)
+7. Matching Methods (**MM**)
 
-1. Evaluating the plausibility of causal identification **assumptions** 
-2. **Estimating** causal effects 
-3. Creating tables and plots with **summary results**
-4. Conducting **sensitivity** analyses 
-5. Producing model **diagnostics** 
+
+For each method, these **functionalities** are provided:
+
+
+1. Assessment of the plausibility of causal identification **assumptions**
+2. **Estimation** and **inference** of the causal effects
+3. **Reporting** the summary results (text, LaTeX, etc.)
+4. Conducting **sensitivity** analysis
+

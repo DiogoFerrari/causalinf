@@ -1,0 +1,2 @@
+The examples are categorized according to causal method. Use the menu
+for navigation.

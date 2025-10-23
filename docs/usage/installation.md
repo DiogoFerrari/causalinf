@@ -1,3 +1,11 @@
+---
+
+hide:
+
+-   toc
+-   navigation
+
+---
 
 You can install causalinf with `pip`{.verbatim}:
 

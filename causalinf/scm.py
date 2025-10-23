@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="rpy2.rinterface")
+# 
 from . import utils as ut
 from .models import lsem
 from .options import get_options
@@ -21,7 +24,6 @@ from rpy2.robjects import NULL
 # 
 dagitty = importr("dagitty")
 dosearch = importr("dosearch")
-
 
 __all__ = ['DAG', 'estimate', 'examples']
 
@@ -86,13 +88,16 @@ class DAG:
             "nodes_position must be None or dict")
         assert nodes_label is None or isinstance(nodes_label, dict), (
             "nodes_label must be None or dict")
+        assert nodes_role is None or isinstance(nodes_role, dict), (
+            "nodes_roles must be None or dict")
 
         # deal with user provided roles in low case
         key_roles = ['Outcome', 'Exposure', "Latent"]
-        for role in  key_roles:
-            if role.lower() in nodes_role.keys():
-                nodes_role[role] = nodes_role[role.lower()]
-                nodes_role.pop(role.lower())
+        if nodes_role:
+            for role in  key_roles:
+                if role.lower() in nodes_role.keys():
+                    nodes_role[role] = nodes_role[role.lower()]
+                    nodes_role.pop(role.lower())
             
 
         # graph
@@ -606,6 +611,7 @@ class DAG:
              figsize = [6, 4],
              usetex = True,
              ax=None,
+             show_plot=None,
              *args,
              **kws
              ):
@@ -645,6 +651,7 @@ class DAG:
         default_usetex = plt.rcParams["text.usetex"] 
         plt.rcParams["text.usetex"] = usetex
         plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
+        show_plot = show_plot if not None else get_options('show_plot')
 
         # collect arguments
         pars = dict(locals())      # {'node_position':..., 'arg2':..., 'args':(...), 'kws':{...}}
@@ -664,7 +671,7 @@ class DAG:
 
         # styles
         # ------
-        graph_style = graph_style or get_options()['graph_style']
+        graph_style = graph_style or get_options('graph_style')
         nodes_style, labels_style, edges_style = self.__plot_get_style__(graph_style)
 
         # nodes 
@@ -848,7 +855,8 @@ class DAG:
 
         plt.axis("off")
         plt.tight_layout()
-        plt.show()
+        if show_plot:
+            plt.show()
         plt.rcParams["text.usetex"] = default_usetex
 
         return plt, ax
@@ -989,7 +997,7 @@ class DAG:
                 figs_res[fig_number] = [fig, axs]
         return figs_res
 
-    @ut.copy_docstring(DAG.plot)
+    @ut.copy_docstring(plot)
     def plot_equivalence_class(self, *args, **kws):
         self.equivalence_class().plot(*args, **kws)
 
@@ -1157,10 +1165,8 @@ class DAG:
         return res
 
     def __graph_str2dict__(self):
-        """
-        Parse DAG string to properties of the graph: nodes, directed, 
-        bidirected, and undirected edges. 
-        """
+        # Parse DAG string to properties of the graph: nodes, directed, 
+        # bidirected, and undirected edges. 
         DAG = self.__graph_str_parsed__
         directed, undirected, bidirected = [], [], []
 
@@ -1403,12 +1409,10 @@ class DAG:
         return nodes
 
     def __chunked_ranges__(self, limit, n):
-        """
-        Split [0..limit] into chunks.
-        Each chunk has n elements, except:
-          - the last one may have fewer if not divisible, OR
-          - the last one may be larger if needed to include 'limit'.
-        """
+        # Split [0..limit] into chunks.
+        # Each chunk has n elements, except:
+        #   - the last one may have fewer if not divisible, OR
+        #   - the last one may be larger if needed to include 'limit'.
         start = 0
         idx = 0
         limit -=1
@@ -1423,12 +1427,10 @@ class DAG:
                 idx += 1
 
     def __edge_frozen_format__(self, edge):
-        """
-        Convert an edge into a canonical, hashable form.
-        - directed: ('A','B')
-        - undirected: frozenset({'A','B'})
-        - bidirected: frozenset({('A','B'),('B','A')})
-        """
+        # Convert an edge into a canonical, hashable form.
+        # - directed: ('A','B')
+        # - undirected: frozenset({'A','B'})
+        # - bidirected: frozenset({('A','B'),('B','A')})
         # undirected
         if isinstance(edge, (set, frozenset)):
             return frozenset(edge)
@@ -1448,9 +1450,9 @@ class DAG:
         raise ValueError(f"Unrecognized edge format: {edge}")
 
     def __edge_type__(self, edge):
-        """
-        Classify an edge as 'directed', 'bidirected', or 'undirected'.
-        """
+        # """
+        # Classify an edge as 'directed', 'bidirected', or 'undirected'.
+        # """
         # Undirected: set/frozenset of 2 nodes
         if isinstance(edge, (set, frozenset)):
             if all(isinstance(x, str) for x in edge) and len(edge) == 2:
@@ -1931,19 +1933,19 @@ class identification:
         self.identification_analysis(self, *args, **kws)
 
     def assumptions(self, category=None, verbose=False):
-        """
-        Return a list of assumption entries (with keys) that include the given usage category.
+        # """
+        # Return a list of assumption entries (with keys) that include the given usage category.
 
-        Parameters
-        ----------
-        category : str
-            An assumption category such as 'identification', 'discovery', 'estimation', 'inference'.
+        # Parameters
+        # ----------
+        # category : str
+        #     An assumption category such as 'identification', 'discovery', 'estimation', 'inference'.
 
-        Returns
-        -------
-        Print assumptions
-        If no matches are found, returns list of categories
-        """
+        # Returns
+        # -------
+        # Print assumptions
+        # If no matches are found, returns list of categories
+        # """
         category = (category or "").strip().lower()
 
         # collect categories
@@ -2073,12 +2075,12 @@ class identification:
 
     # dagitty (R dependencies)
     def identification_analysis(self, *args, **kws):
-        """
-        causal_probability: str
-            If 'always', always compute it; if 'maybe', compute it
-            only if there is not identification by adjustment for
-            total_effect_adj_set effect
-        """
+        # """
+        # causal_probability: str
+        #     If 'always', always compute it; if 'maybe', compute it
+        #     only if there is not identification by adjustment for
+        #     total_effect_adj_set effect
+        # """
         G = kws.get("G", None)
         exposure = kws.get("exposure", None)
         outcome = kws.get("outcome", None)
@@ -2461,16 +2463,16 @@ class identification:
         return res
     
     def __identification_analysis_iv_parse__(self, ivs_obj):
-        """
-        Convert the output of dagitty::instrumentalVariables (via rpy2) to a Python dict:
+        # """
+        # Convert the output of dagitty::instrumentalVariables (via rpy2) to a Python dict:
 
-        Returns:
-            {
-                '<IV 1>': ['adjstments': [...]},
-                '<IV 2>': ['adjstments': [...]},
-                ...
-            }
-        """
+        # Returns:
+        #     {
+        #         '<IV 1>': ['adjstments': [...]},
+        #         '<IV 2>': ['adjstments': [...]},
+        #         ...
+        #     }
+        # """
         def to_str_list(x):
             try:
                 from rpy2.robjects.vectors import StrVector
