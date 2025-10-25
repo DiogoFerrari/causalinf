@@ -7,6 +7,7 @@ import polars as pl
 import tidypolars4sci as tp
 from tools4sci import formulas
 from textwrap import dedent
+import textwrap 
 # 
 from .options import get_options
 
@@ -15,29 +16,29 @@ def parse_formula(formula):
     return formulas.extract_variables(formula)
 
 def get_stars(pvalue=None, sig_levels=None, outcome='symbols', latex=False):
-    """
-    Returns the key corresponding to the smallest value in the sig_levels 
-    dictionary larger than each p-value.
+    # """
+    # Returns the key corresponding to the smallest value in the sig_levels 
+    # dictionary larger than each p-value.
 
-    Parameters
-    ----------
-    pvalues : float
-        A p-value between 0 and 1.
-    sig_levels : dict
-        A dictionary mapping symbols to significance levels.
-        If None, it uses {"***":0.001, "**":0.01, "*":0.05, "+":0.1} 
-    outcome : str
-        'symbols' returns the corresponding symbols; 'codes' returns
-        the p-value and their symbol codes
-    latex: bool
-        Used when outcome='codes'. If True, returns letex-friendly
-        text
+    # Parameters
+    # ----------
+    # pvalues : float
+    #     A p-value between 0 and 1.
+    # sig_levels : dict
+    #     A dictionary mapping symbols to significance levels.
+    #     If None, it uses {"***":0.001, "**":0.01, "*":0.05, "+":0.1} 
+    # outcome : str
+    #     'symbols' returns the corresponding symbols; 'codes' returns
+    #     the p-value and their symbol codes
+    # latex: bool
+    #     Used when outcome='codes'. If True, returns letex-friendly
+    #     text
 
-    Returns
-    -------
-    list
-        A symbol corresponding to the significance of the p-value.
-    """
+    # Returns
+    # -------
+    # list
+    #     A symbol corresponding to the significance of the p-value.
+    # """
     if sig_levels is None: 
         sig_levels = {"***":0.001, "**":0.01, "*":0.05, "+":0.1} 
     sorted_levels = sorted(sig_levels.values())
@@ -64,16 +65,16 @@ def get_stars(pvalue=None, sig_levels=None, outcome='symbols', latex=False):
     return res
 
 def detect_variable_type(data, variables=None, ncats_threshold=5) -> dict:
-    """
-    Classifies all columns in a Polars DataFrame.
+    # """
+    # Classifies all columns in a Polars DataFrame.
 
-    Args:
-        data: The input Polars DataFrame.
-        variables : name of the variables to detect type
+    # Args:
+    #     data: The input Polars DataFrame.
+    #     variables : name of the variables to detect type
 
-    Returns:
-        A dictionary mapping column names to their classified types.
-    """
+    # Returns:
+    #     A dictionary mapping column names to their classified types.
+    # """
     cols = variables or df.columns
     cols = [cols] if isinstance(cols, str) else cols
     df = data.to_polars()
@@ -128,15 +129,15 @@ def get_family(data, outcome):
     return family
 
 def data2tibble(data):
-    """
-    Detects if the input data is a pandas, polars, or tidypolars DataFrame.
+    # """
+    # Detects if the input data is a pandas, polars, or tidypolars DataFrame.
 
-    Args:
-        data: The input dataset to check.
+    # Args:
+    #     data: The input dataset to check.
 
-    Returns:
-        A string indicating the type: "pandas", "polars", "tidypolars", or "unknown".
-    """
+    # Returns:
+    #     A string indicating the type: "pandas", "polars", "tidypolars", or "unknown".
+    # """
     # The check for Tibble must come before polars.DataFrame
     # because tidypolars.Tibble inherits from polars.DataFrame.
     if isinstance(data, tp.tibble):
@@ -149,28 +150,28 @@ def data2tibble(data):
         raise('Dataset format unrecognized.')
     
 def compute_rmse(residuals=None, y_true=None, y_pred=None):
-    """
-    Compute Root Mean Squared Error (RMSE) from either residuals or (y_true, y_pred).
+    # """
+    # Compute Root Mean Squared Error (RMSE) from either residuals or (y_true, y_pred).
 
-    Parameters
-    ----------
-    residuals : array-like, optional
-        Residuals (y_true - y_pred). If provided, takes precedence.
-    y_true : array-like, optional
-        True outcome values.
-    y_pred : array-like, optional
-        Predicted outcome values.
+    # Parameters
+    # ----------
+    # residuals : array-like, optional
+    #     Residuals (y_true - y_pred). If provided, takes precedence.
+    # y_true : array-like, optional
+    #     True outcome values.
+    # y_pred : array-like, optional
+    #     Predicted outcome values.
 
-    Returns
-    -------
-    float
-        RMSE value.
+    # Returns
+    # -------
+    # float
+    #     RMSE value.
 
-    Raises
-    ------
-    ValueError
-        If neither residuals nor (y_true and y_pred) are provided.
-    """
+    # Raises
+    # ------
+    # ValueError
+    #     If neither residuals nor (y_true and y_pred) are provided.
+    # """
     if residuals is not None:
         residuals = np.asarray(residuals)
     elif y_true is not None and y_pred is not None:
@@ -429,18 +430,18 @@ class summary:
         return parameters
 
     def merge_models(self):
-        concise = tp.tibble()
+        concise_parameter = tp.tibble()
+        concise_fit_stats = tp.tibble()
         full = tp.tibble()
         for model_name, summary in self.models.items():
             fit_stats = summary['fit_tidy']
-            concise = self.merge_models_concise(concise, summary['parameters'], fit_stats)
+            concise_parameter = self.merge_models_concise(concise_parameter, summary['parameters'])
+            concise_fit_stats = self.merge_models_concise(concise_fit_stats, fit_stats)
             full = self.merge_models_full(full, summary['parameters_full'], model_name, fit_stats)
+        concise = concise_parameter.bind_rows(concise_fit_stats)
         self.merged = {'concise':concise, 'full':full}
 
-    def merge_models_concise(self, base, to_merge, fit_stats):
-        if self.show_fit:
-            to_merge = to_merge.bind_rows(fit_stats)
-
+    def merge_models_concise(self, base, to_merge):
         if base.nrow>0:
             base = base.full_join(to_merge, on='term', suffix='_right')
             merged = (base
@@ -511,7 +512,7 @@ class summary:
         print(line)
         print(get_stars(outcome='codes'))
         if self.info is not None:
-            print(self.info)
+            print(textwrap.fill(self.info, 80) )
 
         return ''
 

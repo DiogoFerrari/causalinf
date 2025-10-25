@@ -160,7 +160,7 @@
   /* padding-top: 0; */
   /* padding-bottom: 0; */
   line-height: 1;  /* Adjust line-height if needed */
-  width: 280px; /* Example: set a fixed width for the navigation sidebar */
+  /* width: 280px; /\* Example: set a fixed width for the navigation right-side sidebar *\/ */
 }
 /* linespace */
 .md-sidebar .md-nav__item {
@@ -267,4 +267,55 @@
 }
 
 /* body { */
+/* } */
+
+
+
+/* --------------------------- API reference ----------------------- */
+/* Color for the arguments within the signature */
+/* .doc-contents .highlight targets the code block.
+   .n targets variable names, which includes argument names. */
+/* .doc-contents .highlight .n { */
+/*   color: #8c564b; /\* Brown, for example *\/ */
+/* } */
+
+
+/* /\* To target only the class signature and its members, you can use: *\/ */
+/* .doc-class .highlight { */
+/*   /\* font-size: 0.8em; /\\* Smaller font for signatures within a class *\\/ *\/ */
+/*   font-size: 0.8em; /\* Adjust this value to your liking *\/ */
+/* } */
+
+/* .doc-function .highlight { */
+/*   font-size: 0.8em; /\* Adjust this value to your liking *\/ */
+/* } */
+
+
+/* /\* To target only the method signatures within a class, you can use: *\/ */
+/* .doc-class .highlight { */
+/*   font-size: 0.75em; /\* Even smaller font for methods *\/ */
+/* } */
+/* .doc-function .highlight { */
+/*   font-size: 0.7em; /\* Even smaller font for methods *\/ */
+/* } */
+/* /\* /\\* Increase font size for code blocks inside the API reference section *\\/ *\/ */
+/* /\* Selectors to specifically target the source code in your API reference *\/ */
+/* .doc-source .highlight { */
+/*   font-size: 0.95em; /\* Adjust this value as needed *\/ */
+/* } */
+
+
+/* /\* /\\* Custom font size for method and function signatures *\\/ *\/ */
+/* /\* .doc-function > .doc-contents  .highlight { *\/ */
+/* /\*   font-size: 0.7em !important; *\/ */
+/* /\* } *\/ */
+
+/* /\* /\\* Custom font size for the source code blocks *\\/ *\/ */
+/* /\* .doc-source .highlight { *\/ */
+/* /\*   font-size: 0.6em !important; *\/ */
+/* /\* } *\/ */
+
+/* /\* source code *\/ */
+/* .doc-class > .doc-contents  .highlight { */
+/*     font-size: .8em; */
 /* } */

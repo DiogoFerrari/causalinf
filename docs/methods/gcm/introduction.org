@@ -24,7 +24,7 @@ print(# "#+begin_src org \n"# # #
 #+END_SRC
 
 
-*Graphical causal models* (GCM's) are *directed acyclic graphs* (DAG's) that model causal relations between variables. The variables are represented by the nodes in the graph; the causal relations between them are represented by the graph's directed edges, that is, arrows and their direction connecting the nodes; and the absence of causal relations is represented by the absence of edges connecting the nodes. More precisely, the absence of an arrow from a node X to a node Y means that the causal effect of X on Y is /certainly/ zero. The presence of an arrow indicates that the causal effect may or may not be zero. *GCM* in causal inference should be viewed as *assumptions* about the causal relations that were or were not operating in reality when the data were collected.
+ *Graphical causal models* (GCM's) are *directed acyclic graphs* (DAG's) that model causal relations between variables. The variables are represented by the nodes in the graph; the causal relations between them are represented by the graph's directed edges, that is, arrows and their direction connecting the nodes; and the absence of causal relations is represented by the absence of edges connecting the nodes. More precisely, the absence of an arrow from a node X to a node Y means that the causal effect of X on Y is /certainly/ zero. The presence of an arrow indicates that the causal effect may or may not be zero. *GCM* in causal inference should be viewed as *assumptions* about the causal relations that were or were not operating in reality when the data were collected.
 
 For instance, consider the following graph:
 

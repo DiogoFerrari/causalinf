@@ -3,7 +3,6 @@
 hide:
 
 -   toc
--   navigation
 
 ---
 

@@ -1,4 +1,15 @@
 # API Reference
 
+## GCM
+
+::: causalinf.gcm
+
+## SCM
+
 ::: causalinf.scm
-::: causalinf.did
+
+## Core Methods
+
+::: causalinf.utils
+    options:
+      merge_init_into_class: true
