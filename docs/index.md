@@ -43,7 +43,7 @@ hide:
  **causalinf** is a module for **causal inference in Python**. It provides a set of submodules with implementation of different methods for causal inference. They include:
 
 
-1. [Graphical Causal Models](./methods/gcm/introduction) (**GCM**)
+1. [Graphical Causal Models](./methods/gcm/introduction.md) (**GCM**)
        1. [Structural Causal Models](./methods/scm/) (**SCM**)
 	   2. [Causal Bayesian Networds](./methods/cbn/) (**CBN**)
 2. Selection on Observables (**SoO**)

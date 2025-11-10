@@ -29,48 +29,188 @@ __all__ = ['DAG', 'estimate', 'examples']
 
 class DAG:
     """
+    Initialize a directed acyclic graph (DAG) representation.
+
+    Parameters
+    ----------
     graph: (str, dict, list)
         A string with the a graph, or a list or dictionary with the edges
 
+        String
+        ------
         If string, it can have different formats
-        Example:
-        '''
-        X1 -> Y
-        X1 -> Z -> Y
-        X1 <- X2
-        # This is equivalent to directed edges: X3 -> A and X -> B
-        # and X4 -> C and X4 -> D
-        X3 -> {A, B}
-        {C, D} <- X4
-        # Bidirected edges (this is a comment, which is also allowed)
-        X3 <-> X4
-        # Undirected edges 
-        X3 -- X4
-        # Mixing
-        X5 -- X6 -> X7
-        '''
+            X -> Y  : directed edge from X to Y
+            X -- Y  : undirected edge between X and Y
+            X <-> Y : bidirected edge between X and Y
 
-         If list, the edge types will be parsed based on their format:
-         [
-             ('X', 'Y'),                    # becomes X -> Y  (directed edge)
-             {'X', 'Z'},                    # becomes X -- Y  (undirected edge)
-             (('X1', 'X2'), ('X2', 'X1')),  # becomes X <-> Y (bidirected edge)
-         ]
+        Example 1:
 
+            '''
+            X1 -> Y
+            X1 -> Z -> Y
+            X1 <- X2
+            '''
+
+        Example 2: The following three versions are acceptable and produce the same graph:
+
+            Version 1
+            '''
+            X1 -> A
+            X1 -> B
+            X2 -> C
+            X2 -> D
+            '''
+
+            Version 2
+            '''
+            X1 -> {A, B}
+            {C, D} <- X2
+            '''
+
+            Version 3
+            '''
+            X1 -> {A, B}
+            X2 -> {C, D}
+            '''
+
+        Example 3 (comments are allowed and automatically ignored when creating the graph):
+            '''
+            # bidirected edge
+            X3 <-> X4
+            X3 -- X4  # undirected edge
+            X5 -- X6 -> X7
+            '''
+
+        List
+        ----
+        If list, the edge types will be parsed based on their format:
+    
+            [
+                ('X', 'Y'),                    # becomes X -> Y  (directed edge)
+                {'X', 'Z'},                    # becomes X -- Y  (undirected edge)
+                (('X1', 'X2'), ('X2', 'X1')),  # becomes X <-> Y (bidirected edge)
+            ]
+
+        Dict
+        ----
         If dictionary, it must contains the edges as elements and the
-        edge type (directed, undirected, bidirected) as keys 
-        Example:
-        {'directed'  : [('X', 'Y'), ...],  # list of tuples
-         'undirected': [{'X1', 'X2'}, ...] # list of dictionaries
-         'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] # list of 2-tuple tuples
-         }
+        edge type (directed, undirected, bidirected) as keys. Example:
 
-    SEM: a string with the structural equation model (SEM).
-         Parameter and path effects definition are allowed in the
-         SEM string. If parameters are provided,
-         they are used as 'edge_labels', except if the later is also
-         provided. 
-         See examples below.
+            {
+                 'directed'  : [('X', 'Y'), ...],  # list of tuples
+                 'undirected': [{'X1', 'X2'}, ...] # list of dictionaries
+                 'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] # list of 2-tuple tuples
+             }
+
+        See more examples below.
+    
+    data : DataFrame-like or None, optional
+        Observational data to retain alongside the graph for downstream
+        identification tasks. The data is stored without validation.
+
+    nodes_role : dict[str, Sequence[str]] or None, optional
+        Keys should be node role names (e.g., ``'Exposure'``, ``'Outcome'``,
+        ``'Latent'``) and values a string or list with the node names.
+         Lowercase role keys for ``'Exposure'``, ``'Outcome'``, and
+        ``'Latent'`` are automatically promoted to their capitalized equivalents.
+
+    nodes_label : dict[str, str] or None, optional
+        Labels for graph nodes. Keys should be node names, values their labels.
+        Latex expression is accepted.
+
+    nodes_position : dict[str, tuple[float, float]] or None, optional
+        Layout coordinates for nodes. Keys should be node names, values 
+        (x, y) coordinate tuples.
+
+    edge_label : dict or None, optional
+        Custom labels for edges. Keys should be edge, values the
+        edge labels. Latex expression is accepted. See examples below.
+
+    Examples
+    --------
+    >>> # basic settings
+    >>> pos = {'D': (0,0),
+    >>>        'Y': (1,0),
+    >>>        'Z': (.5, -1),
+    >>>        'M1': (.25, 1),
+    >>>        'M2': (.75, 1),
+    >>>        'M3': (1.75, 1),
+    >>>        }
+    >>> roles = {'Exposure'    : "D",
+    >>>          'Outcome'     : "Y",
+    >>>          "Latent"      : 'Z',
+    >>>          "The M2 node" : "M2" # arbtiraty roles available
+    >>>          }
+    >>> node_labels = {"D": "$\widetilde{D}$",
+    >>>           'Y': "Outcome"}
+    >>> edge_labels = {
+    >>>     # directed edge labels
+    >>>     ('D', 'M1') : 1,
+    >>>     ('M2', 'Y') : -1,
+    >>>     ('M3', 'Y') : 'a',
+    >>>     ('D', 'Y') : 'AbC',
+    >>>     ('Z', 'D') : '$\\beta$',
+    >>>     ('Z', 'Y'): 'asccc',
+    >>>     # bidirected edge label
+    >>>     (('D', 'Y'), ('Y', 'D')): '$f(x)=\\alpha$',
+    >>>     # undirected edge label
+    >>>     ( 'M1', 'M2' ) : 1234, # 
+    >>>     ( 'M2', 'M1' ) : 1234, # 
+    >>> }
+    >>> 
+    >>> 
+    >>> # using string
+    >>> # ------------
+    >>> dag  = '''
+    >>> D -> M1 
+    >>> M1 -- M2
+    >>> M2 -> Y
+    >>> M3 -> Y
+    >>> D <-> Y
+    >>> D  -> Y
+    >>> Z -> {D, Y}
+    >>> '''
+    >>> Gs = gcm.DAG(dag, nodes_role=roles, nodes_position=pos, nodes_label=node_labels, edge_label=edge_labels)
+    >>> Gs.plot()
+    >>> 
+    >>> # using a list
+    >>> # ------------
+    >>> dag  =[('D', 'M1'), 
+    >>>        ('M3', 'Y'), 
+    >>>        ('M2', 'Y'), 
+    >>>        ('D', 'Y'), 
+    >>>        ('Z', 'D'), 
+    >>>        ('Z', 'Y'), 
+    >>>        (('D', 'Y'), ('Y', 'D')), 
+    >>>        {'M2', 'M1'}
+    >>>        ]
+    >>> Gl = gcm.DAG(dag, nodes_role=roles, nodes_position=pos, nodes_label=labels, edge_label=edge_label)  # 
+    >>> Gl.plot()
+    >>> 
+    >>> # using a dict
+    >>> # ------------
+    >>> dag = {
+    >>>     'directed': [
+    >>>         ('D', 'M1'), 
+    >>>         ('M3', 'Y'), 
+    >>>         ('M2', 'Y'), 
+    >>>         ('D', 'Y'), 
+    >>>         ('Z', 'D'), 
+    >>>         ('Z', 'Y')
+    >>>     ], 
+    >>>     'bidirected': [
+    >>>         (('D', 'Y'), ('Y', 'D'))
+    >>>     ], 
+    >>>     'undirected': [
+    >>>         {'M2', 'M1'}
+    >>>     ]
+    >>> }      
+    >>> Gd = gcm.DAG(dag, nodes_role=roles, nodes_position=pos, nodes_label=labels, edge_label=edge_label)  # 
+    >>> Gd.plot()
+
+    Returns
+    -------
+    DAG graph object
     """
 
     def __init__(self,
@@ -134,6 +274,21 @@ class DAG:
 
     # manipulating graph  -----------------------------
     def get_nodes(self, exclude_latent=False):
+        """
+        Return the graph node names, optionally omitting latent variables.
+
+        Parameters
+        ----------
+        exclude_latent : bool, optional
+            If ``True``, latent nodes are excluded from the returned list.
+            Defaults to ``False``.
+
+        Returns
+        -------
+        list[str]
+            Node names in the current graph. The order corresponds to the
+            insertion order preserved in ``self.nodes``.
+        """
         nodes = list(self.nodes)
         latent_nodes = self.latent
 
@@ -142,10 +297,52 @@ class DAG:
         return nodes
 
     def set_node_label(self, nodes_label):
+        """
+        Update display labels for one or more nodes.
+
+        Parameters
+        ----------
+        nodes_label : dict[str, str]
+            Mapping from node names to their new label strings.
+
+        Examples
+        --------
+        >>> dag = DAG(graph="X -> Y")
+        >>> dag.set_node_label({"X": "Treatment (X)", "Y": "Outcome (Y)"})
+        """
         for node, label in nodes_label.items():
             self.nodes_label[node] = label
 
     def set_nodes_role(self, nodes_role):
+        """
+        Create a new DAG instance with updated node roles.
+
+        Parameters
+        ----------
+        nodes_role : dict[str, Sequence[str]]
+            Keys should be node role names (e.g., ``'Exposure'``, ``'Outcome'``,
+            ``'Latent'``) and values a string or list with the node names.
+             Lowercase role keys for ``'Exposure'``, ``'Outcome'``, and
+            ``'Latent'`` are automatically promoted to their capitalized equivalents.
+
+        Returns
+        -------
+        DAG
+            A fresh `DAG` object reflecting the new role assignments.
+
+        Examples
+        --------
+        >>> dag = DAG(graph="X -> Y")
+        >>> updated = dag.set_nodes_role({"Exposure": ["X"], "Outcome": ["Y"]})
+        >>> updated
+        Graph:
+        X -> Y
+        Observed: 
+        Exposure: X
+        Outcome: Y
+        >>> updated.exposure
+        ['X']
+        """
         res = DAG(graph=self.__graph_str_parsed__,
                   nodes_role=nodes_role,
                   nodes_label=self.nodes_label,
@@ -155,10 +352,48 @@ class DAG:
         return res
 
     def set_node_position(self, position):
+        """
+        Assign layout coordinates to nodes in-place.
+
+        Parameters
+        ----------
+        position : dict[str, tuple[float, float]]
+            Mapping from node names to (x, y) coordinate tuples.
+            Keys should be the node name, the value its position.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.set_node_position({"X": (0.0, 0.5), "Y": (1.0, 0.5)})
+        """
         for node, p in position.items():
             self.position[node] = p
 
     def edge_add(self, edge):
+        """
+        Add an edge to the graph if it is not already present.
+
+        Parameters
+        ----------
+        edge : tuple[str, str] or tuple[tuple[str, str], tuple[str, str]] or set[str]
+            Edge specification compatible with the formats accepted at
+            initialization. Use a two-tuple for directed edges, a set with two
+            nodes for undirected edges, or a pair of directed tuples for
+            bidirected edges.
+
+        Returns
+        -------
+        DAG
+            The current instance when the edge already exists; otherwise a new
+            `DAG` instance containing the added edge.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G = G.edge_add(("Y", "Z"))
+        >>> ("Y", "Z") in G.directed
+        True
+        """
         res = self
         if not self.edge_exist(edge):
             graph = self.__graph_list__.copy()
@@ -167,6 +402,28 @@ class DAG:
         return res
 
     def edge_remove(self, edge):
+        """
+        Remove an existing edge from the graph when present.
+
+        Parameters
+        ----------
+        edge : tuple[str, str] or tuple[tuple[str, str], tuple[str, str]] or set[str]
+            Edge specification matching one of the accepted formats. The check
+            is insensitive to direction for bidirected and undirected edges.
+
+        Returns
+        -------
+        DAG
+            A new `DAG` instance with the edge removed when the edge exists;
+            otherwise the current instance is returned unchanged.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G = G.edge_remove(("X", "Y"))
+        >>> ("X", "Y") in G.directed
+        False
+        """
         removed = False
         graph = self.__graph_list__.copy()
 
@@ -185,31 +442,62 @@ class DAG:
             return  self
 
     def edge_replace(self, remove, add):
+        """
+        Replace an existing edge with a new one in a single operation.
+
+        Parameters
+        ----------
+        remove : tuple[str, str] or tuple[tuple[str, str], tuple[str, str]] or set[str]
+            Edge specification to be removed. Formats follow the accepted edge
+            types for the graph and support undirected and bidirected symmetry.
+
+        add : tuple[str, str] or tuple[tuple[str, str], tuple[str, str]] or set[str]
+            Edge specification to be added after removal.
+
+        Returns
+        -------
+        DAG
+            A `DAG` instance reflecting the requested change. If the removal
+            fails because the edge does not exist, the method still returns the
+            result of attempting to add the new edge.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G = G.edge_replace(("X", "Y"), ("X", "Z"))
+        >>> ("X", "Y") in G.directed, ("X", "Z") in G.directed
+        (False, True)
+        """
         res = self.edge_remove(remove)
         res = res.edge_add(add)
         return res
 
     def edge_exist(self, edge, edges=None):
         """
-        Check whether `edge` exists in `edges`,
-        robust to order of nodes for undirected and bidirected edges.
+        Check whether an edge is present in the graph (or a supplied edge list).
 
         Parameters
         ----------
-        edge : tuple or set
-            A tuple representing the edge to check, e.g., (node1, node2).
-            For directed edge: typle is (from, to)
-            For bidirected edge: typle is ((node1, node2), (node2, node1))
-            For undirected edge: set is {node1, node2}
-
+        edge : tuple[str, str] or tuple[tuple[str, str], tuple[str, str]] or set[str]
+            Edge specification to check for existence. The method canonicalizes
+            the representation so that undirected and bidirected edges are
+            insensitive to node order.
         edges : list or None, optional
-            A list of edges to check against. If None, the method will retrieve 
-            the edges associated with the edge type.
+            Specific list of edges to search. When ``None``, the method looks up
+            the corresponding edge collection from the instance.
 
         Returns
         -------
         bool
-            True if the edge exists in the edges list, False otherwise.
+            ``True`` when the edge is found, otherwise ``False``.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.edge_exist(("X", "Y"))
+        True
+        >>> G.edge_exist({"X", "Y"})
+        False
         """
         if edges is None:
             edge_type = self.__edge_type__(edge)
@@ -220,12 +508,56 @@ class DAG:
         return edge in edges_in_list
 
     def set_edge_label(self, edge_label):
+        """
+        Assign or update labels for one or more edges.
+
+        Parameters
+        ----------
+        edge_label : dict
+            Mapping of edge specifications to label values. Keys can be any
+            valid edge representation accepted at initialization. Values are
+            stored verbatim without validation.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.set_edge_label({("X", "Y"): "beta"})
+        >>> G.edge_label[("X", "Y")]
+        'beta'
+        """
         for edge, label in edge_label.items():
             self.edge_label[edge] = label
 
     # computations --------------------------------------
     # dagitty (R dependencies)
     def dseparated(self, var1=None, var2=None, conditional=None):
+        """
+        Determine whether two variables are d-separated given a conditioning set.
+
+        Parameters
+        ----------
+        var1 : str
+            Name of the first variable.
+        var2 : str
+            Name of the second variable.
+        conditional : Sequence[str] or None, optional
+            Variables to condition on. Provide an iterable of node names. When
+            ``None``, no conditioning is applied.
+
+        Returns
+        -------
+        bool
+            ``True`` if the variables are d-separated given ``conditional``,
+            otherwise ``False``.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> G.dseparated("X", "Y")
+        False
+        >>> G.dseparated("X", "Y", conditional=["Z"])
+        True
+        """
         assert var1 and isinstance(var1, str), "'var1' (a str) must be provided."
         assert var2 and isinstance(var2, str), "'var2' (a str) must be provided."
 
@@ -236,6 +568,29 @@ class DAG:
         
     # dagitty (R dependencies)
     def dseparation(self, var1, var2):
+        """
+        Retrieve the list of d-separations involving two variables.
+
+        Parameters
+        ----------
+        var1 : str
+            Name of the first variable.
+        var2 : str
+            Name of the second variable.
+
+        Returns
+        -------
+        list[list[str]] or None
+            Conditioning sets that d-separate ``var1`` and ``var2``. Each inner
+            list contains the conditioning variables as strings. Returns
+            ``None`` when no separating set is found.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> G.dseparation("X", "Y")
+        [['Z']]
+        """
         assert var1 and isinstance(var1, str), "'var1' (a str) must be provided."
         assert var2 and isinstance(var2, str), "'var2' (a str) must be provided."
 
@@ -265,14 +620,37 @@ class DAG:
     # dagitty (R dependencies)
     def local_independencies(self, data=None, alpha=0.05, include_sep_cols=False):
         """
-        Given a networkx.DiGraph, return implied conditional independencies using dagitty (via R).
+        List conditional independencies implied by the DAG, optionally using data.
 
-        Parameters:
-            G (nx.DiGraph): Directed acyclic graph (must be a valid DAG)
-            data: tibble data frame from tidypolars4sci
+        Parameters
+        ----------
+        data : tidypolars4sci.DataFrame or None, optional
+            Observational data used to perform local conditional independence
+            tests through ``dagitty::localTests``. When ``None`` (default), the
+            method enumerates implied independencies analytically.
+        alpha : float, optional
+            Significance level for converting quantile-based confidence bounds
+            into standard errors. Only used when ``data`` is provided. Defaults
+            to 0.05.
+        include_sep_cols : bool, optional
+            When ``True``, return additional columns detailing the separated
+            variables and conditioning sets. Defaults to ``False``.
 
-        Returns:
-            tibble dataframe from tidypolars4sci
+        Returns
+        -------
+        tidypolars4sci.DataFrame
+            Tidy representation of the implied independencies. The result
+            always includes columns ``term`` (formatted as ``"Y _||_ X | Z"``),
+            ``estimate``, ``se``, ``lo``, ``hi``, and ``pvalue``. When
+            ``include_sep_cols`` is ``True``, columns ``var1``, ``var2``, and
+            ``cond`` are also present.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> independencies = G.local_independencies(include_sep_cols=True)
+        >>> independencies.select(["term"]).to_pandas().term.tolist()
+        ['Y _||_ X | Z']
         """
         if data is None:
             data = self.data
@@ -323,13 +701,48 @@ class DAG:
                                 verbose=True
                                 ):
         """
-        causal_probability: str
-            If 'always', always compute it; if 'maybe', compute it
-            only if there is not identification by adjustment for
-            total_effect_adj_set effect
+        Run identification analysis for the specified exposure-outcome pair.
 
-        conditional: list or str
-            List of variables to condition the causal effect on        
+        Parameters
+        ----------
+        exposure : str or list[str] or None, optional
+            Exposure variable(s) of interest. When ``None``, the current DAG
+            exposure roles are used.
+        outcome : str or None, optional
+            Outcome variable. Defaults to the first DAG outcome role when
+            omitted.
+        conditional : str or list[str] or None, optional
+            Variables to condition the causal effect on. Strings are promoted to
+            single-element lists.
+        causal_probability : {'always', 'maybe'}, optional
+            Controls whether causal probabilities are computed. With ``'maybe'``
+            (default) probabilities are evaluated only when identification by
+             adjustment fails; ``'always'`` forces computation.
+        iv : {'always', 'maybe'}, optional
+            Identification using instrumental variable. Use ``'maybe'`` (default)
+            to run analysis only when identification by
+             adjustment fails; use ``'always'`` to force IV evaluation.
+        verbose : bool, optional
+            When ``True`` (default), results are printed via ``self.print``.
+
+        Returns
+        -------
+        None
+
+        Notes
+        -----
+        Results printed and can be retrieved using <DAG>.identification
+        and <dag>.print(). See examples.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+
+        >>> G.identification()        # to print
+        >>> G.print('identification') # to print
+        >>> G.identification_dict     # dictionary
         """
         assert not outcome or isinstance(outcome, str), 'Outcome must be a string.'
         assert not exposure or (isinstance(exposure, str) or isinstance(exposure, list)), 'Exposure must be a string or list.'
@@ -358,8 +771,26 @@ class DAG:
 
     def get_identified(self, by='parameter', include_all=False):
         """
-        by : str
-           'parameter' or 'strategy'
+        Retrieve identification results summarised by parameter or strategy.
+
+        Parameters
+        ----------
+        by : {'parameter', 'strategy'}, optional
+            Grouping used for the returned results. Defaults to ``'parameter'``.
+        include_all : bool, optional
+            When ``True``, include all strategies that identify the parameters.
+            Otherwise, only the SoO, or IV, or do-calculus, whatever
+            identifies it first. Defaults to ``False``.
+
+        Returns
+        -------
+        dict
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> G.get_identified()
         """
         if not self.__identification__:
             self.identification_analysis()
@@ -367,6 +798,32 @@ class DAG:
         return res
 
     def identification(self, print='default', parameter='ACE', *args, **kws):
+        """
+        Print identification analysis using custom output options.
+
+        Parameters
+        ----------
+        print : str, optional
+            Content selector forwarded to the identification printer. Defaults
+            to ``'default'``.
+        parameter : str, optional
+            Target causal parameter to display, e.g., ``'ACE'`` (default).
+        *args :
+            Additional positional arguments forwarded to ``self.print``.
+        **kws :
+            Keyword arguments supporting an ``identification`` dictionary that
+            overrides default print options.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> G.identification(print="assumptions", parameter="ACE")
+        """
         if not self.__identification__:
             self.identification_analysis(verbose=False)
 
@@ -379,6 +836,22 @@ class DAG:
 
     @property
     def identification_dict(self):
+        """
+        Mapping of identification results produced by the last analysis.
+
+        Returns
+        -------
+        dict
+            Identification summary as generated by the internal identification
+            object.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> isinstance(G.identification_dict, dict)
+        True
+        """
         if not self.__identification__:
             self.identification_analysis()
         res = self.__identification__.identification
@@ -397,20 +870,28 @@ class DAG:
               )
               ):
         """
-        what : str
-            What to print
-            'graph', 'DAG', 'dag', 'identification'
+        Display graph or identification information using configured options.
 
-        identification : dict
-            Options to print identification results
-             - content
-             - style
-             - strategy
-             - parameter
-             - omit_DAG
-             - assumptions
-             - assumptions_verbose
-            
+        Parameters
+        ----------
+        what : {'graph', 'DAG', 'dag', 'identification'}, optional
+            Content selector. Case-insensitive variants for graph display are
+            accepted. Defaults to ``'graph'``.
+        identification : dict, optional
+            Print configuration dict forwarded to the internal identification
+            object. Missing keys fall back to global defaults obtained from
+            ``get_options()``.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.print(what="graph")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> G.print(what="identification", identification={"content": "strategy"})
         """
         if what in ['graph', 'DAG', 'dag']:
             print(self)
@@ -430,6 +911,34 @@ class DAG:
         
     # dagitty (R dependencies)
     def paths(self, exposure=None, outcome=None, adj_set=None, directed=False):
+        """
+        Enumerate paths between exposure and outcome, optionally conditioning on a set.
+
+        Parameters
+        ----------
+        exposure : str or list[str] or None, optional
+            Exposure node(s). Defaults to the DAG's exposure role when omitted.
+        outcome : str or list[str] or None, optional
+            Outcome node(s). Defaults to the DAG's outcome role when omitted.
+        adj_set : Sequence[str] or None, optional
+            Conditioning set supplied to ``dagitty.paths``. ``None`` is passed
+            through to indicate no adjustment.
+        directed : bool, optional
+            When ``True``, restrict to directed paths from exposure to outcome.
+            Defaults to ``False``.
+
+        Returns
+        -------
+        dict[str, dict[str, Any]]
+            Mapping from path strings to dictionaries with keys ``'open'`` and
+            ``'adj_set'`` indicating path status and conditioning set.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> G.paths(exposure="X", outcome="Y", directed=True)
+        {'X -> Z -> Y': {'open': True, 'adj_set': None}}
+        """
         exposure = exposure or self.exposure
         outcome = outcome or self.outcome
 
@@ -444,6 +953,29 @@ class DAG:
         return {path:{'open':is_open, 'adj_set':adj_set} for path, is_open in zip(paths, are_open)}
 
     def mediators(self, as_string=False):
+        """
+        Extract mediator nodes lying on directed paths from exposure to outcome.
+
+        Parameters
+        ----------
+        as_string : bool, optional
+            When ``True``, return a formatted string representation of mediator
+            sets. Defaults to ``False`` to return a list of lists.
+
+        Returns
+        -------
+        list[list[str]] or str
+            Mediator nodes grouped by directed path when ``as_string`` is
+            ``False``; otherwise a string representation of the same structure.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> M -> Y")
+        >>> G.mediators()
+        [['M']]
+        >>> G.mediators(as_string=True)
+        '[[M]]'
+        """
         paths = self.paths(directed=True)
         paths = [p.split('->') for p in paths]
         exposure = self.exposure
@@ -460,12 +992,32 @@ class DAG:
     # dagitty (R dependencies)
     def equivalence_class(self):
         """
-        Details
+        Construct the partially directed equivalence class implied by the DAG.
+
+        Returns
         -------
-        A equivalence class of a DAG is a graph that replaces directional edges
-        by undirectional edges except in v-structures (triples X->Z<-Y where 
-        X and Y are not adjacent). Therefore, all Markov
-        equivalent DAGs will have the same equivalence class.
+        DAG
+            A new `DAG` instance representing the Markov equivalence class,
+            where edges are undirected unless compelled by v-structures.
+
+        Notes
+        -----
+        The equivalence class replaces directional edges with undirected edges
+        except in v-structures (triples ``X -> Z <- Y`` where ``X`` and ``Y``
+        are not adjacent).
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> eq = G.equivalence_class()
+        >>> eq
+        Graph:
+
+        Z -- X
+        Z -- Y
+        Observed: Z, Y, X
+        >>> eq.undirected
+        [{'X', 'Z'}, {'Z', 'Y'}]
         """
         eq = dagitty.equivalenceClass(self.__dagitty__)
         dag, _ = self.__dagitty2inputs__(eq)
@@ -474,6 +1026,22 @@ class DAG:
 
     # dagitty (R dependencies)
     def equivalent_dags(self):
+        """
+        Generate all DAGs that are Markov equivalent to the current graph.
+
+        Returns
+        -------
+        list[DAG]
+            Collection of `DAG` instances, each representing a distinct DAG in
+            the equivalence class.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> dags = G.equivalent_dags()
+        >>> len(dags)
+        3
+        """
         eqs = dagitty.equivalentDAGs(self.__dagitty__)
         res = []
         for eq in eqs:
@@ -483,67 +1051,93 @@ class DAG:
 
     def observationally_equivalent(self, G):
         """
-        Check if two DAGs are observationally equivalent by comparing their
-        markov equivalent classes. It applies to CBN or for
-        SCM when no functional form for the SCM equations were selected.
-        See details.
+        Test whether two DAGs are observationally equivalent.
+
+
+        Parameters
+        ----------
+        G : DAG
+            Graph to compare with the current instance.
+
+        Returns
+        -------
+        bool
+            ``True`` if both graphs encode the same observational constraints,
+            i.e., they belong to the same Markov equivalence class; ``False``
+            otherwise.
 
         Details
         -------
-        Observational equivalence is related to Markov equivalence.
+
+        The method checks if two DAGs are observationally equivalent by comparing their Markov equivalent classes.
+        The method considers only the DAG structure, that is, CBN or SCM when no functional
+        form for the latter is selected. Observational equivalence is related to Markov equivalence.
 
         Two DAGs are Markov equivalent iff
-        A. They have the same skeleton (same set of adjacencies, i.e. same undirected edges)
-        B. They have the same set of v-structures, which are triples X->Z<-Y where 
-           X and Y are not adjacent).
 
-        A equivalence class of a DAG is a graph that replaces directional edges
-        by undirectional edges except in v-structures. Therefore, all Markov
-        equivalent DAGs will have the same equivalence class.
+        A. They have the same skeleton (same set of adjacencies, i.e., same undirected edges)  
+
+        B. They have the same set of v-structures (triples \( X \rightarrow Z \leftarrow Y \) where X and Y are not adjacent).
+
+        An equivalence class of a DAG is a graph that replaces directional edges with undirected edges except
+        in v-structures. Therefore, all Markov equivalent DAGs will have the same equivalence class.
 
         For CBN:
-        - Two CBNs are observational equivalence iff they are Markov equivalence.
+
+        - Two CBNs are observationally equivalent iff they are Markov equivalent.
 
         For SCM:
-        Without functional form assumptions_show, for observational equivalence:
-        - Necessary condition: both SCMs have the same set of conditional independencies
-        - Sufficient condition: both SCMs are in the same markov equivalence class (Pearl, 2009)
-        - Basically, two SCMs are observationally equivalent iff their causal graphs belong
-          to the same Markov equivalence class — i.e., they share the same skeleton and v-structures.
 
-        With functional form assumptions_show
-        - Once you impose functional form restrictions on SCMs, such as linearity,
-          Gaussian disturbance, or additive error, and so on, observational equivalence
-          can be strictly finer. That is, Markov-equivalence is not a sufficient condition.
-          Example:
-          a. Linear Gaussian SEMs assumption:
-             - All DAGs in the same equivalence class remain indistinguishable.
-               Markov equivalence = observational equivalence.
-               Reason: any covariance matrix that one DAG can generate can also
-               be generated by another DAG in its equivalence class, via suitable parameter choice.
+        Without functional form assumptions, for observational equivalence:
 
-          b. Linear non-Gaussian models (LiNGAM)
-             - Orientations become testable because independent non-Gaussian noise
-               'pins down' which variable must be the parent, breaking Markov equivalence.
-                Example: X->Y and X <- Y: In Gaussian case: indistinguishable.
-                         In non-Gaussian: identifiable.
+        - Necessary condition: both SCMs have the same set of conditional independencies.
 
-          c. Additive Noise Models (ANMs)
-             - If the true relation is Y = f(X) + e with independent noise e,
-               then typically the 'wrong' orientation X = g(Y) + e'
-               cannot hold with independent noise. So direction becomes identifiable.
+        - Sufficient condition: both SCMs are in the same Markov equivalence class (Pearl, 2009).
 
-        In summary, generally SCMs (no distributional restrictions), Markov equivalence
-        does imply observational equivalence. But once you impose restrictions
-        (linear, Gaussian, additive, etc.), observational equivalence can be strictly finer.
-        That is, if one assumes functional forms or noise properties, one may be able to 
-        distinguish DAGs inside a Markov equivalence class. Some Markov-equivalent DAGs
-        become distinguishable. Then, the test of equivalence depends on the
-        functional form assumption adopted, so it is case-by-case.
+        - Basically, two SCMs are observationally equivalent iff their causal graphs belong to the same Markov
+        equivalence class --- i.e., they share the same skeleton and v-structures.
+
+        With functional form assumptions:
+
+        - Once you impose functional form restrictions on SCMs, such as linearity, Gaussian disturbance, or
+        additive error, observational equivalence can be strictly finer. That is, Markov equivalence is not a sufficient condition.
+
+        Example:
+
+        a. Linear Gaussian SEMs assumption:
+        - All DAGs in the same equivalence class remain indistinguishable.
+        Markov equivalence = observational equivalence. Reason: any covariance matrix that
+        one DAG can generate can also be generated by another DAG in its equivalence class, via suitable parameter choice.
+
+        b. Linear non-Gaussian models (LiNGAM):
+        - Orientations become testable because independent non-Gaussian noise
+        'pins down' which variable must be the parent, breaking Markov equivalence.
+        Example: \( X \rightarrow Y \) and \( X \leftarrow Y \): In the Gaussian case: indistinguishable.
+        In non-Gaussian: identifiable.
+
+        c. Additive Noise Models (ANMs):
+        - If the true relation is \( Y = f(X) + e \) with independent noise \( e \),
+        then typically the 'wrong' orientation \( X = g(Y) + e' \) cannot hold with
+        independent noise. So direction becomes identifiable.
+
+        In summary, generally, SCMs (no distributional restrictions) imply that Markov equivalence
+        does imply observational equivalence. But once you impose restrictions (linear, Gaussian,
+        additive, etc.), observational equivalence can be strictly finer. That is, if one assumes
+        functional forms or noise properties, one may be able to distinguish DAGs inside a Markov
+        equivalence class. Some Markov-equivalent DAGs become distinguishable. Then, the test of
+        equivalence depends on the functional form assumption adopted, so it is case-by-case.
+
+        Examples
+        --------
+        >>> G1 = DAG(graph="X -> Y")
+        >>> G2 = DAG(graph="X <- Y")
+        >>> G1.observationally_equivalent(G2)
+        True
 
         References
         ----------
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge Univ Press.
+        Pearl, J. (2009). *Causality: Models, Reasoning and Inference*.
+        Cambridge University Press.
         """
         # check if same equivalence class
         G1_eq = self.equivalence_class()
@@ -555,6 +1149,30 @@ class DAG:
         return obs_eq 
 
     def assumptions(self, category=None, verbose=False):
+        """
+        Retrieve identification assumptions grouped by category.
+
+        Parameters
+        ----------
+        category : str or None, optional
+            Filter assumptions to a specific category (e.g., ``'identification'``).
+            When ``None`` (default), all available categories are returned.
+        verbose : bool, optional
+            If ``True``, include additional descriptive information when supported
+            by the underlying identification object. Defaults to ``False``.
+
+        Returns
+        -------
+        dict or tidypolars4sci.DataFrame
+            Structure containing the requested assumptions, as provided by the
+            identification backend.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> G.assumptions(category="identification")
+        """
         if not self.__identification__:
             self.identification_analysis()
         return self.__identification__.assumptions(category=category, verbose=verbose)
@@ -633,34 +1251,114 @@ class DAG:
              **kws
              ):
         """
-        Draw a custom DAG with support for:
-          - Latent variables
-          - Curved edges
-          - Colored and dotted arcs
-          - Optional arc representation for latent confounding
-          - Custom node labels
+        Render the DAG using matplotlib with extensive styling controls.
 
-        Parameters:
-            G (nx.DiGraph): The input DAG with optional edge attributes 'style', 'color', 'curved'.
-            estimates: obj
-                A LSEM object from the cass causalinf.scm.estimate
-            nodes_position (dict): Optional node positions for layout.
-            nodes_role (dict): Optional dict with keys 'latent', 'exposure', 'outcome' listing node names.
-            use_arc (bool): If True, draw dotted arcs between children of latent confounders instead of drawing latent nodes.
-            nodes_label (dict): Optional dict mapping node names to display labels.
-            show_labels  (str or None; Default='label'): One of 'label', 'name', or 'none'.
-                If 'label', use labels if provided; If 'name', always use node name; If 'none',
-                don't omit labels and names of nodes altogether.
-            node_label_adj_x (float or dict): displaces the labels in the x direction. If dict, the keys
-                should be the node labels or name, and displacement will be applied only to those points
-                specified in the dict. If float, the same displacement is applied to all nodes.
-            node_label_adj_x (float or dict): same as node_label_adj_y, but for the y axis
-            graph_style (str): specific styles for nodes and arrows
-                  - 'default': nodes in circles with labels in their middle
-                  - 'rectangle': nodes in rectangles with labels in their middle
-                  - 'pearl': nodes as dots with labels next to them (use node_label_adj_x and node_label_adj_y
-                             to adjust the location of the labels)
-                  All features can be overwrittied by specifying the value of the parameters for the plot.
+        Parameters
+        ----------
+        graph_style : {'default', 'rectangle', 'pearl'} or None, optional
+            Predefined style bundle for nodes and edges. When ``None``, falls
+            back to the global plotting option.
+        nodes_label : dict[str, str] or None, optional
+            Mapping from node names to display labels.
+        nodes_position : dict[str, tuple[float, float]] or None, optional
+            Coordinates to override automatic layout positions.
+        estimates : estimate or None, optional
+            Output of ``causalinf.scm.estimate`` used to annotate edges with
+            estimates and p-values.
+        node_subset : dict[str, list[str]] or None, optional
+            Restrict plotting to specific node groups (e.g., observed,
+            latent). Defaults to all nodes.
+        node_shape, node_size, node_color, node_border_color, node_border_style, node_border_width : dict or scalar, optional
+            Visual attributes applied per node group; scalars are broadcast.
+        node_latent_show : bool, optional
+            If ``False``, omit latent nodes while preserving their effects via
+            arcs. Defaults to ``True``.
+        show_labels : bool, optional
+            Display node labels when ``True`` (default).
+        use_labels : bool, optional
+            When ``True`` (default), prefer custom labels over node names.
+        node_label_box : bool, optional
+            Draw a bounding box around node labels in rectangle mode.
+        node_label_fontsize, node_label_fontweight : dict or scalar, optional
+            Font styling overrides for node labels.
+        node_label_adj_x, node_label_adj_y : dict or float, optional
+            Horizontal and vertical label offsets.
+        node_label_box_style : str, optional
+            Matplotlib box style applied when ``node_label_box`` is ``True``.
+        node_label_box_margin : float, optional
+            Padding for label boxes.
+        edge_subset : dict[str, list] or None, optional
+            Limit plotting to selected edges by type.
+        edge_color, edge_style, edge_arc, edge_linewidth, edge_head_size, edge_head_style : dict or scalar, optional
+            Edge styling parameters by edge type.
+        edge_margin_tail, edge_margin_head : dict or float, optional
+            Arrowhead offsets for edges.
+        edge_label : dict or None, optional
+            Explicit edge labels overriding stored defaults.
+        edge_label_color_background, edge_label_color_border : str, optional
+            Background and border colors for edge labels.
+        edge_label_size, edge_label_color, edge_label_alpha, edge_label_rotate, edge_label_position : dict or scalar, optional
+            Label appearance controls.
+        edge_label_sig_level : float, optional
+            Significance level used when estimates include confidence bounds.
+        edge_label_pvalue : dict or None, optional
+            P-value annotations keyed by edge.
+        edge_label_font_family : str or None, optional
+            Font family for edge labels.
+        legend_show : bool, optional
+            Display the legend when ``True`` (default).
+        legend_title : str, optional
+            Legend title. Defaults to ``'Nodes'``.
+        legend_title_align : {'left', 'center', 'right'}, optional
+            Horizontal alignment for the legend title.
+        legend_title_weight : str, optional
+            Font weight for the legend title.
+        legend_title_size : int, optional
+            Legend title font size.
+        legend_omit_cases : list[str], optional
+            Node role labels to omit from the legend.
+        legend_keys : dict or None, optional
+            Custom legend entries keyed by role.
+        legend_loc : str, optional
+            Legend placement for ``matplotlib.axes.Axes.legend``.
+        legend_fontsize : int, optional
+            Legend text size.
+        legend_frame : bool, optional
+            Draw a frame around the legend when ``True``.
+        legend_kws : dict, optional
+            Additional keyword arguments forwarded to ``legend``.
+        title : str or None, optional
+            Plot title.
+        title_loc : {'left', 'center', 'right'}, optional
+            Title alignment. Defaults to ``'left'``.
+        title_kws : dict, optional
+            Additional title styling options.
+        figsize : Sequence[float], optional
+            Width and height (in inches) for the created figure. Defaults to
+            ``[6, 4]``.
+        usetex : bool, optional
+            Enable LaTeX rendering for text. Defaults to ``True``.
+        ax : matplotlib.axes.Axes or None, optional
+            Existing axis to draw on. A new figure and axis are created when
+            ``None``.
+        show_plot : bool or None, optional
+            Override global option controlling whether ``plt.show()`` is called.
+        *args :
+            Additional positional arguments forwarded to the internal plotting
+            helpers.
+        **kws :
+            Extra keyword arguments forwarded to the internal plotting helpers.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            plot object and axis on which the graph is drawn.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> plt, ax = G.plot(figsize=(4, 3), show_plot=False)
+        True
         """
         assert estimates is None or isinstance(estimates, estimate), (
             "'estimates' must be either None or an object of causalinf.scm.estimate ")
@@ -886,6 +1584,51 @@ class DAG:
                    path_color='black',
                    **plot_kws
                    ):
+        """
+        Plot individual paths between exposure and outcome nodes.
+
+        Parameters
+        ----------
+        exposure : str or list[str] or None, optional
+            Exposure node(s) to anchor the paths. Defaults to the DAG exposure
+            role when omitted.
+        outcome : str or list[str] or None, optional
+            Outcome node(s) serving as path targets. Defaults to the DAG outcome
+            role when omitted.
+        adj_set : str or Sequence[str] or None, optional
+            Adjustment set used to assess path openness. Strings are promoted to
+            single-element lists.
+        directed : bool, optional
+            If ``True``, restrict to directed paths from exposure to outcome.
+            Defaults to ``False``.
+        show_full_dag : bool, optional
+            Draw the entire DAG in the background with muted styling before
+            highlighting each path. Defaults to ``True``.
+        use_labels : bool, optional
+            When ``True`` (default), prefer custom node labels over names.
+        title_fontsize : int, optional
+            Font size for subplot titles. Defaults to ``10``.
+        figsize : tuple[float, float], optional
+            Size of the grid of path plots in inches. Defaults to ``(16, 9)``.
+        path_color : str, optional
+            Color applied to highlighted path edges. Defaults to ``'black'``.
+        **plot_kws :
+            Additional keyword arguments forwarded to ``DAG.plot`` for both the
+            background DAG (when ``show_full_dag`` is ``True``) and each path.
+
+        Returns
+        -------
+        list[matplotlib.axes.Axes]
+            Axes objects for the generated subplots. The list is flattened even
+            when the grid contains a single axis.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z -> Y")
+        >>> axes = G.plot_paths(exposure="X", outcome="Y", directed=True, show_full_dag=False)
+        >>> len(axes)
+        1
+        """
         adj_set = [adj_set] if isinstance(adj_set, str) else adj_set
 
         paths = self.paths(exposure=exposure, outcome=outcome, adj_set=adj_set, directed=directed)
@@ -942,6 +1685,48 @@ class DAG:
                              max_eq_dags= 27,
                              **plot_kws
                              ):
+        """
+        Visualize multiple DAGs in the Markov equivalence class.
+
+        Parameters
+        ----------
+        use_labels : bool, optional
+            Prefer custom node labels when ``True`` (default).
+        show_labels : bool, optional
+            Display node labels on the plots. Defaults to ``True``.
+        edge_difference_color : str, optional
+            Color used to highlight edges that differ from the original graph
+            in each equivalent DAG. Defaults to ``'red'``.
+        title_fontsize : int, optional
+            Font size for subplot titles. Defaults to ``10``.
+        title_original_graph : str, optional
+            Title assigned to the baseline plot of the original DAG.
+        title_equivalent_graph : str, optional
+            Title applied to each equivalent DAG subplot.
+        show_footnote : bool, optional
+            Display a numbered footnote beneath each subplot when ``True``.
+        figsize : tuple[float, float], optional
+            Figure size in inches for each panel grid. Defaults to ``(16, 9)``.
+        max_per_figure : int, optional
+            Maximum number of panels per figure. Defaults to ``9``.
+        max_eq_dags : int, optional
+            Cap on the number of equivalent DAGs to display. Defaults to ``27``.
+        **plot_kws :
+            Additional keyword arguments forwarded to ``DAG.plot``.
+
+        Returns
+        -------
+        dict[int, list]
+            Mapping from figure index to ``[figure, axes_list]`` pairs. Returns
+            ``None`` when no equivalent DAGs exist.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z <- Y")
+        >>> figs = G.plot_equivalent_dags(show_footnote=False, max_eq_dags=4)
+        >>> isinstance(figs, dict)
+        True
+        """
         # collecting equivalent DAGs
         eq_dags = self.equivalent_dags()
         n_eq_dags = len(eq_dags)
@@ -1014,8 +1799,29 @@ class DAG:
                 figs_res[fig_number] = [fig, axs]
         return figs_res
 
-    @ut.copy_docstring(plot)
     def plot_equivalence_class(self, *args, **kws):
+        """
+        Plot the partially directed Markov equivalence class of the DAG.
+
+        Parameters
+        ----------
+        *args :
+            Positional arguments forwarded to ``DAG.plot``.
+        **kws :
+            Keyword arguments forwarded to ``DAG.plot``.
+
+        Returns
+        -------
+        matplotlib.axes.Axes
+            Axis containing the rendered equivalence class.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Z <- Y")
+        >>> ax = G.plot_equivalence_class(show_plot=False)
+        >>> ax is not None
+        True
+        """
         self.equivalence_class().plot(*args, **kws)
 
     def plot_identification(self,
@@ -1038,12 +1844,58 @@ class DAG:
                             **kws
                             ):
         """
-        txt_line_height: float
-            height of the lines for the text. Not used if figsize is set.
-        kws_detailed : dict
-            Example: 
-           {'parameter':'ACE'
-             'strategy':'SoO'}
+        Plot identification information alongside the DAG.
+
+        Parameters
+        ----------
+        content : {'default', 'detailed'}, optional
+            Level of detail displayed in the identification summary. Defaults to
+            ``'default'``.
+        effect : {'total', 'direct', 'do'}, optional
+            Effect type to highlight when ``content`` requires it. Defaults to
+            ``'total'``.
+        show_np, show_linear, show_do : bool, optional
+            Toggle inclusion of non-parametric, linear, and do-calculus
+            strategies in the summary. All default to ``True``.
+        kws_graph : dict, optional
+            Keyword arguments forwarded to ``DAG.plot`` for the DAG panel.
+        kws_identification : dict, optional
+            Arguments passed to ``identification_analysis`` before plotting.
+        kws_detailed : dict or None, optional
+            Overrides for detailed identification output (e.g.,
+            ``{'strategy': 'SoO', 'parameter': 'ACE'}``). Defaults to selecting
+            the first available parameter.
+        figsize : tuple[float, float] or None, optional
+            Figure size in inches. When ``None``, the identification plotting
+            routine chooses a default.
+        ratio : float or None, optional
+            Aspect ratio override for the combined plot.
+        ncols, nrows : int or None, optional
+            Layout configuration for identification panels.
+        title_dag : str or None, optional
+            Title displayed above the DAG subplot.
+        title_info : str or None, optional
+            Title for the identification summary panel.
+        txt_line_height : float, optional
+            Text line height used when ``figsize`` is not provided. Defaults to
+            ``0.55``.
+        *args :
+            Additional positional arguments forwarded to the underlying plotting
+            routine.
+        **kws :
+            Extra keyword arguments forwarded to the underlying plotting routine.
+
+        Returns
+        -------
+        tuple
+            Result of ``self.__identification__.plot`` which includes figure and
+            axes handles.
+
+        Examples
+        --------
+        >>> G = DAG(graph="X -> Y")
+        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        >>> result = G.plot_identification(show_plot=False)
         """
         roles = ['Exposure', 'Outcome', 'Latent', 'Observed',
                  'exposure', 'outcome', 'latent', 'observed']
@@ -1492,6 +2344,30 @@ class DAG:
 
     # comparing SCM
     def edge_differences(self, G2):
+        """
+        Compare edge sets between two DAGs by edge type.
+
+        Parameters
+        ----------
+        G2 : DAG
+            Graph to compare with the current instance.
+
+        Returns
+        -------
+        dict[str, dict[str, list]]
+            Dictionary with keys ``'G1'`` and ``'G2'``, each mapping to a
+            dictionary keyed by edge type (``'directed'``, ``'undirected'``,
+            ``'bidirected'``) listing edges present in one graph but absent in
+            the other.
+
+        Examples
+        --------
+        >>> G1 = DAG(graph="X -> Y")
+        >>> G2 = DAG(graph="X <- Y")
+        >>> diff = G1.edge_differences(G2)
+        >>> diff["G1"]["directed"]
+        [('X', 'Y')]
+        """
         res1 = self.__edge_differences__(G2)
         res2 = G2.__edge_differences__(self)
         return {"G1":res1, "G2":res2}
@@ -3126,20 +4002,40 @@ class identification:
     def __str__(self):
         self.__repr__()
         return ''
-
+    
 class examples:
-    """
-    Registry of example DAGs.
-
-    Usage:
-    -------
-    >>> from causalinf.scm import examples
-    >>> examples()                                # -> ['Not identifiable', ...]
-    >>> dag = examples(which='Not identifiable')  # -> DAG instance
-    >>> examples('Not identifiable', as_text=True)
-    """
 
     def __new__(cls, which=None, print_DAG=False, *args, **kws):
+        """
+        Retrieve a predefined example DAG or list available examples.
+
+        Parameters
+        ----------
+        which : str or None, optional
+            Name of the example to load. When ``None``, the function prints the
+            list of available examples (optionally with their DAG representations)
+            and returns ``None``.
+        print_DAG : bool, optional
+            If ``True`` and ``which`` is ``None``, print the textual
+            representation of each example DAG. Defaults to ``False``.
+        *args :
+            Additional positional arguments forwarded to the example factory.
+        **kws :
+            Additional keyword arguments forwarded to the example factory.
+
+        Returns
+        -------
+        DAG or None
+            Instantiated `DAG` object when ``which`` matches an example; otherwise
+            ``None``.
+
+        Examples
+        --------
+        >>> examples() # print the list of predefined examples
+        >>> G = examples('Frontdoor') # load DAG from predefined example
+        >>> isinstance(G, DAG)
+        True
+        """
         if not which:
             examples._print_examples(print_DAG=print_DAG)
             dag = None
@@ -3246,10 +4142,6 @@ class examples:
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
 
     def _example_iv_1_instrument(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
         dag  = """
         X <-> Y
         Z -> X -> Y
@@ -3266,10 +4158,6 @@ class examples:
                     edge_label=edge_labels)
 
     def _example_iv_3_instruments(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
         dag  = """
         D <-> Y
         Z1 -> D -> Y

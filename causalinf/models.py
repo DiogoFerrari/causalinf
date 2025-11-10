@@ -18,15 +18,16 @@ lavaan = importr("lavaan")
 __all__ = ['lsem', 'glm']
 
 class lsem:
-    """Interface to estimate linear structural equation models via ``lavaan``.
+    """
+    Interface to estimate linear structural equation models via ``lavaan``.
 
     Parameters
     ----------
     formula : str
         ``lavaan``-compatible model specification passed to :func:`lavaan.sem`.
 
-    data : tidypolars4sci.tibble
-        Dataset providing the observed variables referenced in ``formula``.
+    data : tidypolars4sci.DataFrame
+        Dataset containing all variables referenced in ``formula``.
 
     estimator : str
        The name of the estimator to use. 
@@ -42,9 +43,9 @@ class lsem:
         type and set the estimator type accordingly (see 'estimator')
         If None, use all variables as continuous.
 
-    ordinal_auto_ncat : int
-        When ordinal='auto', variables are classified as ordinal if
-        they have 'ordinal_auto_ncat' categories or fewer. 
+    ordinal_auto_ncat : int, optional
+        Threshold for categorizing variables as ordinal when using
+        ``ordinal='auto'``. Defaults to ``5``.
 
     se : str, bool, or None
         Specification for classical, robust, or bootstrap standard errors. Options:
@@ -57,19 +58,29 @@ class lsem:
           the data are complete or not.
         - "boot" or "bootstrap": bootstrap standard errors using
            standard bootstrapping 
-        
+
     se_cluster : str or None
         Column name indicating clustering groups for standard errors. If ``None``
         no clustering is requested.
 
-    weights : any
-        Optional weights forwarded to :func:`lavaan.sem`.
+    weights : str or None, optional
+        Optional column name specifying sampling weights.
 
-    silent: bool
-       If False, omit estimation progress messages.
+    silent : bool, optional
+        Suppress estimation progress messages when ``True``. Defaults to
+        ``False``.
 
-    *args, **kws
-        Additional positional and keyword arguments passed to :func:`lavaan.sem`.
+    *args :
+        Additional positional arguments passed directly to ``lavaan.sem``.
+    **kws :
+        Additional keyword arguments passed directly to ``lavaan.sem``.
+
+    Examples
+    --------
+    >>> df = tp.tibble({'X': [0, 1, 0], 'Y': [1.0, 2.3, 1.5]})
+    >>> model = lsem("Y ~ X", data=df, silent=True)
+    >>> round(model.est.fit['AIC'], 2)
+    0.0
     """
     def __init__(self, formula, data,
                  estimator='auto',
@@ -236,22 +247,20 @@ class lsem:
         txt = [f"{model} ({', '.join(vars)})" for model, vars in models.items() if len(vars)>0]
         txt = f"Models: {', '.join(txt)}"
         return txt
-        
+    
 class glm:
     """
-    family : str 
-        Defines the family of the outcome variable distribution for
-        'auto', 'gaussian', 'logit', 'multinomial'
-        If 'auto', it detects the type of the outcome and
-        automatically set the distribution family using:
-        - binary: logit
-        - categorical: multinomial
-        - continuous: gaussian
-        For linear probability model, set family='gaussian' with
-        binary outcomes
-        For LSEM, see causalinf.models.lsem documentation.
+    Convenience helpers for fitting and summarizing Gaussian linear models.
 
+    Examples
+    --------
+    >>> df = tp.tibble({'y': [1.0, 2.0, 3.0], 'x': [0.0, 1.0, 2.0]})
+    >>> results = glm.estimate_gaussian('y ~ x', data=df, se_robust='HC1')
+    >>> summary = glm.estimate_gaussian_summarize(results)
+    >>> summary['fit_stats']['N.obs']
+    3
     """
+
     # Regression: Gaussian -----------------------------------------------
     def estimate_gaussian(formula, data, se_cluster=None, se_robust=None,
                           weights=1, *args, **kws):

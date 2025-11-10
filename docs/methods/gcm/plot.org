@@ -4,6 +4,7 @@
 #+NAME: save-plot
 #+BEGIN_SRC python :exports results :results output raw :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
 #
+import matplotlib.pyplot as plt
 from causalinf import options as opt
 opt.set_options(show_plot=False)
 # Save figures
@@ -33,7 +34,7 @@ The function [[file:../../../api/#causalinf.scm.DAG.plot][plot()]] plots the gra
 
 
 #+BEGIN_SRC python :exports both :results silent :cache yes :noweb no :session *Python* :tangle src-scm.py :linenums 1
-from causalinf import scm
+from causalinf import gcm
 dag = """
 Y <- {X1, X2, D}
 D <- {X1, Z}
@@ -45,15 +46,11 @@ pos = {'D': (0, 0),
        'X2': (0.5, -1),
        'X1': (0.5, 1)}
 var_types = {"Exposure":"Y", "Outcome":"D"}
-G = scm.DAG(dag, nodes_role=var_types, nodes_position=pos)
+G = gcm.DAG(dag, nodes_role=var_types, nodes_position=pos)
 G.plot()
 #+END_SRC
 
 
-#+CALL: save-plot("02-plotting-gcm-unformatted")
-
-#+RESULTS[af408a119f5155cf352574821ecdc288d1c2030c]:
-[[./tables-and-figures/02-plotting-gcm-unformatted.png]]
 
 
 /Bidirected edges/ are represented by default in the plot with dashed curved lines. In the context of causal inference with DAGs, by convention these arrows (often called "arcs") indicate a latent or unobserved common cause between the variables connected by the bidirected arrow. Alternatively, these variables can be included explicitly when creating the DAG.
@@ -83,8 +80,9 @@ G.plot()
 
 #+CALL: save-plot(fn="02-plotting-gcm-bidirected-and-undirected") 
 
-#+RESULTS[bd087f46d728bdbdf268f250b725ec4a17626fba]:
+#+RESULTS:
 [[./tables-and-figures/02-plotting-gcm-bidirected-and-undirected.png]]
+
 
 
 

@@ -1,8 +1,11 @@
+---
 
-** Installation
-:PROPERTIES:
-:CUSTOM_ID: installation
-:END:
+hide:
+  - toc
+
+---
+
+
 You can install causalinf with =pip=:
 
 #+begin_src sh

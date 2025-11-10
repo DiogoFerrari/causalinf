@@ -24,13 +24,16 @@ assessments regarding the validity of the underlying causal modeling
 assumptions in the specific context of application. Typically, users of
 causal inference methods know the causal assumptions associated with
 each causal modeling approach and then select the method whose
-assumptions are satisfied in the available data. Hence, the emphasis of
+assumptions are plausible in the available data. Hence, the emphasis of
 `causalinf` on those assumptions.
 
-Differently from many statistical modeling assumptions, the **validity
-of causal modeling assumptions cannot be tested using typical
-statistical test procedures.** Instead, the judgment about their
-validity depends on three things:
+Users can find functionalities to test statistical modeling assumptions
+in various other existing modules outside `causalinf`. They can be used
+directly on the output of the estimation object from `causalinf` (see
+[Estimation](../estimation)). However, differently from many statistical
+modeling assumptions, the **validity of causal modeling assumptions
+cannot be tested using typical statistical test procedures.** Instead,
+the judgment about their validity depends on three things:
 
 1.  *Methodological expertise*, which refers to the understanding of
     what the assumptions mean (and do not mean) in terms of the
@@ -47,8 +50,8 @@ validity depends on three things:
     data.
 
 Whenever possible, the `causalinf` module facilitates that third aspect
-of the assessment of causal modeling assumptions. The main method in all
-submodules to get that assessment is `check_assumptions()`. For
+of the assessment of causal modeling assumptions. The main function in
+all submodules to get that assessment is `check_assumptions()`. For
 instance, to check the causal assumptions for a **DiD** application,
 use:
 
@@ -58,7 +61,8 @@ from causalinf import did
 did.check_assumptions(<args>)
 ```
 
-`<args>` vary across submodules depending on the method used.
+`<args>` vary across submodules depending on the method used. See
+[Methods](../methods/overview) for details in each case.
 
 ## References {#sec-refs}
 

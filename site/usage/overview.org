@@ -1,0 +1,26 @@
+---
+
+hide:
+  - toc
+
+---
+
+
+Some core functions in ~causalinf~ are standardized across the many submodules used for different causal inference methods. The main ones are:
+
+| Task                              | Basic function                     |
+|-----------------------------------+------------------------------------|
+| Check causal modeling assumptions | ~<submodule>.check_assumptions()~    |
+| Estimate causal model             | ~<submodule>.estimate()~             |
+| Run sensitivity analysis          | ~<submodule>.sensitivity_analysis()~ |
+| Summarize the results             | ~<submodule>.summary()~              |
+| Examples(1)                        | ~<submodule>examples()~      |
+
+/Note: (1) Each submodule contains some pre-defined examples to illustrate ~causalinf~ usage. See [[file:../examples/][Examples.]]/
+
+For details of these functions, see [[file:../assumptions/][Basic Functions]] subsections.
+
+For method-specific features, see [[file:../../methods/gcm/introduction][Methods]].
+
+For comprehensive applied examples, see [[file:../../case-studies/did-card1994minimum][Case Studies]].
+

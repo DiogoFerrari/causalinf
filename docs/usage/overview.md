@@ -18,14 +18,11 @@ are:
 | Summarize the results             | `<submodule>.summary()`              |
 | Examples(1)                       | `<submodule>examples()`              |
 
-*Note: (1) Each submodule contains some pre-defined examples to
-illustrate `causalinf` usage. See [Examples.](../examples/)*
+*(1) Each submodule contains some pre-defined examples to illustrate
+`causalinf` application. See [Examples.](../examples/)*
 
-For details of these functions, see [Basic Functions](../assumptions/)
-subsections.
-
-For method-specific features, see
-[Methods](../../methods/gcm/introduction).
+There are many other method-specific functions. See
+[Methods](../methods/overview.md) for details.
 
 For comprehensive applied examples, see [Case
-Studies](../../case-studies/did-card1994minimum).
+Studies](../../case-studies/overview).

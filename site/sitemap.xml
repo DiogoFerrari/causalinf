@@ -2,50 +2,158 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://www.diogoferrari.com/causalinf/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/api/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/releases/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/did/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/case-studies/did-card1994minimum/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/scm/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/assumptions/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/introduction/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/did/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/did/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/assumptions/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/build/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/identification/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/introduction/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/plot/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/scm/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/iv/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/iv/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/rd/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/rd/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/scm/assumptions/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/scm/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/scm/introduction/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/scm/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/soo/estimate/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/soo/report/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/usage/assumptions/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/usage/estimation/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/usage/examples/</loc>
+         <lastmod>2025-11-05</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/usage/import/</loc>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/installation/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/iv/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/usage/overview/</loc>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/matching/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/usage/sensitivity/</loc>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/mediation/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/usage/simulate-data/</loc>
+         <lastmod>2025-11-05</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/rdd/</loc>
-         <lastmod>2025-02-18</lastmod>
-    </url>
-    <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/scm/</loc>
-         <lastmod>2025-02-18</lastmod>
-    </url>
-    <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/soo/</loc>
-         <lastmod>2025-02-18</lastmod>
-    </url>
-    <url>
-         <loc>https://www.diogoferrari.com/causalinf/usage/usage/</loc>
-         <lastmod>2025-02-18</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/usage/summary-and-reporting/</loc>
+         <lastmod>2025-11-05</lastmod>
     </url>
 </urlset>

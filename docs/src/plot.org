@@ -1,0 +1,22 @@
+
+#+NAME: save-plot
+#+BEGIN_SRC python :exports results :results output raw :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
+import matplotlib.pyplot as plt
+from causalinf import options as opt
+opt.set_options(show_plot=False)
+# Save figures
+fns = ["./tables-and-figures/" + f"{fn}.png",
+       "./tables-and-figures/" + f"{fn}.pdf"]
+[plt.savefig(fn) for fn in fns]
+plt.close('all')
+
+print(# "#+begin_src org \n"# # # 
+      # "#+ATTR_ORG: :width 200/250/300/400/500/600\n"
+      # "#+ATTR_LATEX: :width 1\textwidth :placement [ht!]\n"
+      # "#+CAPTION: Comparing performance for pivot_wide()\n"
+      # "#+Name: fig-pivot-wide\n"
+      f"[[./tables-and-figures/{fn}.png]]\n"
+      # "#+end_src\n"# # # 
+)
+#+END_SRC
+

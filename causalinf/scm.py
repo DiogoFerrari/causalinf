@@ -9,34 +9,97 @@ __all__ = ['estimate']
 
 class estimate:
     """
-    Estimate a structural causal model.
+    Estimate structural equation parameters for a causal DAG.
 
+    This class bridges a `gcm.DAG` object, observational data, and model
+    specifications (e.g., linear SEMs via :class:`causalinf.models.lsem`)
+    to produce fitted models based on the DAG, as well as estimation
+    summaries, diagnostic, and  visualizations.
 
-    formula : str or None (optional)
-        A structural equation model
-           Ex: y ~ d + x1 + z1
-               x2 ~ z1 + z2
-        where y, d, Z's, and X's are variables in the data
+    Parameters
+    ----------
+    G : gcm.DAG
+        Causal graph describing relationships among observed and latent
+        variables.
 
     model: str
-        Used only if formula is not provided
-        'auto' : use LSEM
-        'LSEM': use linear structural equation models. 
-        'GLSEM': use generalied linear structural equation models
-        'NPSEM': uses nonparametric structural equation estimation
-                 In this case, it uses GAM.
-    
+        Models for the functions of the structural causal model.
+        - 'auto' : use LSEM
+        - 'LSEM': use (parametric) generalized linear structural equation models. 
+        - 'NPSEM-IE-<option>': use nonparametric structural equation
+                    models with independent errors. Available options:
+            - BART: NPSEM-IE-BART (default)
+            - GAM: NPSEM-IE-GAM
+
+
+    formula : str or None, optional
+        Depends on the model for the functional forms used  (see argument ``model``).
+        When ``None`` (default), automatically generate a formula
+        without interactive terms based on the DAG and the functional
+        forms selected (parameter ``model``) for the estimation.
+        For model-specific formulas and arguments, see Notes below.
+
+        Example:
+
+        When model='auto' (which is equivalent to model='LSEM')
+        a formula used by R package lavaan is auto-generated from the
+        DAG structure, and it includes definitions for direct, indirect,
+        and total effect parameters whenever exposure/outcome roles are defined
+        in the DAG object.
+        For LSEM model-specific arguments, use the ``model_kws`` argument
+        and check arguments accepted by LSEM in causalinf.models.lsem
+        See ``Notes`` below.
+
+    data : DataFrame-like
+        Observational dataset containing all variables referenced by the DAG or
+        formula. Converted internally to ``tidypolars4sci`` tibble format.
+
+    family : str, optional
+        Outcome distribution family. Defaults to ``'auto'``.
     se_cluster : str
         Name of the variable to cluster the std. errors. 
-
     se : str or None
-       See the documentation of the specific model used. Example:
-       causalinf.models.lsem (for LSEM)
+        See the documentation of the specific model used. Example:
+        causalinf.models.lsem (for LSEM). See notes.
+    model_kws : dict, optional
+        Additional keyword arguments forwarded to model-specific estimation
+        routines.
+    sem : Any, optional
+        Placeholder for future compatibility with alternative SEM backends.
+    weights : str or array-like, optional
+        Observation weights passed through to the estimator. Defaults to
+        ``1`` (equal weights).
+    *args :
+        Additional positional arguments forwarded to the underlying estimator.
+    **kws :
+        Additional keyword arguments forwarded to the underlying estimator.
 
-    Specific models
-    ---------------
+
+    Notes
+    -----
     For documentation of model-specific arguments, see models. Example:
     - causalinf.models.lsem (for LSEM)
+
+
+    Attributes
+    ----------
+    G : gcm.DAG
+        Original DAG used in the estimation.
+    formula : str
+        SEM specification employed during fitting.
+    fit : object
+        Raw estimator output (e.g., lavaan fit object) when available.
+    est : dict
+        Summary bundle returned by the selected estimator, including parameter
+        tables, fit statistics, and option metadata.
+
+    Examples
+    --------
+    >>> dag = gcm.DAG("X -> Y")
+    >>> data = tp.tibble({'X': [0, 1, 0], 'Y': [1.0, 2.5, 1.2]})
+    >>> est = estimate(G=dag, data=data, silent=True)
+    >>> est.est['fit']['N_obs']
+    3
     """
     def __init__(self,
                  G,
@@ -134,12 +197,12 @@ class estimate:
         return sem
 
     def _graph2sem_indirect_and_total_effects(self, G, parameter_fmt):
-        """
-        edges    : list of (u, v) directed edges
-        exposure, outcome : compute indirect paths from exposure to outcome
-        parameter_fmt: how to name each coefficient (e.g., 'beta_{u}.{v}' or '(beta_{u}.{v})')
-        returns  : list of (path_nodes, effect_str)
-        """
+        # """
+        # edges    : list of (u, v) directed edges
+        # exposure, outcome : compute indirect paths from exposure to outcome
+        # parameter_fmt: how to name each coefficient (e.g., 'beta_{u}.{v}' or '(beta_{u}.{v})')
+        # returns  : list of (path_nodes, effect_str)
+        # """
         # build adjacency
         edges = G.directed
         exposure = G.exposure[0]

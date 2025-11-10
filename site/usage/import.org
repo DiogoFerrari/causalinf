@@ -1,0 +1,60 @@
+---
+
+hide:
+  - toc
+
+---
+
+
+# 
+#+BEGIN_SRC python :exports none :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+from docs.src.constants import *
+#+END_SRC
+
+
+The ~causalinf~ module provides implementations, through different submodules, of many *causal identification strategies*, that is, (causal) *models* used to recover causal effects in quantitative analyses. /Experiments/ are treated as a particular case of an identification strategy. The following submodules are available (other methods may be added in the future):
+
+# 
+#+BEGIN_SRC python :exports results :results output code org :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+import causalinf 
+
+i = 1
+for module in causalinf.__all__:
+    method = causalinf.__all_labels__.get(module, None)
+    if method:
+        print(f"{i}. {method:33} (submodule name: *{module}*)")
+        i+=1
+#+END_SRC
+
+#+RESULTS[36d719ba5ebc27d7d48d952a2d919d5ef449ebfb]:
+#+begin_src org
+1. Experimental Design (ED)          (submodule name: *experiment*)
+2. Graphical Causal Models (GCM)     (submodule name: *gcm*)
+3. Structural Causal Models (SCM)    (submodule name: *scm*)
+4. Causal Bayesian Networks (CBN)    (submodule name: *cbn*)
+5. Selection on Observables (SoO)    (submodule name: *soo*)
+6. Difference-in-Differences (DiD)   (submodule name: *did*)
+7. Regression Discontinuity (RD)     (submodule name: *rd*)
+8. Instrumental Variable (IV)        (submodule name: *iv*)
+#+end_src
+
+
+To import a submodule, use:
+
+# 
+#+BEGIN_SRC python :exports code :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval never
+from causalinf import <submodule name>
+#+END_SRC
+
+Here are some examples:
+# 
+#+BEGIN_SRC python :exports code :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1  :eval never
+from causalinf import did # (1)!
+from causalinf import gcm # (2)!
+from causalinf import iv  # (3)!
+#+END_SRC
+
+1. Load the Difference-in-Differences (DiD) module
+2. Load the Causal Graphical Models (GCM) module
+3. Load the Instrumental Variable (IV) module
+

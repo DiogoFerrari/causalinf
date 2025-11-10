@@ -1,0 +1,42 @@
+---
+
+hide:
+  - toc
+
+---
+
+#+BEGIN_SRC python :exports none :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+from docs.src.constants import *
+#+END_SRC
+
+* Overview
+
+The following submodules (i.e., methods to identify causal effects) are available (other methods may become available in the future):
+
+# 
+#+BEGIN_SRC python :exports results :results output code org :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+import causalinf 
+
+i = 1
+for module in causalinf.__all__:
+    method = causalinf.__all_labels__.get(module, None)
+    if method:
+        print(f"{i}. {method:33} (submodule name: *{module}*)")
+        i+=1
+#+END_SRC
+
+#+RESULTS[36d719ba5ebc27d7d48d952a2d919d5ef449ebfb]:
+#+begin_src org
+1. Experimental Design (ED)          (submodule name: *experiment*)
+2. Graphical Causal Models (GCM)     (submodule name: *gcm*)
+3. Structural Causal Models (SCM)    (submodule name: *scm*)
+4. Causal Bayesian Networks (CBN)    (submodule name: *cbn*)
+5. Selection on Observables (SoO)    (submodule name: *soo*)
+6. Difference-in-Differences (DiD)   (submodule name: *did*)
+7. Regression Discontinuity (RD)     (submodule name: *rd*)
+8. Instrumental Variable (IV)        (submodule name: *iv*)
+#+end_src
+
+Use the top or left-side menu to view the implementation of each method and the functionalities available.
+
+Study cases with applied examples are in [[file:../case-studies/overview.md][Case Studies]].

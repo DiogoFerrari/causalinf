@@ -11,7 +11,7 @@ customization. Check the documentation of
 of options.
 
 ``` {.python exports="both" results="silent" cache="yes" noweb="no" session="*Python*" tangle="src-scm.py" linenums="1"}
-from causalinf import scm
+from causalinf import gcm
 dag = """
 Y <- {X1, X2, D}
 D <- {X1, Z}
@@ -23,11 +23,9 @@ pos = {'D': (0, 0),
        'X2': (0.5, -1),
        'X1': (0.5, 1)}
 var_types = {"Exposure":"Y", "Outcome":"D"}
-G = scm.DAG(dag, nodes_role=var_types, nodes_position=pos)
+G = gcm.DAG(dag, nodes_role=var_types, nodes_position=pos)
 G.plot()
 ```
-
-![](./tables-and-figures/02-plotting-gcm-unformatted.png)
 
 *Bidirected edges* are represented by default in the plot with dashed
 curved lines. In the context of causal inference with DAGs, by
@@ -157,7 +155,7 @@ G.plot()
 
 ### Edge style
 
-## References {#sec-plot-styles-refs}
+## References {#sec-refs}
 
 -   Pearl, J. (2009). Causality: Models, Reasoning and Inference. :
     Cambridge University Press.
