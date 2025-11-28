@@ -13,19 +13,19 @@ class estimate():
     
     def __init__(self, stage1, stage2, data,
                  cov_type:str='robust', clusters:list=None):
-        """
-        Fit instrumental variable (IV) model
+        # """
+        # Fit instrumental variable (IV) model
 
-        Parameters
-        ----------
-        formula : str
-            A formula that specifies the model.
+        # Parameters
+        # ----------
+        # formula : str
+        #     A formula that specifies the model.
 
-        Returns
-        -------
-        IV
-            Object of class IV.
-        """
+        # Returns
+        # -------
+        # IV
+        #     Object of class IV.
+        # """
         self.__cov_type__ = cov_type
         self.__clusters__ = clusters
         self.__collect_info__(stage1, stage2)
@@ -33,13 +33,13 @@ class estimate():
         self.__get_diagnostics__()
 
     def summary(self):
-        """
-        Summarize IV estimation 
+        # """
+        # Summarize IV estimation 
 
-        Returns
-        -------
-        None
-        """        
+        # Returns
+        # -------
+        # None
+        # """        
         print(self.formula)
         return None
 

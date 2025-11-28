@@ -8,13 +8,14 @@ from .tau import *
 # 
 import tidypolars4sci as tp
 import networkx as nx
-import re, itertools, math, inspect, textwrap
+import re, itertools, math, inspect, textwrap, inspect
 from textwrap import dedent
 import numpy as np
 from scipy.stats import norm as dnorm
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from collections import defaultdict
+from typing import Any
 # for examples
 import difflib
 # R packages/dependencies
@@ -25,101 +26,49 @@ from rpy2.robjects import NULL
 dagitty = importr("dagitty")
 dosearch = importr("dosearch")
 
-__all__ = ['DAG', 'estimate', 'examples']
+__all__ = ['DAG', 'examples']
 
 class DAG:
     """
-    Initialize a directed acyclic graph (DAG) representation.
+    Create a directed acyclic graph (DAG).
 
     Parameters
     ----------
-    graph: (str, dict, list)
-        A string with the a graph, or a list or dictionary with the edges
+    graph: str, dict, or list
+        A string with a graph or a list or a dictionary with the edges. Formats:
 
-        String
-        ------
-        If string, it can have different formats
-            X -> Y  : directed edge from X to Y
-            X -- Y  : undirected edge between X and Y
-            X <-> Y : bidirected edge between X and Y
+        * String: If string, it can have different formats (see examples)
+            * X -> Y  : directed edge from X to Y
+            * X -- Y  : undirected edge between X and Y
+            * X <-> Y : bidirected edge between X and Y
 
-        Example 1:
+        * List: If list, the elements are edge types:
+            * ('X', 'Y'): Tuple becomes X -> Y  (directed edge)
+            * {'X', 'Z'}: Set becomes X -- Y  (undirected edge)
+            * (('X1', 'X2'), ('X2', 'X1')), Tuple of tyuples becomes X <-> Y (bidirected edge)
 
-            '''
-            X1 -> Y
-            X1 -> Z -> Y
-            X1 <- X2
-            '''
-
-        Example 2: The following three versions are acceptable and produce the same graph:
-
-            Version 1
-            '''
-            X1 -> A
-            X1 -> B
-            X2 -> C
-            X2 -> D
-            '''
-
-            Version 2
-            '''
-            X1 -> {A, B}
-            {C, D} <- X2
-            '''
-
-            Version 3
-            '''
-            X1 -> {A, B}
-            X2 -> {C, D}
-            '''
-
-        Example 3 (comments are allowed and automatically ignored when creating the graph):
-            '''
-            # bidirected edge
-            X3 <-> X4
-            X3 -- X4  # undirected edge
-            X5 -- X6 -> X7
-            '''
-
-        List
-        ----
-        If list, the edge types will be parsed based on their format:
-    
-            [
-                ('X', 'Y'),                    # becomes X -> Y  (directed edge)
-                {'X', 'Z'},                    # becomes X -- Y  (undirected edge)
-                (('X1', 'X2'), ('X2', 'X1')),  # becomes X <-> Y (bidirected edge)
-            ]
-
-        Dict
-        ----
-        If dictionary, it must contains the edges as elements and the
+        * Dict: If dictionary, it must contains the edges as elements and the
         edge type (directed, undirected, bidirected) as keys. Example:
+            * 'directed'  : [('X', 'Y'), ...] (list of tuples for directed edges)
+            * 'undirected': [{'X1', 'X2'}, ...]  (list of sets fo undirected edges)
+            *  'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] (list of tuples of tuples of bidirected edges)
 
-            {
-                 'directed'  : [('X', 'Y'), ...],  # list of tuples
-                 'undirected': [{'X1', 'X2'}, ...] # list of dictionaries
-                 'bidirected': [ (('X1', 'X2'), ('X2', 'X1')), ...] # list of 2-tuple tuples
-             }
-
-        See more examples below.
-    
     data : DataFrame-like or None, optional
-        Observational data to retain alongside the graph for downstream
-        identification tasks. The data is stored without validation.
+        Data on the variables included in the graph.
 
     nodes_role : dict[str, Sequence[str]] or None, optional
-        Keys should be node role names (e.g., ``'Exposure'``, ``'Outcome'``,
-        ``'Latent'``) and values a string or list with the node names.
-         Lowercase role keys for ``'Exposure'``, ``'Outcome'``, and
-        ``'Latent'`` are automatically promoted to their capitalized equivalents.
+        Keys should be the role of the variables and the dict values strings
+        or lists with the variable names playing that role.
+        Main roles for causal analysis are  ``'Exposure'``, ``'Outcome'``, and
+        ``'Latent'`` variables.
+        Other arbitrary roles are accepted, but not used for causal analysis.
 
     nodes_label : dict[str, str] or None, optional
-        Labels for graph nodes. Keys should be node names, values their labels.
-        Latex expression is accepted.
+        Labels for graph variables. Keys should be variable names, values their labels.
+        Labels with Latex expression are accepted.
 
     nodes_position : dict[str, tuple[float, float]] or None, optional
-        Layout coordinates for nodes. Keys should be node names, values 
+        Layout coordinates for variables. Keys should be variable names, values 
         (x, y) coordinate tuples.
 
     edge_label : dict or None, optional
@@ -128,6 +77,38 @@ class DAG:
 
     Examples
     --------
+    >>> # Examples of acceptable string formats
+    >>> dag = '''
+    >>> X1 -> Y
+    >>> X1 -> Z -> Y
+    >>> X1 <- X2
+    >>> '''
+    >>> 
+    >>> dag = '''
+    >>> X1 -> A
+    >>> X1 -> B
+    >>> X2 -> C
+    >>> X2 -> D
+    >>> '''
+    >>> 
+    >>> dag = '''
+    >>> X1 -> {A, B}
+    >>> {C, D} <- X2
+    >>> '''
+    >>> 
+    >>> dag = '''
+    >>> X1 -> {A, B}
+    >>> X2 -> {C, D}
+    >>> '''
+    >>> 
+    >>> dag = '''
+    >>> # bidirected edge
+    >>> X3 <-> X4
+    >>> X3 -- X4  # undirected edge
+    >>> X5 -- X6 -> X7
+    >>> '''
+    >>> 
+    >>> 
     >>> # basic settings
     >>> pos = {'D': (0,0),
     >>>        'Y': (1,0),
@@ -141,7 +122,7 @@ class DAG:
     >>>          "Latent"      : 'Z',
     >>>          "The M2 node" : "M2" # arbtiraty roles available
     >>>          }
-    >>> node_labels = {"D": "$\widetilde{D}$",
+    >>> node_labels = {"D": "$\\widetilde{D}$",
     >>>           'Y': "Outcome"}
     >>> edge_labels = {
     >>>     # directed edge labels
@@ -214,7 +195,7 @@ class DAG:
     """
 
     def __init__(self,
-                 graph=None,
+                 graph,
                  data=None,
                  # nodes
                  nodes_role=None,
@@ -620,7 +601,7 @@ class DAG:
     # dagitty (R dependencies)
     def local_independencies(self, data=None, alpha=0.05, include_sep_cols=False):
         """
-        List conditional independencies implied by the DAG, optionally using data.
+        List conditional independencies implied by the DAG, and test them if data is provided.
 
         Parameters
         ----------
@@ -649,7 +630,7 @@ class DAG:
         --------
         >>> G = DAG(graph="X -> Z -> Y")
         >>> independencies = G.local_independencies(include_sep_cols=True)
-        >>> independencies.select(["term"]).to_pandas().term.tolist()
+        >>> independencies.pull("term").to_list()
         ['Y _||_ X | Z']
         """
         if data is None:
@@ -770,60 +751,60 @@ class DAG:
         return None
 
     def get_identified(self, by='parameter', include_all=False):
-        """
-        Retrieve identification results summarised by parameter or strategy.
+        # """
+        # Retrieve identification results summarised by parameter or strategy.
 
-        Parameters
-        ----------
-        by : {'parameter', 'strategy'}, optional
-            Grouping used for the returned results. Defaults to ``'parameter'``.
-        include_all : bool, optional
-            When ``True``, include all strategies that identify the parameters.
-            Otherwise, only the SoO, or IV, or do-calculus, whatever
-            identifies it first. Defaults to ``False``.
+        # Parameters
+        # ----------
+        # by : {'parameter', 'strategy'}, optional
+        #     Grouping used for the returned results. Defaults to ``'parameter'``.
+        # include_all : bool, optional
+        #     When ``True``, include all strategies that identify the parameters.
+        #     Otherwise, only the SoO, or IV, or do-calculus, whatever
+        #     identifies it first. Defaults to ``False``.
 
-        Returns
-        -------
-        dict
+        # Returns
+        # -------
+        # dict
 
-        Examples
-        --------
-        >>> G = DAG(graph="X -> Y")
-        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
-        >>> G.get_identified()
-        """
+        # Examples
+        # --------
+        # >>> G = DAG(graph="X -> Y")
+        # >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        # >>> G.get_identified()
+        # """
         if not self.__identification__:
             self.identification_analysis()
         res = self.__identification__.get_identified(by=by, include_all=include_all)
         return res
 
     def identification(self, print='default', parameter='ACE', *args, **kws):
-        """
-        Print identification analysis using custom output options.
+        # """
+        # Print identification analysis using custom output options.
 
-        Parameters
-        ----------
-        print : str, optional
-            Content selector forwarded to the identification printer. Defaults
-            to ``'default'``.
-        parameter : str, optional
-            Target causal parameter to display, e.g., ``'ACE'`` (default).
-        *args :
-            Additional positional arguments forwarded to ``self.print``.
-        **kws :
-            Keyword arguments supporting an ``identification`` dictionary that
-            overrides default print options.
+        # Parameters
+        # ----------
+        # print : str, optional
+        #     Content selector forwarded to the identification printer. Defaults
+        #     to ``'default'``.
+        # parameter : str, optional
+        #     Target causal parameter to display, e.g., ``'ACE'`` (default).
+        # *args :
+        #     Additional positional arguments forwarded to ``self.print``.
+        # **kws :
+        #     Keyword arguments supporting an ``identification`` dictionary that
+        #     overrides default print options.
 
-        Returns
-        -------
-        None
+        # Returns
+        # -------
+        # None
 
-        Examples
-        --------
-        >>> G = DAG(graph="X -> Y")
-        >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
-        >>> G.identification(print="assumptions", parameter="ACE")
-        """
+        # Examples
+        # --------
+        # >>> G = DAG(graph="X -> Y")
+        # >>> G.identification_analysis(exposure="X", outcome="Y", verbose=False)
+        # >>> G.identification(print="assumptions", parameter="ACE")
+        # """
         if not self.__identification__:
             self.identification_analysis(verbose=False)
 
@@ -837,7 +818,8 @@ class DAG:
     @property
     def identification_dict(self):
         """
-        Mapping of identification results produced by the last analysis.
+        Mapping of identification results produced by the most recent run of
+        identification_analysis.
 
         Returns
         -------
@@ -912,7 +894,7 @@ class DAG:
     # dagitty (R dependencies)
     def paths(self, exposure=None, outcome=None, adj_set=None, directed=False):
         """
-        Enumerate paths between exposure and outcome, optionally conditioning on a set.
+        Get paths between exposure and outcome, optionally conditioning on a set.
 
         Parameters
         ----------
@@ -1011,11 +993,10 @@ class DAG:
         >>> G = DAG(graph="X -> Z -> Y")
         >>> eq = G.equivalence_class()
         >>> eq
-        Graph:
-
-        Z -- X
-        Z -- Y
-        Observed: Z, Y, X
+            Graph:
+            Z -- X
+            Z -- Y
+            Observed: Z, Y, X
         >>> eq.undirected
         [{'X', 'Z'}, {'Z', 'Y'}]
         """
@@ -1051,7 +1032,7 @@ class DAG:
 
     def observationally_equivalent(self, G):
         """
-        Test whether two DAGs are observationally equivalent.
+        Test whether two DAGs are observationally equivalent. See details.
 
 
         Parameters
@@ -1068,64 +1049,64 @@ class DAG:
 
         Details
         -------
-
         The method checks if two DAGs are observationally equivalent by comparing their Markov equivalent classes.
         The method considers only the DAG structure, that is, CBN or SCM when no functional
         form for the latter is selected. Observational equivalence is related to Markov equivalence.
 
-        Two DAGs are Markov equivalent iff
+        Two DAGs are Markov equivalent if and only if
 
-        A. They have the same skeleton (same set of adjacencies, i.e., same undirected edges)  
-
-        B. They have the same set of v-structures (triples \( X \rightarrow Z \leftarrow Y \) where X and Y are not adjacent).
+        * They have the same skeleton (same set of adjacencies, i.e., same undirected edges)  
+        * They have the same set of v-structures (triples $ X -> Z <- Y $ where X and Y are not adjacent).
 
         An equivalence class of a DAG is a graph that replaces directional edges with undirected edges except
         in v-structures. Therefore, all Markov equivalent DAGs will have the same equivalence class.
 
-        For CBN:
+        **For CBN:**
 
-        - Two CBNs are observationally equivalent iff they are Markov equivalent.
+        - Two CBNs are observationally equivalent if and only if they are Markov equivalent.
 
-        For SCM:
+        **For SCM:**
 
-        Without functional form assumptions, for observational equivalence:
+        *SCM without functional form assumptions*, for observational equivalence to hold:
 
         - Necessary condition: both SCMs have the same set of conditional independencies.
 
         - Sufficient condition: both SCMs are in the same Markov equivalence class (Pearl, 2009).
 
-        - Basically, two SCMs are observationally equivalent iff their causal graphs belong to the same Markov
+        Basically, two SCMs without imposing any functional form assumptions to either
+        are observationally equivalent if and only if their causal graphs belong to the same Markov
         equivalence class --- i.e., they share the same skeleton and v-structures.
 
-        With functional form assumptions:
+        *SCM with functional form assumptions:*
 
         - Once you impose functional form restrictions on SCMs, such as linearity, Gaussian disturbance, or
-        additive error, observational equivalence can be strictly finer. That is, Markov equivalence is not a sufficient condition.
+        additive error, observational equivalence can be strictly finer.
+        That is, Markov equivalence is not a sufficient condition.
 
-        Example:
+        **Examples:**
 
-        a. Linear Gaussian SEMs assumption:
-        - All DAGs in the same equivalence class remain indistinguishable.
-        Markov equivalence = observational equivalence. Reason: any covariance matrix that
-        one DAG can generate can also be generated by another DAG in its equivalence class, via suitable parameter choice.
+        * *Linear Gaussian SEMs assumption:* All DAGs in the same equivalence class remain indistinguishable.
+        Markov equivalence implies observational equivalence and vice-versa. Reason: any covariance matrix that
+        one DAG can generate can also be generated by another DAG in its equivalence class, via suitable
+        parameter choice.
 
-        b. Linear non-Gaussian models (LiNGAM):
-        - Orientations become testable because independent non-Gaussian noise
-        'pins down' which variable must be the parent, breaking Markov equivalence.
-        Example: \( X \rightarrow Y \) and \( X \leftarrow Y \): In the Gaussian case: indistinguishable.
-        In non-Gaussian: identifiable.
+        * *Linear non-Gaussian models (LiNGAM):*  Orientations become testable because independent
+        non-Gaussian noise 'pins down' which variable must be the parent, breaking Markov equivalence.
+        Example:  $X \\rightarrow Y$  and  $X \\leftarrow Y$: In the Gaussian case: indistinguishable.
+        In non-Gaussian: distinguishable.
 
-        c. Additive Noise Models (ANMs):
-        - If the true relation is \( Y = f(X) + e \) with independent noise \( e \),
-        then typically the 'wrong' orientation \( X = g(Y) + e' \) cannot hold with
+        * *Additive Noise Models (ANMs):* - If the true relation is $ Y = f(X) + e $ with independent
+        noise $ e $, then typically the 'wrong' orientation $ X = g(Y) + e' $ cannot hold with
         independent noise. So direction becomes identifiable.
 
-        In summary, generally, SCMs (no distributional restrictions) imply that Markov equivalence
-        does imply observational equivalence. But once you impose restrictions (linear, Gaussian,
-        additive, etc.), observational equivalence can be strictly finer. That is, if one assumes
-        functional forms or noise properties, one may be able to distinguish DAGs inside a Markov
-        equivalence class. Some Markov-equivalent DAGs become distinguishable. Then, the test of
-        equivalence depends on the functional form assumption adopted, so it is case-by-case.
+        In summary, generally, for *SCMs with no distributional restrictions*, Markov equivalence
+        imply observational equivalence. But once you impose restrictions via functional forms
+        or noise properties to the SCMs (linear, Gaussian, additive, etc.),
+        observational equivalence can be strictly finer than Markov equivalence, and 
+        one may be able to distinguish empirically two DAGs inside the same Markov equivalence class.
+        Some Markov-equivalent DAGs become distinguishable. Therefore, as the 
+        observational equivalence between Markov equivalent DAGs depends on the functional
+        form assumption adopted, the evaluation is case-by-case.
 
         Examples
         --------
@@ -1136,8 +1117,7 @@ class DAG:
 
         References
         ----------
-        Pearl, J. (2009). *Causality: Models, Reasoning and Inference*.
-        Cambridge University Press.
+        * Pearl, J. (2009). *Causality: Models, Reasoning and Inference*. Cambridge University Press.
         """
         # check if same equivalence class
         G1_eq = self.equivalence_class()
@@ -1245,6 +1225,7 @@ class DAG:
              # 
              figsize = [6, 4],
              usetex = True,
+             latex_packages = None,
              ax=None,
              show_plot=None,
              *args,
@@ -1362,10 +1343,14 @@ class DAG:
         """
         assert estimates is None or isinstance(estimates, estimate), (
             "'estimates' must be either None or an object of causalinf.scm.estimate ")
+        assert isinstance(latex_packages, list) or latex_packages is None, "latex_packages must be None or a list"
 
         default_usetex = plt.rcParams["text.usetex"] 
         plt.rcParams["text.usetex"] = usetex
-        plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath, amssymb, siunitx, bm}'
+        latex_packages_base = ["amsmath", "amssymb", "siunitx", "bm", "wasysym", "marvosym"]
+        packages = latex_packages_base + (latex_packages or [])
+        plt.rcParams['text.latex.preamble'] = rf"\usepackage{{{', '.join(packages)}}}"
+
         show_plot = show_plot if not None else get_options('show_plot')
 
         # collect arguments
@@ -1629,6 +1614,15 @@ class DAG:
         >>> len(axes)
         1
         """
+        if show_full_dag:
+            assert self.nodes_position, "Nodes position must be set when show_full_dag=True"
+            
+
+        default_usetex = plt.rcParams["text.usetex"] 
+        plt.rcParams["text.usetex"] = True
+        packages = ["amsmath", "amssymb", "siunitx", "bm", "wasysym", "marvosym"]
+        plt.rcParams['text.latex.preamble'] = rf"\usepackage{{{', '.join(packages)}}}"
+
         adj_set = [adj_set] if isinstance(adj_set, str) else adj_set
 
         paths = self.paths(exposure=exposure, outcome=outcome, adj_set=adj_set, directed=directed)
@@ -1670,6 +1664,7 @@ class DAG:
             ax.axis('on')
             plt.tight_layout()
 
+        plt.rcParams["text.usetex"] = default_usetex
         return axs
 
     def plot_equivalent_dags(self,
@@ -4002,40 +3997,70 @@ class identification:
     def __str__(self):
         self.__repr__()
         return ''
-    
+
+    def __dir__(self):
+        # Get all attributes and methods of the object
+        all_attrs = dir(type(self)) + list(self.__dict__.keys())
+        
+        # Filter the attributes based on your criteria
+        filtered_attrs = []
+        for attr in all_attrs:
+            # 1. Skip dunder methods (double leading/trailing underscores)
+            if attr.startswith('_'):
+                continue
+                
+            # 2. Check for docstring if it's a method
+            try:
+                # Use getattr to safely access the attribute
+                attribute = getattr(self, attr)
+                if inspect.ismethod(attribute) or inspect.isfunction(attribute):
+                    # Skip methods without a docstring
+                    if not attribute.__doc__:
+                        continue
+            except AttributeError:
+                # In case attribute is not directly accessible (e.g., name mangled)
+                pass 
+                
+            # Add to the list if it passes all checks
+            if attr not in filtered_attrs: # Avoid duplicates
+                filtered_attrs.append(attr)
+        
+        # The returned list is automatically sorted by the built-in dir() function
+        return filtered_attrs
+
 class examples:
+    """
+    Retrieve a predefined example DAG or list available examples.
 
-    def __new__(cls, which=None, print_DAG=False, *args, **kws):
-        """
-        Retrieve a predefined example DAG or list available examples.
+    Parameters
+    ----------
+    which : str or None, optional
+        Name of the example to load. When ``None``, the function prints the
+        list of available examples (optionally with their DAG representations)
+        and returns ``None``.
+    print_DAG : bool, optional
+        If ``True`` and ``which`` is ``None``, print the textual
+        representation of each example DAG. Defaults to ``False``.
+    *args :
+        Additional positional arguments forwarded to the example factory.
+    **kws :
+        Additional keyword arguments forwarded to the example factory.
 
-        Parameters
-        ----------
-        which : str or None, optional
-            Name of the example to load. When ``None``, the function prints the
-            list of available examples (optionally with their DAG representations)
-            and returns ``None``.
-        print_DAG : bool, optional
-            If ``True`` and ``which`` is ``None``, print the textual
-            representation of each example DAG. Defaults to ``False``.
-        *args :
-            Additional positional arguments forwarded to the example factory.
-        **kws :
-            Additional keyword arguments forwarded to the example factory.
+    Returns
+    -------
+    DAG or None
+        Instantiated `DAG` object when ``which`` matches an example; otherwise
+        ``None``.
 
-        Returns
-        -------
-        DAG or None
-            Instantiated `DAG` object when ``which`` matches an example; otherwise
-            ``None``.
+    Examples
+    --------
+    >>> examples() # print the list of predefined examples
+    >>> G = examples('Frontdoor') # load DAG from predefined example
+    >>> isinstance(G, DAG)
+    True
+    """
 
-        Examples
-        --------
-        >>> examples() # print the list of predefined examples
-        >>> G = examples('Frontdoor') # load DAG from predefined example
-        >>> isinstance(G, DAG)
-        True
-        """
+    def __new__(cls, which=None, print_DAG=False, *args: Any, **kws: Any):
         if not which:
             examples._print_examples(print_DAG=print_DAG)
             dag = None
@@ -4074,7 +4099,7 @@ class examples:
         }
         res = all_examples[which] if which else all_examples
         return res
-
+    
     def _print_examples(print_DAG):
         print(dedent("""
         List of available examples:
@@ -4230,10 +4255,10 @@ class examples:
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
 
     def _example_pearl_fig_1_1_a(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         W -> Z -> Y
         Z <-> X -> Y
@@ -4252,10 +4277,10 @@ class examples:
                     edge_label=edge_labels)
 
     def _example_pearl_fig_1_1_b(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         Z -> {W, Z, Y}
         Y -> X
@@ -4274,10 +4299,10 @@ class examples:
                     edge_label=edge_labels)
 
     def _example_pearl_fig_1_2(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         X1 -> {X2, X3} -> X4 -> X5
         """
@@ -4301,10 +4326,10 @@ class examples:
                     edge_label=edge_labels)
 
     def _example_pearl_fig_1_3_a(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         X -> Z1 <- Z2 <- Z3 <- Y
         Z1 <-> Z3
@@ -4324,10 +4349,10 @@ class examples:
                     edge_label=edge_labels)
         
     def _example_pearl_fig_1_3_b(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         X -> Z2 -> Z1 -> X
         Y -> Z2
@@ -4346,10 +4371,10 @@ class examples:
                     edge_label=edge_labels)
 
     def _example_pearl_fig_3_1(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         X -> {Z2, Y}
         Z2 -> {Z3, Y}
@@ -4380,10 +4405,10 @@ class examples:
                     edge_label=edge_labels)
         
     def _example_pearl_fig_3_4(*args, **kws):
-        """
-        Source:
-        - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
-        """
+        # """
+        # Source:
+        # - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.
+        # """
         dag  = """
         X1 -> {X3, X4}
         X2 -> {X4, X5}

@@ -9,63 +9,59 @@ __all__ = ['estimate']
 
 class estimate:
     """
-    Estimate structural equation parameters for a causal DAG.
-
-    This class bridges a `gcm.DAG` object, observational data, and model
-    specifications (e.g., linear SEMs via :class:`causalinf.models.lsem`)
-    to produce fitted models based on the DAG, as well as estimation
-    summaries, diagnostic, and  visualizations.
+    Structural Equation Model (SCM) estimation of Graphical Causal Models (GCM).
 
     Parameters
     ----------
     G : gcm.DAG
         Causal graph describing relationships among observed and latent
-        variables.
+        variables created by ``causalinf.gcm.DAG``.
 
     model: str
         Models for the functions of the structural causal model.
-        - 'auto' : use LSEM
-        - 'LSEM': use (parametric) generalized linear structural equation models. 
-        - 'NPSEM-IE-<option>': use nonparametric structural equation
-                    models with independent errors. Available options:
-            - BART: NPSEM-IE-BART (default)
-            - GAM: NPSEM-IE-GAM
 
+        * "auto" : use LSEM (default)
+        * "LSEM": Estimate (parametric) generalized linear structural equation models. 
+        * "NPSEM-IE-BART: Estimate nonparametric structural equation
+                    models with independent errors using BART. 
+        * "NPSEM-IE-GAM: Estimate nonparametric structural equation
+                    models with independent errors using GAM. 
 
     formula : str or None, optional
-        Depends on the model for the functional forms used  (see argument ``model``).
-        When ``None`` (default), automatically generate a formula
-        without interactive terms based on the DAG and the functional
-        forms selected (parameter ``model``) for the estimation.
-        For model-specific formulas and arguments, see Notes below.
-
-        Example:
-
-        When model='auto' (which is equivalent to model='LSEM')
-        a formula used by R package lavaan is auto-generated from the
-        DAG structure, and it includes definitions for direct, indirect,
+        Formula for the functional form of the SCM. The formula depends on the
+        model used and defined by the argument ``model``.
+        If ``None`` it creates a formula automatically based on the
+        ``model`` used. Auto-generated formulas do not include interactions
+        between variables in the DAG. 
+        If ``model='auto'``, 
+        the formula generated includes definitions for direct, indirect,
         and total effect parameters whenever exposure/outcome roles are defined
-        in the DAG object.
-        For LSEM model-specific arguments, use the ``model_kws`` argument
-        and check arguments accepted by LSEM in causalinf.models.lsem
-        See ``Notes`` below.
+        in the DAG object provided to the ``G`` argument. To provide custom formulas:
+
+        * If ``model='LSEM'`` or ``model='auto'``: Use the formula format as used for the ``sem()`` function of R's lavaan.
+          For additional model-specific documentation, see ``causalinf.models.lsem``.
+        * If ``model='NPSEM-IE-BART'``:  TBD
+          For additional model-specific documentation, see ``causalinf.models.bart``.
+        * If ``model='NPSEM-IE-GAM'``:  TBD
+          For additional model-specific documentation, see ``causalinf.models.gam``.
 
     data : DataFrame-like
         Observational dataset containing all variables referenced by the DAG or
-        formula. Converted internally to ``tidypolars4sci`` tibble format.
+        formula. 
 
     family : str, optional
-        Outcome distribution family. Defaults to ``'auto'``.
+        Outcome distribution family. Defaults to ``'auto'``, in which
+        case the family is infered from the type of outcome in the data.
     se_cluster : str
         Name of the variable to cluster the std. errors. 
     se : str or None
-        See the documentation of the specific model used. Example:
-        causalinf.models.lsem (for LSEM). See notes.
+        Options available depend on the ``model`` used. See comments in
+        ``formula`` to find model-specific documentation and model-specific
+        options for ``se``. See also ``Notes`` below.
     model_kws : dict, optional
-        Additional keyword arguments forwarded to model-specific estimation
-        routines.
-    sem : Any, optional
-        Placeholder for future compatibility with alternative SEM backends.
+        Additional keyword arguments for the model defined in ``model``.
+        The accepted arguments for each respective ``model`` are those accepted
+        by the function described in ``formula``. See also ``Notes`` below.
     weights : str or array-like, optional
         Observation weights passed through to the estimator. Defaults to
         ``1`` (equal weights).
@@ -77,9 +73,11 @@ class estimate:
 
     Notes
     -----
-    For documentation of model-specific arguments, see models. Example:
-    - causalinf.models.lsem (for LSEM)
+    For documentation of model-specific arguments, see:
 
+    * LSEM: '``causalinf.models.lsem``'
+    * NPSEM-IE-BART: '``causalinf.models.bart``'
+    * NPSEM-IE-GAM: '``causalinf.models.gam``'
 
     Attributes
     ----------
@@ -111,7 +109,6 @@ class estimate:
                  se=None,
                  # 
                  model_kws={},
-                 sem=None,
                  # 
                  weights=1,
                  *args,

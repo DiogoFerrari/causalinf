@@ -11,8 +11,8 @@ __all__ = [
     'rd',
     'iv',
     # 
-    'synthetic_data',
-    'utils',
+    'simulate',
+    # 'utils',
 ]
 
 __all_labels__ = {
@@ -24,6 +24,20 @@ __all_labels__ = {
     'did': "Difference-in-Differences (DiD)",  
     'rd': "Regression Discontinuity (RD)",  
     'iv': "Instrumental Variable (IV)",
+}
+
+API_labels = __all_labels__ | {
+    # 'experiment': "Experimental Design (ED)",  
+    # 'gcm'       : "Graphical Causal Models",  
+    # 'scm'       : "Structural Causal Models",  
+    # 'cbn'       : "Causal Bayesian Networks (CBN)",  
+    # 'soo'       : "Selection on Observables (SoO)",  
+    # 'did'       : "Difference-in-Differences (DiD)",  
+    # 'rd'        : "Regression Discontinuity (RD)",  
+    # 'iv'        : "Instrumental Variable (IV)",
+    'models'    : "Models",
+    'utils'     : 'Utils',
+    'simulate'  : 'Simulate Data',
 }
 
 # options

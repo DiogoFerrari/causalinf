@@ -1,4 +1,3 @@
-
 # Project information
 site_name: Causal Inference (causalinf)
 site_url: https://www.diogoferrari.com/causalinf
@@ -20,37 +19,38 @@ nav:
     - <font color="#a41034">Simulate Data</font>: usage/simulate-data.md
   - Methods:
     - Overview: methods/overview.md
-    - <font color="#a41034">GCM</font>:
+    - <font color="#a41034">Graphical Causal Models (GCM)</font>:
       - Introduction: methods/gcm/introduction.md
       - Build: methods/gcm/build.md
       - Visualize: methods/gcm/plot.md
       - Check Assumptions: methods/gcm/assumptions.md
       - Identification Analysis: methods/gcm/identification.md
-    - <font color="#a41034">SCM</font>: methods/scm.md
+    - <font color="#a41034">Structural Causal Models (SCM)</font>: methods/scm.md
       # - Assumptions: methods/scm/assumptions.md
       # - Estimate: methods/scm/estimate.md
       # - Report: methods/scm/report.md
-    - <font color="#a41034">CBN</font>: methods/cbn.md
+    - <font color="#a41034">Causal Bayesian Networds (CBN)</font>: methods/cbn.md
       # - Assumptions: methods/cbn/assumptions.md
       # - Estimate: methods/cbn/estimate.md
       # - Report: methods/cbn/report.md
-    - <font color="#a41034">SoO</font>:
+    - <font color="#a41034">Selection on Observables (SoO)</font>:
       - Estimate: methods/soo/estimate.md
       - Report: methods/soo/report.md
-    - <font color="#a41034">DiD</font>:
+    - <font color="#a41034">Difference-in-Differences (DiD)</font>:
       - Estimate: methods/did/estimate.md
       - Report: methods/did/report.md
-    - <font color="#a41034">IV</font>:
+    - <font color="#a41034">Instrumental Variable (IV)</font>:
       - Estimate: methods/iv/estimate.md
       - Report: methods/iv/report.md
-    - <font color="#a41034"> RD</font>:
+    - <font color="#a41034">Regression Discontinuity (RD)</font>:
       - Estimate: methods/rd/estimate.md
       - Report: methods/rd/report.md
   - Case Studies:
     - Overview: case-studies/overview.md
     - <font color="#a41034">DiD</font>:
       - Minimal Wage Effect: case-studies/did-card1994minimum.md
-  - API Reference: api.md
+  ## - API Reference: api.md ## <- usual API
+  - API reference: reference/ ## using py to create one docstring per page
   - Releases: releases.md
 
 theme:
@@ -95,7 +95,7 @@ theme:
 
 
 # Preview controls
-strict: true
+strict: false
 
 
 extra_css:
@@ -108,17 +108,25 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          # paths: ["."] # <-- Add this line
+          paths: ["causalinf"] # <-- for the API docstring using .py (per page docstring)
           options:
             show_source: true
             show_signature: true
             docstring_style: numpy
+            docstring_options:
+              warn_unknown_params: false
             show_symbol_type_heading: true
             show_symbol_type_toc: true
             show_root_toc_entry: false
             show_object_full_path: true
   - section-index
   - autolinks 
+  # starting here for one docstring per page
+  - gen-files:
+      scripts:
+        - docs/src/gen_ref_pages.py  
+  - literate-nav:
+      nav_file: SUMMARY.md
 
 markdown_extensions:
   - admonition
@@ -143,11 +151,11 @@ markdown_extensions:
   - pymdownx.superfences
   - md_in_html
   - pymdownx.blocks.caption
+  - pymdownx.arithmatex:
+        generic: true
   # - pymdownx.superfences
   # - pymdownx.tabbed:
   #     alternate_style: true
-  - pymdownx.tabbed:
-      alternate_style: true
   - pymdownx.superfences:
       custom_fences:
         - name: vegalite
@@ -158,9 +166,17 @@ markdown_extensions:
       # permalink_title: Anchor link to this section for reference
       # title: On this page # Custom title for the TOC
       toc_depth: 4
+  # for latex tables
 
 extra_javascript: 
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+  # 1. Load Config FIRST
+  - src/mathjax.js
+
+  # 2. Load Vega (Charts)
   - https://cdn.jsdelivr.net/npm/vega@5
   - https://cdn.jsdelivr.net/npm/vega-lite@5
   - https://cdn.jsdelivr.net/npm/vega-embed@6
+
+  # 3. Load MathJax Library LAST
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

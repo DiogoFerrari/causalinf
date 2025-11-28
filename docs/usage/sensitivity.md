@@ -1,9 +1,6 @@
 ---
-
 hide:
-
--   toc
-
+- toc
 ---
 
 **Sensitivity analysis** is a procedure to evaluate how the conclusions
@@ -26,3 +23,6 @@ sens = soo.sensitivity_analysis(<args>)
 ```
 
 `<args>` vary across submodules depending on the method used.
+
+table
+

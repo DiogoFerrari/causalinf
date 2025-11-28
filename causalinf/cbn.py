@@ -4,21 +4,21 @@ import pandas as pd
 import numpy as np
 
 class estimate:
-    """
-    Estimate p(Y=y | do(D=d)) (or E[Y | do(D=d)] when Y is binary in {0,1})
-    from a user-supplied adjustment formula string of the form:
+    # """
+    # Estimate p(Y=y | do(D=d)) (or E[Y | do(D=d)] when Y is binary in {0,1})
+    # from a user-supplied adjustment formula string of the form:
 
-        p(Y | do(D)) = sum_{Z1} p(Z1) p(Y | D, Z1)
-        p(Y | do(D)) = sum_{Z,X1,X2} p(Z, X1, X2) p(Y | D, Z, X1, X2)
+    #     p(Y | do(D)) = sum_{Z1} p(Z1) p(Y | D, Z1)
+    #     p(Y | do(D)) = sum_{Z,X1,X2} p(Z, X1, X2) p(Y | D, Z, X1, X2)
 
-    Parameters
-    ----------
-    laplace : float, default 0.0
-        Additive (Laplace) smoothing for probability estimates. Use a small value
-        like 1e-6 if you want minor smoothing; use 1.0 for classic Laplace.
-    drop_na : bool, default True
-        Drop rows with NA in any variable referenced by the formula.
-    """
+    # Parameters
+    # ----------
+    # laplace : float, default 0.0
+    #     Additive (Laplace) smoothing for probability estimates. Use a small value
+    #     like 1e-6 if you want minor smoothing; use 1.0 for classic Laplace.
+    # drop_na : bool, default True
+    #     Drop rows with NA in any variable referenced by the formula.
+    # """
     _SUM_RE = re.compile(
         r"sum_\{\s*([A-Za-z0-9_,\s]+)\s*\}\s*p\(\s*([A-Za-z0-9_,\s]+)\s*\)\s*p\(\s*Y\s*\|\s*D\s*,\s*([A-Za-z0-9_,\s]+)\s*\)",
         flags=re.IGNORECASE
@@ -33,11 +33,11 @@ class estimate:
         return [v.strip() for v in s.split(",") if v.strip()]
 
     def parse(self, formula: str) -> Dict[str, Any]:
-        """
-        Parse a restricted adjustment formula string. Returns dict with keys:
-            'sum_vars' (list), 'joint_vars' (list), 'cond_vars' (list)
-        Validates that joint_vars == sum_vars and cond_vars == ['D'] + sum_vars.
-        """
+        # """
+        # Parse a restricted adjustment formula string. Returns dict with keys:
+        #     'sum_vars' (list), 'joint_vars' (list), 'cond_vars' (list)
+        # Validates that joint_vars == sum_vars and cond_vars == ['D'] + sum_vars.
+        # """
         # Normalize spaces
         rhs = formula.split("=")[-1]
         rhs = rhs.replace("\n", " ")
@@ -72,9 +72,9 @@ class estimate:
         return df2
 
     def _empirical_joint(self, df: pd.DataFrame, vars_list: list) -> pd.Series:
-        """
-        Returns Series indexed by tuples of levels for vars_list with probabilities.
-        """
+        # """
+        # Returns Series indexed by tuples of levels for vars_list with probabilities.
+        # """
         if len(vars_list) == 0:
             return pd.Series([1.0], index=[()], dtype=float)
 
@@ -102,10 +102,10 @@ class estimate:
         z_vars: list,
         y_value: Optional[Any],
     ) -> pd.Series:
-        """
-        Returns Series over tuples of z_vars with p(Y=y_value | D=d_val, Z=z)
-        or E[Y | D=d_val, Z=z] when y is binary numeric and y_value is None.
-        """
+        # """
+        # Returns Series over tuples of z_vars with p(Y=y_value | D=d_val, Z=z)
+        # or E[Y | D=d_val, Z=z] when y is binary numeric and y_value is None.
+        # """
         use_cols = [y, d] + z_vars
         dfc = df[use_cols].copy()
 
@@ -167,16 +167,16 @@ class estimate:
         y_value: Optional[Any] = None,
         return_components: bool = False,
     ) -> Union[Dict[Any, float], float, Dict[str, Any]]:
-        """
-        Estimate p(Y=y_value | do(D=treatment_value)) or E[Y | do(D=treatment_value)].
+        # """
+        # Estimate p(Y=y_value | do(D=treatment_value)) or E[Y | do(D=treatment_value)].
 
-        If treatment_value is None, computes results for all observed D values.
+        # If treatment_value is None, computes results for all observed D values.
 
-        Returns either:
-          - scalar (if a single d provided), or
-          - dict {d: value} (if d is None or an iterable), or
-          - dict with components if return_components=True
-        """
+        # Returns either:
+        #   - scalar (if a single d provided), or
+        #   - dict {d: value} (if d is None or an iterable), or
+        #   - dict with components if return_components=True
+        # """
         parsed = self.parse(formula)
         sum_vars = parsed["sum_vars"]  # adjustment set Z
         vars_needed = set([outcome, treatment] + sum_vars)

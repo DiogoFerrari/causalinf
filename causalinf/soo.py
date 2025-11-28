@@ -9,20 +9,20 @@ MODELS = ['GLM']
 GLM_FAMILY = ['auto', 'gaussian']
 
 class estimate:
-    """
-    model : (str, default: GLM)
-        Statistical model to use.
-        Available models: check soo.MODELS
+    # """
+    # model : (str, default: GLM)
+    #     Statistical model to use.
+    #     Available models: check soo.MODELS
 
-    family : (str, default: gaussian)
-        Used when GLMs are used. It is the distribution family of the outcome variable
-        Available: check soo.GLM_FAMILY
-        Option 'auto' automatically guess the family based on the type of the
-        outcome variable.
-        Logistic models are used when family='binary' or family='auto' and the
-        outcome is binary. To use *Linear probability models* (LPMs), set
-        family='gaussian' with binary outcomes.
-    """
+    # family : (str, default: gaussian)
+    #     Used when GLMs are used. It is the distribution family of the outcome variable
+    #     Available: check soo.GLM_FAMILY
+    #     Option 'auto' automatically guess the family based on the type of the
+    #     outcome variable.
+    #     Logistic models are used when family='binary' or family='auto' and the
+    #     outcome is binary. To use *Linear probability models* (LPMs), set
+    #     family='gaussian' with binary outcomes.
+    # """
 
     def __init__(self,
                  formula=None,

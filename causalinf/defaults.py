@@ -74,14 +74,14 @@ class FitSummary:
                     extras_prefix: str = "",
                     digits = 2,
                     ) -> tp.tibble_df.tibble:
-        """
-        Return a two-column tibble with columns: 'term', 'estimate'.
+        # """
+        # Return a two-column tibble with columns: 'term', 'estimate'.
 
-        estimate_dtype:
-          - "auto": lets Polars infer (mixed → Utf8)
-          - "float": coerce numbers to Float64, drop non-numeric rows
-          - "str": stringify everything (Utf8)
-        """
+        # estimate_dtype:
+        #   - "auto": lets Polars infer (mixed → Utf8)
+        #   - "float": coerce numbers to Float64, drop non-numeric rows
+        #   - "str": stringify everything (Utf8)
+        # """
         # Collect (term, value) pairs
         items = []
         for k, v in self.fit.items():
@@ -111,12 +111,12 @@ class FitSummary:
         return res
 
     def fit_normalize(self) -> Tuple[FitDict, dict[str, Any]]:
-        """
-        Coerce an incoming mapping into the FitDict schema.
-        - Ensures all required keys exist (filling with None)
-        - Keeps only known keys in `fit` (coerced), unknowns go to `extras`.
-        - Does lightweight type coercion where obvious (e.g., ints/floats from strings).
-        """
+        # """
+        # Coerce an incoming mapping into the FitDict schema.
+        # - Ensures all required keys exist (filling with None)
+        # - Keeps only known keys in `fit` (coerced), unknowns go to `extras`.
+        # - Does lightweight type coercion where obvious (e.g., ints/floats from strings).
+        # """
         fit_like = self.fit
         base = fit_defaults()
         extras: dict[str, Any] = {}
@@ -148,12 +148,12 @@ class FitSummary:
         return base, extras
 
     def parameters_validate(self) -> tp.tibble:
-        """
-        Ensure `tidy` is a Polars DataFrame with required columns.
-        - Adds missing required columns with None.
-        - Raises if extra columns are present.
-        - Casts numeric columns to float.
-        """
+        # """
+        # Ensure `tidy` is a Polars DataFrame with required columns.
+        # - Adds missing required columns with None.
+        # - Raises if extra columns are present.
+        # - Casts numeric columns to float.
+        # """
         df = self.parameters
         if not isinstance(df, (tp.tibble_df.tibble)):
             raise TypeError("`tidy` must be a tibble.")

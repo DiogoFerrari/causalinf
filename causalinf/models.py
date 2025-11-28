@@ -1,5 +1,6 @@
 from .defaults import FitSummary
 from . import utils as ut
+# from dataclasses import dataclass
 # 
 import re
 import numpy as np
@@ -14,6 +15,10 @@ from rpy2.robjects.packages import importr
 from rpy2.robjects import NULL
 # 
 lavaan = importr("lavaan")
+
+# from typing import Literal, Optional
+# import contextvars
+# from contextlib import contextmanager
 
 __all__ = ['lsem', 'glm']
 
@@ -30,11 +35,11 @@ class lsem:
         Dataset containing all variables referenced in ``formula``.
 
     estimator : str
-       The name of the estimator to use. 
-       If 'auto', it uses maximum likelihood ('ML') if estimating
-       models with continuous outcomes an diagonally weighted least squares
-       ('DWLS') if there are ordinal endogenous variables.
-       For other options, see lavaan lavOptions documentation.
+        The name of the estimator to use. 
+        If 'auto', it uses maximum likelihood ('ML') if estimating
+        models with continuous outcomes an diagonally weighted least squares
+        ('DWLS') if there are ordinal endogenous variables.
+        For other options, see lavaan lavOptions documentation.
 
     ordinal : str, list, or None
         Used to indicate binary and ordinal endogenous variables in the data 
@@ -247,6 +252,12 @@ class lsem:
         txt = [f"{model} ({', '.join(vars)})" for model, vars in models.items() if len(vars)>0]
         txt = f"Models: {', '.join(txt)}"
         return txt
+
+class bart:
+    pass
+
+class gam:
+    pass
     
 class glm:
     """
@@ -262,7 +273,7 @@ class glm:
     """
 
     # Regression: Gaussian -----------------------------------------------
-    def estimate_gaussian(formula, data, se_cluster=None, se_robust=None,
+    def linear(formula, data, se_cluster=None, se_robust=None,
                           weights=1, *args, **kws):
         """
         Fit a Gaussian linear model (OLS) with optional robust or clustered SEs.
@@ -320,21 +331,21 @@ class glm:
         return res
 
     def estimate_gaussian_summarize(model):
-        """
-        Extract tidy summary results and fit statistics from a statsmodels OLS result.
+        # """
+        # Extract tidy summary results and fit statistics from a statsmodels OLS result.
 
-        Parameters
-        ----------
-        model : statsmodels.regression.linear_model.RegressionResultsWrapper
-            Fitted model object from `estimate_gaussian`.
+        # Parameters
+        # ----------
+        # model : statsmodels.regression.linear_model.RegressionResultsWrapper
+        #     Fitted model object from `estimate_gaussian`.
 
-        Returns
-        -------
-        dict
-            Dictionary with:
-            - 'coefficients': tidy table with coef, std err, t, pval
-            - 'fit_statistics': R2, Adj R2, AIC, BIC, nobs, df_resid, df_model
-        """
+        # Returns
+        # -------
+        # dict
+        #     Dictionary with:
+        #     - 'coefficients': tidy table with coef, std err, t, pval
+        #     - 'fit_statistics': R2, Adj R2, AIC, BIC, nobs, df_resid, df_model
+        # """
         # Coefficients table
         coef_df = model.summary2().tables[1].reset_index()
         coef_df.columns = ["term", "estimate", "se", "t", "pvalue", "lo", "hi"]

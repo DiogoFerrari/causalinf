@@ -1,6 +1,6 @@
 from . import utils as ut
 # 
-import re, os
+import re, os, inspect
 import numpy as np
 import pandas as pd
 import polars as pl
@@ -215,6 +215,11 @@ def invert_dict(input_dict):
             inverted[value] = []
         inverted[value].append(key)
     return inverted
+
+def _filter_kwargs_for(func, kws):
+    sig = inspect.signature(func)
+    allowed = sig.parameters.keys()
+    return {k: v for k, v in kws.items() if k in allowed}
 
 class summary:
     """
