@@ -5,6 +5,7 @@ from . import utils as ut
 from .models import lsem
 from .options import get_options
 from .tau import *
+from .gcm_styles import GRAPH_STYLES, resolve_graph_style
 # 
 import tidypolars4sci as tp
 import networkx as nx
@@ -15,7 +16,10 @@ from scipy.stats import norm as dnorm
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from collections import defaultdict
-from typing import Any
+from collections.abc import Mapping, Sequence
+from typing import Dict, Any, Iterable, Union, Hashable
+from types import MappingProxyType
+from copy import deepcopy
 # for examples
 import difflib
 # R packages/dependencies
@@ -1177,11 +1181,12 @@ class DAG:
              # node label
              show_labels = True,
              use_labels = True,
-             node_label_box=True,
+             node_label_color='black',
              node_label_fontsize=None,
              node_label_fontweight='normal',
              node_label_adj_x=0,
              node_label_adj_y=0,
+             node_label_box=None,
              node_label_box_style="square",
              node_label_box_margin=.5,
              # edges
@@ -1236,9 +1241,12 @@ class DAG:
 
         Parameters
         ----------
-        graph_style : {'default', 'rectangle', 'pearl'} or None, optional
-            Predefined style bundle for nodes and edges. When ``None``, falls
-            back to the global plotting option.
+        graph_style : dict, str, None, optional
+            If str, it must be a name of a predefined built-in style
+            (see causalinf.gcm.styles()). When ``None``, falls
+            back to the global plotting option. If dict, it must
+            match the names of the keys of the built-in styles
+            (see causalinf.gcm.styles(which='default')).
         nodes_label : dict[str, str] or None, optional
             Mapping from node names to display labels.
         nodes_position : dict[str, tuple[float, float]] or None, optional
@@ -1249,8 +1257,6 @@ class DAG:
         node_subset : dict[str, list[str]] or None, optional
             Restrict plotting to specific node groups (e.g., observed,
             latent). Defaults to all nodes.
-        node_shape, node_size, node_color, node_border_color, node_border_style, node_border_width : dict or scalar, optional
-            Visual attributes applied per node group; scalars are broadcast.
         node_latent_show : bool, optional
             If ``False``, omit latent nodes while preserving their effects via
             arcs. Defaults to ``True``.
@@ -1258,34 +1264,91 @@ class DAG:
             Display node labels when ``True`` (default).
         use_labels : bool, optional
             When ``True`` (default), prefer custom labels over node names.
-        node_label_box : bool, optional
-            Draw a bounding box around node labels in rectangle mode.
-        node_label_fontsize, node_label_fontweight : dict or scalar, optional
-            Font styling overrides for node labels.
-        node_label_adj_x, node_label_adj_y : dict or float, optional
-            Horizontal and vertical label offsets.
-        node_label_box_style : str, optional
-            Matplotlib box style applied when ``node_label_box`` is ``True``.
-        node_label_box_margin : float, optional
-            Padding for label boxes.
+
+        node_ : dict or scalar or None, optional
+            Control the visual attributes of nodes. Can be applied per node,
+            per group based on node role, or to all nodes.
+            Which case happends depends on the input:
+
+            * str, float, int -> apply to all nodes
+            * None   -> use defaults based on GCM styles by type (see causalinf.gcm.styles())
+            * dict   -> apply to nodes or types based on the keys, which can be:
+
+                - Node Role: 'Exposure', "Outcome", "Latent", "Observed", or any user-defined node role
+                - Node name
+
+            Accepted values for each parameter:
+
+            *  _shape: ``str``
+            *  _size: int, ``float``
+            *  _color: ``str``
+
+            *  _border_color: ``str``
+            *  _border_style: ``str`` ('-', 'solid', '--', 'dashed', ":", 'dotted')
+            *  _border_width: ``int, float``
+
+            *  _label_color: ``str``
+            *  _label_fontsize: ``int, float``
+            *  _label_fontweight: ``str`` (normal, bold, italic)
+            *  _label_adj_x: int, ``float``
+            *  _label_adj_y: int, ``float``
+            *  _label_box_style: ``str`` ("round"')
+            *  _label_box_margin: ``int, float``
+
+        node_latent_show: bool
+            If True, show latent nodes
+
+        node_label_box: bool, optional
+            If True, draw box around the label when using 'rectangle' node style.
+
+        edge_  : dict or scalar or None, optional
+            Control the visual attributes of edges. Can be applied per edge,
+            per edge type, or to all edges. Which case happends depends on the input:
+
+            - scalar -> apply to all edges
+            - None   -> use defaults by edge type
+            - dict   -> keys can be:
+                * edge type (case-insensitive):
+                    * 'directed' -> apply to all directed edges
+                    * 'bidirected' -> apply to all bidirected edges
+                    * 'undirected'  -> apply to all undirected edges
+                * actual edges. Example:
+                    - ('D', 'Y') apply to the "D -> Y" directed edge
+                    - (('D', 'Y'), ('Y', 'D')) apply to the "D <-> Y" bidirected edge
+                    - frozenset({'D', 'Y'}) apply to the "D -- Y" undirected edge
+
+            Accepted values for each parameter:
+
+            * _color: ``str``
+            * _style: ``str`` ('-', 'solid', '--', 'dashed', ":", 'dotted')
+            * _arc: ``float``
+            * _linewidth: ``float``
+            * _head_size: ``float``
+            * _head_style: ``str`` ('->', '-|>')
+            * _margin_tail: ``float``
+            * _margin_head: ``float``
+
+            * _label: ``str``
+            * _label_color_background: ``str``
+            * _label_color_border: ``str``
+            * _label_size: ``float``
+            * _label_color: ``str``
+            * _label_alpha: ``float``
+            * _label_rotate: bool
+            * _label_position:  ``float``
+
         edge_subset : dict[str, list] or None, optional
             Limit plotting to selected edges by type.
-        edge_color, edge_style, edge_arc, edge_linewidth, edge_head_size, edge_head_style : dict or scalar, optional
-            Edge styling parameters by edge type.
-        edge_margin_tail, edge_margin_head : dict or float, optional
-            Arrowhead offsets for edges.
-        edge_label : dict or None, optional
-            Explicit edge labels overriding stored defaults.
-        edge_label_color_background, edge_label_color_border : str, optional
-            Background and border colors for edge labels.
-        edge_label_size, edge_label_color, edge_label_alpha, edge_label_rotate, edge_label_position : dict or scalar, optional
-            Label appearance controls.
+
         edge_label_sig_level : float, optional
             Significance level used when estimates include confidence bounds.
+
         edge_label_pvalue : dict or None, optional
             P-value annotations keyed by edge.
+        
         edge_label_font_family : str or None, optional
             Font family for edge labels.
+
         legend_show : bool, optional
             Display the legend when ``True`` (default).
         legend_title : str, optional
@@ -1340,6 +1403,58 @@ class DAG:
         >>> G = DAG(graph="X -> Y")
         >>> plt, ax = G.plot(figsize=(4, 3), show_plot=False)
         True
+
+        >>> dag  = '''
+        >>> D -> M1
+        >>> M1 -- M2
+        >>> M2 -> Y
+        >>> M3 -> Y
+        >>> D <-> Y
+        >>> D  -> Y
+        >>> Z -> {D, Y}
+        >>> '''
+        >>> pos = {'D': (0,0),
+        >>>        'Y': (1,0),
+        >>>        'Z': (.5, -1),
+        >>>        'M1': (.25, 1),
+        >>>        'M2': (.75, 1),
+        >>>        'M3': (1.75, 1),
+        >>>        }
+        >>> pos2 = {'D': (.5,0),
+        >>>        'Y': (1,0),
+        >>>        'Z': (.5, -1),
+        >>>        'M1': (.25, 1),
+        >>>        'M2': (.75, 1),
+        >>>        'M3': (1.75, 1),
+        >>>        }
+        >>> roles = {'Exposure': "D",
+        >>>          'Outcome' : "Y",
+        >>>          "Latent"  : 'Z',
+        >>>          "M2 role" : "M2"
+        >>>          }
+        >>> labels = {"D": "$\widetilde{D}$",
+        >>>           "M1":'$M_1$',
+        >>>           'Y': "Outcome"}
+        >>> labels2 = {"D": "$\widetilde{D}_i$"}
+        >>> edge_label = {('D', 'M1') : 1,
+        >>>               ('M2', 'Y') : -1,
+        >>>               ('M3', 'Y') : 'a',
+        >>>               ('D', 'Y') : 'bsd;fkajsd;',
+        >>>               ('Z', 'D') : '$\\beta$',
+        >>>               ('Z', 'Y'): 'asccc',
+        >>>               (('D', 'Y'), ('Y', 'D')): 'abc',
+        >>>                # ('M2', 'M1') : 1234, # no label for undireted edges
+        >>>               }
+        >>> 
+        >>> G = gcm.DAG(dag,  nodes_role=roles, nodes_position=pos, nodes_label=labels)  # 
+        >>> G.plot()
+        >>> 
+        >>> G.plot(node_color='red')
+        >>> G.plot(node_color={'D':'red'})
+        >>> G.plot(node_border_color={'D':'red'})
+        >>> G.plot(node_border_color={'Z':'red'})
+        >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':'})
+        >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':', 'Z':'solid'})
         """
         assert estimates is None or isinstance(estimates, estimate), (
             "'estimates' must be either None or an object of causalinf.scm.estimate ")
@@ -1372,36 +1487,41 @@ class DAG:
         # styles
         # ------
         graph_style = graph_style or get_options('graph_style')
-        nodes_style, labels_style, edges_style = self.__plot_get_style__(graph_style)
+        style_dict = resolve_graph_style(graph_style, GRAPH_STYLES)
 
         # nodes 
         # -----
-        node_subset    = self.__plot_nodes_subset__(node_subset, node_latent_show)
-        nodes_position = self.__plot_nodes_positions__(G_draw, nodes_position)
-        for role, nodes in node_subset.items():
-            fig_nodes = nx.draw_networkx_nodes(
-                G_draw,
-                nodes_position,
-                nodelist=nodes,
-                ax=ax,
-                # 
-                node_size  = self.__plot_collect_aes__(role, node_size, nodes_style[role]['node_size']),
-                node_color = self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
-                node_shape = self.__plot_collect_aes__(role, node_shape, nodes_style[role]['node_shape']),
-                linewidths = self.__plot_collect_aes__(role, node_border_width,
-                                                       nodes_style[role]['node_border_width']),
-                edgecolors = self.__plot_collect_aes__(role, node_border_color,
-                                                       nodes_style[role]['node_border_color']),
-                alpha      = None,
-                cmap       = None,
-                vmin       = None,
-                vmax       = None,
-                label      = None,
-                margins    = None, 
-                hide_ticks = True
-            )
-            fig_nodes.set_linestyle(self.__plot_collect_aes__(role, node_border_style,
-                                                              nodes_style[role]['node_border_style']))
+        node_subset       = self.__plot_nodes_subset__(node_subset, node_latent_show)
+        nodes_position    = self.__plot_nodes_positions__(G_draw, nodes_position)
+        node_size         = self._plot_parse_aes_node('node_size', node_size, style_dict)
+        node_color        = self._plot_parse_aes_node('node_color', node_color, style_dict)
+        node_shape        = self._plot_parse_aes_node('node_shape', node_shape, style_dict)
+        node_border_width = self._plot_parse_aes_node('node_border_width', node_border_width, style_dict)
+        node_border_color = self._plot_parse_aes_node('node_border_color', node_border_color, style_dict)
+        node_border_style = self._plot_parse_aes_node("node_border_style", node_border_style, style_dict)
+
+        for _, nodes in node_subset.items():
+            for node in nodes:
+                fig_nodes = nx.draw_networkx_nodes(
+                    G_draw,
+                    nodes_position,
+                    nodelist=[node],
+                    ax=ax,
+                    # 
+                    node_size  = node_size[node],
+                    node_color = node_color[node],
+                    node_shape = node_shape[node],
+                    linewidths = node_border_width[node],
+                    edgecolors = node_border_color[node],
+                    alpha      = None,
+                    cmap       = None,
+                    vmin       = None,
+                    vmax       = None,
+                    label      = None,
+                    margins    = None, 
+                    hide_ticks = True
+                )
+                fig_nodes.set_linestyle(node_border_style[node])
 
         # nodes labels 
         # ------------
@@ -1410,34 +1530,45 @@ class DAG:
             nodes_label = self.nodes_label | (nodes_label or {})
             adj_x = self.__plot_label_adj__(node_label_adj_x, nodes_label)
             adj_y = self.__plot_label_adj__(node_label_adj_y, nodes_label)
+
+            fc        = self._plot_parse_aes_node('node_color', node_color, style_dict)
+            fontweight= self._plot_parse_aes_node('node_label_fontweight', node_label_fontweight, style_dict)
+            fontsize  = self._plot_parse_aes_node('node_label_fontsize', node_label_fontsize, style_dict)
+            boxstyle  = self._plot_parse_aes_node('node_label_box_style', node_label_box_style, style_dict)
+            boxmargin = self._plot_parse_aes_node('node_label_box_margin', node_label_box_margin, style_dict)
+
+            ec        = self._plot_parse_aes_node('node_border_color', node_border_color, style_dict)
+            lw        = self._plot_parse_aes_node('node_border_width', node_border_width, style_dict)
+            linestyle = self._plot_parse_aes_node('node_border_style', node_border_style, style_dict)
+            node_label_box = self._plot_parse_aes_node('node_label_box', node_label_box, style_dict)
+
             for node in nodes:
                 label = nodes_label.get(node, node) if use_labels else node
                 role  = self.nodes_info[node]['role']
-                x, y  = nodes_position[node] if nodes_position and nodes_position[node] else\
+                x, y  = nodes_position[node] if nodes_position and nodes_position[node] else \
                     self.nodes_info[node]['position'] 
 
-                bbox = None
-                if node_label_box and graph_style=='rectangle':
-                    bbox = {
-                        "boxstyle": f"{node_label_box_style},pad={node_label_box_margin}",
-                        "fc": self.__plot_collect_aes__(role, node_color, nodes_style[role]['node_color']),
-                        "ec": self.__plot_collect_aes__(role, node_border_color,
-                                                        nodes_style[role]['node_border_color']),
-                        "lw": self.__plot_collect_aes__(role, node_border_width,
-                                                       nodes_style[role]['node_border_width']),
-                        "linestyle": self.__plot_collect_aes__(role, node_border_style,
-                                                               nodes_style[role]['node_border_style']),
-                        "alpha": 1}
+                if node_label_box[node]:
+                    bbox = {"boxstyle": f"{boxstyle[node]},pad={boxmargin[node]}",
+                            "fc": fc[node],
+                            "ec": ec[node],
+                            "lw": lw[node],
+                            "linestyle": linestyle[node],
+                            "alpha": 1
+                            }
+                else:
+                    bbox = None
 
-                weight = self.__plot_collect_aes__(role, node_label_fontweight,
-                                                   labels_style[role]['node_label_fontweight'])
-                label = f"\\textbf{{{label}}}" if weight == 'bold' else label
+                if fontweight[node]=='bold':
+                    label = f"\\textbf{{{label}}}"
+                elif fontweight[node]=='italic':
+                    label = f"\\textit{{{label}}}"
+
                 plt.text(x + adj_x[node],
                          y + adj_y[node],
                          label,
-                         fontweight = weight,
-                         fontsize   = self.__plot_collect_aes__(role, node_label_fontsize,
-                                                                labels_style[role]['node_label_fontsize']),
+                         fontweight = 'normal',
+                         fontsize   = fontsize[node],
                          ha = 'center',
                          va = 'center',
                          bbox = bbox)
@@ -1445,28 +1576,41 @@ class DAG:
         # edges and edges labels
         # ----------------------
         nodes = set(itertools.chain.from_iterable(node_subset.values()))
+
+        style            = self._plot_parse_aes_edge("edge_style", edge_style, style_dict)
+        color            = self._plot_parse_aes_edge("edge_color", edge_color, style_dict)
+        arc              = self._plot_parse_aes_edge("edge_arc", edge_arc, style_dict)
+        width            = self._plot_parse_aes_edge("edge_linewidth", edge_linewidth, style_dict)
+        arrow_head_size  = self._plot_parse_aes_edge("edge_head_size", edge_head_size, style_dict)
+        arrow_head_style = self._plot_parse_aes_edge("edge_head_style", edge_head_style, style_dict)
+        edge_margin_head = self._plot_parse_aes_edge("edge_margin_head", edge_margin_head, style_dict)
+        edge_margin_tail = self._plot_parse_aes_edge("edge_margin_tail", edge_margin_tail, style_dict)
+
+
+        edge_label_alpha    = self._plot_parse_aes_edge("edge_label_alpha", edge_label_alpha, style_dict)
+        edge_label_size     = self._plot_parse_aes_edge("edge_label_size", edge_label_size, style_dict)
+        edge_label_color    = self._plot_parse_aes_edge("edge_label_color", edge_label_color, style_dict)
+        edge_label_rotate   = self._plot_parse_aes_edge("edge_label_rotate", edge_label_rotate, style_dict)
+        edge_label_position = self._plot_parse_aes_edge("edge_label_position", edge_label_position, style_dict)
+        edge_label_color_border     = self._plot_parse_aes_edge("edge_label_color_border", edge_label_color_border, style_dict)
+        edge_label_color_background = self._plot_parse_aes_edge("edge_label_color_background", edge_label_color_background, style_dict)
+        
         for edge_type in ['directed', 'bidirected', 'undirected']:
-            style = self.__plot_collect_aes__(edge_type, edge_style, edges_style['edge_style'][edge_type])
-            color = self.__plot_collect_aes__(edge_type, edge_color, edges_style['edge_color'][edge_type])
-            arc   = self.__plot_collect_aes__(edge_type, edge_arc, edges_style['edge_arc'][edge_type])
-            width = self.__plot_collect_aes__(edge_type, edge_linewidth, edges_style['edge_linewidth'][edge_type])
-            arrow_head_size = self.__plot_collect_aes__(edge_type, edge_head_size, edges_style['edge_head_size'][edge_type])
-            arrow_head_style = self.__plot_collect_aes__(edge_type, edge_head_style, edges_style['edge_head_style'][edge_type])
-            edge_margin_tail = self.__plot_edge_margin__(edge_margin_tail, edges_style["edge_margin_tail"][edge_type])
-            edge_margin_head = self.__plot_edge_margin__(edge_margin_head, edges_style["edge_margin_head"][edge_type])
-
             for edge in self.__getattribute__(edge_type):
-                edge = tuple(edge)
-                if edge_type!='bidirected':
-                    u, v = edge
-                else:
-                    u, v = edge[0][0], edge[0][1]
 
-                # collect edges to show if edge_subset 
-                show_edge = True
+                if edge_type == 'directed':
+                    u, v = tuple(edge)
+                elif edge_type=='bidirected':
+                    u, v = edge[0]
+                elif edge_type=='undirected':
+                    u, v = tuple(edge)
+                    edge = frozenset(edge)
+
                 if edge_subset:
                     e = set(edge) if edge_type=='undirected' else edge
                     show_edge = self.edge_exist(e, edge_subset.get(edge_type, []))
+                else:
+                    show_edge = True
 
                 if u in nodes and v in nodes and show_edge:
                     # edge
@@ -1474,15 +1618,17 @@ class DAG:
                         G_draw,
                         nodes_position,
                         edgelist            = [(u, v)],
-                        style               = style,
-                        edge_color          = color,
-                        connectionstyle     = f"arc3,rad={arc}",
+                        nodelist            = [u, v],
+                        node_size           = [node_size[u], node_size[v]],
+                        style               = style[edge],
+                        edge_color          = color[edge],
+                        connectionstyle     = f"arc3,rad={arc[edge]}",
                         arrows              = True,
-                        arrowstyle          = arrow_head_style,
-                        arrowsize           = arrow_head_size,
-                        min_source_margin   = edge_margin_tail.get(edge, 0),
-                        min_target_margin   = edge_margin_head.get(edge, 0),
-                        width               = width,
+                        arrowstyle          = arrow_head_style[edge],
+                        arrowsize           = arrow_head_size[edge],
+                        min_source_margin   = edge_margin_tail[edge],
+                        min_target_margin   = edge_margin_head[edge],
+                        width               = width[edge],
                         ax=ax)
 
                     # edge label
@@ -1491,62 +1637,66 @@ class DAG:
                     rotate = edge_label_rotate if edge_label_rotate is not None else True # must keep "is not None" here
                     nx.draw_networkx_edge_labels(
                         G_draw,
-                        pos             = nodes_position,
-                        connectionstyle = f"arc3,rad={arc}",
-                        edge_labels     = {(u, v): label},
-                        bbox=dict(facecolor=edge_label_color_background, edgecolor=edge_label_color_border),
-                        # 
-                        alpha      = self.__plot_edge_label_feature__('alpha', edge, edge_label_alpha, None, edge_label_sig_level,
-                                                                      edge_label_pvalue=edge_label_pvalue),
-                        font_size  = self.__plot_edge_label_feature__('size' , edge, edge_label_size, 15),
-                        font_color = self.__plot_edge_label_feature__('color', edge, edge_label_color, label=label),
-                        rotate     = self.__plot_edge_label_feature__('rotate', edge, edge_label_rotate, default=rotate),
-                        label_pos  = self.__plot_edge_label_feature__('position', edge, edge_label_position, .5),
-                        font_family=edge_label_font_family,
-                        ax         = ax
+                        pos         = nodes_position,
+                        edge_labels = {(u, v): label},
+                        bbox        = dict(facecolor=edge_label_color_background[edge],
+                                           edgecolor=edge_label_color_border[edge]),
+                        alpha       = edge_label_alpha[edge],
+                        font_size   = edge_label_size[edge], 
+                        font_color  = edge_label_color[edge], 
+                        rotate      = edge_label_rotate[edge], 
+                        label_pos   = edge_label_position[edge], 
+                        font_family = edge_label_font_family,
+                        connectionstyle = f"arc3,rad={arc[edge]}",
+                        ax          = ax
                     )
 
-        # legend 
+        # legend (aggreagate per role, not per node)
         # ------
         if legend_show:
             keys = []
-            for role, _ in node_subset.items():
+            for role, nodes in node_subset.items():
                 if role not in legend_omit_cases:
-                    if role=='Latent' and node_latent_show:
-                        marker = ''
-                        linecolor = self.__plot_collect_aes__(role, node_border_color,
-                                                              nodes_style[role]['node_border_color']) 
-                    else:
-                        marker = 'o'
-                        linecolor='white'
-                    keys += [
-                        Line2D(
-                            [0], [0],
-                            marker=marker,
-                            color=linecolor,
-                            label=role,
-                            markersize=10,
-                            markeredgecolor=self.__plot_collect_aes__(role, node_border_color,
-                                                                      nodes_style[role]['node_border_color']),
-                            markerfacecolor=self.__plot_collect_aes__(role, node_color,
-                                                                      nodes_style[role]['node_color']),
-                            linestyle=self.__plot_collect_aes__(role, node_border_style,
-                                                                nodes_style[role]['node_border_style'])
-                        )
-                    ]
-                if keys: 
-                    legend = plt.legend(handles        = keys,
-                                        title          = legend_title,
-                                        title_fontsize = legend_title_size,
-                                        alignment      = legend_title_align,
-                                        # title_weight   = legend_title_weight,
-                                        loc            = legend_loc,
-                                        fontsize       = legend_fontsize,
-                                        frameon        = legend_frame,
-                                        **legend_kws
-                                        )
-                    if legend_title_weight=='bold' and legend_title:
-                        legend.set_title(title=f'\\textbf{{{legend_title}}}', prop={'weight': 'bold'})
+                    # collect aes for all latent nodes
+                    marker          = []
+                    color           = []
+                    markeredgecolor = []
+                    markerfacecolor = []
+                    linestyle       = []
+                    for i, node in enumerate(nodes):
+                        linestyle       += [node_border_style[node]]
+                        marker          += [''] if linestyle[i] in ['--', 'dotted', 'dashed', ':'] else ['o']
+                        color           += [node_border_color[node]]#['black'] if role == 'Latent' else ['white']
+                        markeredgecolor += [node_border_color[node]]
+                        markerfacecolor += [node_color[node]]
+
+                    # add only unique aes to legend
+                    for marker, color, markeredgecolor, markerfacecolor, linestyle in \
+                            set(zip(marker, color, markeredgecolor, markerfacecolor, linestyle)):
+                        keys += [
+                            Line2D(
+                                [0], [0],
+                                marker=marker,
+                                color = color,
+                                label = role,
+                                markersize = 10,
+                                markeredgecolor=markeredgecolor,
+                                markerfacecolor=markerfacecolor,
+                                linestyle=linestyle
+                            )]
+            if keys: 
+                legend = plt.legend(handles        = keys,
+                                    title          = legend_title,
+                                    title_fontsize = legend_title_size,
+                                    alignment      = legend_title_align,
+                                    # title_weight   = legend_title_weight,
+                                    loc            = legend_loc,
+                                    fontsize       = legend_fontsize,
+                                    frameon        = legend_frame,
+                                    **legend_kws
+                                    )
+                if legend_title_weight=='bold' and legend_title:
+                    legend.set_title(title=f'\\textbf{{{legend_title}}}', prop={'weight': 'bold'})
 
         # title 
         # -----
@@ -2460,323 +2610,15 @@ class DAG:
 
         return ests, pvalues
 
-    # styles
-    def __plot_get_style__(self, graph_style):
-        if graph_style=='default':
-            aes = self.__plot_get_style_default__()
-        
-        elif graph_style=='rectangle':
-            aes = self.__plot_get_style_rectangle__()
-
-        elif graph_style=='pearl':
-            aes = self.__plot_get_style_pearl__()
-
-        else:
-            aes = self.__plot_get_style_default__()
-
-        return aes
     
-    def __plot_get_style_default__(self):
-        nodes = {
-            "Exposure": {
-                "node_shape": "o",
-                "node_size": 1000,
-                "node_color": "lightgray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Outcome": {
-                "node_shape": "o",
-                "node_size": 1000,
-                "node_color": "gray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Observed": {
-                "node_shape": "o",
-                "node_size": 1000,
-                "node_color": "white",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Latent": {
-                "node_shape": "o",
-                "node_size": 1000,
-                "node_color": "white",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "--"
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in nodes.keys():
-                nodes[role] = nodes['Observed']
 
-        labels = {
-            "Exposure": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Outcome": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Observed": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Latent": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in labels.keys():
-                labels[role] = labels['Observed']
-            
-        edges = {
-            "edge_label": self.edge_label,
-            "edge_style": {"directed": "solid",
-                           "bidirected": "dashed",
-                           "undirected": "solid"
-                           },
-            "edge_color": {"directed": "black",
-                           "bidirected": "black",
-                           "undirected": "orange"
-                           },
-            "edge_arc": {"directed": 0,
-                         "bidirected": -.33,
-                         "undirected": 0,
-                         },
-            "edge_linewidth": {"directed": 1.5,
-                               "bidirected": 1.5,
-                               "undirected": 1.5
-                               },
-            "edge_head_size": {"directed": 20,
-                               "bidirected": 20,
-                               "undirected": 0
-                               },
-            "edge_head_style": {"directed": None,
-                               "bidirected": '<|-|>',
-                               "undirected": '-' 
-                               },
-            "edge_margin_tail": {"directed": 20,
-                                 "bidirected": 20,
-                                 "undirected": 0
-                                 },
-            "edge_margin_head": {"directed": 20,
-                                 "bidirected": 20,
-                                 "undirected": 0
-                                 }
-        }
-        return [nodes, labels, edges]
-    
-    def __plot_get_style_pearl__(self):
-        nodes = {
-            "Exposure": {
-                "node_shape": ".",
-                "node_size": 200,
-                "node_color": "lightgray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Outcome": {
-                "node_shape": ".",
-                "node_size": 200,
-                "node_color": "gray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Observed": {
-                "node_shape": ".",
-                "node_size": 200,
-                "node_color": "black",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Latent": {
-                "node_shape": ".",
-                "node_size": 200,
-                "node_color": "white",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "--"
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in nodes.keys():
-                nodes[role] = nodes['Observed']
-
-        labels = {
-            "Exposure": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Outcome": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Observed": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Latent": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in labels.keys():
-                labels[role] = labels['Observed']
-            
-        edges = {
-            "edge_label": self.edge_label,
-            "edge_style": {"directed": "solid",
-                           "bidirected": "dashed",
-                           "undirected": "solid"
-                           },
-            "edge_color": {"directed": "black",
-                           "bidirected": "black",
-                           "undirected": "orange"
-                           },
-            "edge_arc": {"directed": 0,
-                         "bidirected": -.33,
-                         "undirected": 0,
-                         },
-            "edge_linewidth": {"directed": 1.5,
-                               "bidirected": 1.5,
-                               "undirected": 1.5
-                               },
-            "edge_head_size": {"directed": 20,
-                               "bidirected": 20,
-                               "undirected": 0
-                               },
-            "edge_head_style": {"directed": None,
-                               "bidirected": '<|-|>',
-                               "undirected": '-' 
-                               },
-            "edge_margin_tail": {"directed": 0,
-                                 "bidirected": -10,
-                                 "undirected": -10
-                                 },
-            "edge_margin_head": {"directed": -10,
-                                 "bidirected": -10,
-                                 "undirected": 0
-                                 }
-        }
-        return [nodes, labels, edges]
-
-    def __plot_get_style_rectangle__(self, *args, **kws):
-        nodes = {
-            "Exposure": {
-                "node_shape": "",
-                "node_size": 1000,
-                "node_color": "lightgray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Outcome": {
-                "node_shape": "",
-                "node_size": 1000,
-                "node_color": "gray",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Observed": {
-                "node_shape": "",
-                "node_size": 1000,
-                "node_color": "white",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "-"
-            },
-            "Latent": {
-                "node_shape": "",
-                "node_size": 1000,
-                "node_color": "white",
-                "node_border_color": "black",
-                "node_border_width": 1,
-                "node_border_style": "--"
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in nodes.keys():
-                nodes[role] = nodes['Observed']
-
-        labels = {
-            "Exposure": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Outcome": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Observed": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            },
-            "Latent": {
-                "node_label_fontweight": "normal",
-                "node_label_fontsize"  : 12,
-            }
-        }
-        for role, node in self.nodes_role.items():
-            if role not in labels.keys():
-                labels[role] = labels['Observed']
-            
-        edges = {
-            "edge_label": self.edge_label,
-            "edge_style": {"directed": "solid",
-                           "bidirected": "dashed",
-                           "undirected": "solid"
-                           },
-            "edge_color": {"directed": "black",
-                           "bidirected": "black",
-                           "undirected": "orange"
-                           },
-            "edge_arc": {"directed": 0,
-                         "bidirected": -.33,
-                         "undirected": 0,
-                         },
-            "edge_linewidth": {"directed": 1.5,
-                               "bidirected": 1.5,
-                               "undirected": 1.5
-                               },
-            "edge_head_size": {"directed": 20,
-                               "bidirected": 20,
-                               "undirected": 0
-                               },
-            "edge_head_style": {"directed": None,
-                               "bidirected": '<|-|>',
-                               "undirected": '-' 
-                               },
-            "edge_margin_tail": {"directed": 20,
-                                 "bidirected": 20,
-                                 "undirected": 0
-                                 },
-            "edge_margin_head": {"directed": 20,
-                                 "bidirected": 20,
-                                 "undirected": 0
-                                 }
-        }
-        return [nodes, labels, edges]
-
-    def __plot_collect_aes__(self, role, aes, default):
+    def __plot_collect_aes__(self, role, aes_name, default):
         res = None
-        if aes is not None:
-            if isinstance(aes, dict):
-                res = aes.get(role, None)
+        if aes_name is not None:
+            if isinstance(aes_name, dict):
+                res = aes_name.get(role, None)
             else:
-                res = aes
+                res = aes_name
         
         if not res:
             res = default
@@ -2812,6 +2654,349 @@ class DAG:
                 # default
                 res = 1
         return res
+
+    # def _plot_parse_aes_edge(self, aes_name, aes_to, defaults):
+    #     # """
+    #     # Parse arbitrary `aes_to` specification and return a dict
+
+    #     # {
+    #     #     "directed":   {edge: color, ...},
+    #     #     "bidirected": {edge: color, ...},
+    #     #     "undirected": {edge: color, ...},
+    #     # }
+
+    #     # where any unspecified edge gets its type-specific default color.
+    #     # """
+    #     # Bundle edges by type
+    #     edges_by_type = {
+    #         "directed":   self.directed,
+    #         "bidirected": self.bidirected,
+    #         "undirected": {frozenset(s) for s in self.undirected}
+    #     }
+
+    #     # Initialize result with defaults
+    #     result = {}
+    #     for etype, edges in edges_by_type.items():
+    #         default = defaults.get(etype)
+    #         result[etype] = {e: default for e in edges}
+
+    #     # If no customization or a single scalar: use it for all edges
+    #     if aes_to is None:
+    #         return result
+
+    #     if not isinstance(aes_to, Mapping):
+    #         # scalar (e.g., 'red'): apply to all edges across all types
+    #         for etype, edges in result.items():
+    #             for e in edges:
+    #                 result[etype][e] = aes_to
+    #         return result
+
+    #     # Build a lookup: edge -> edge_type
+    #     edge_type_by_edge = {}
+    #     for etype, edges in edges_by_type.items():
+    #         for e in edges:
+    #             edge_type_by_edge[e] = etype
+
+    #     # Split the user spec into:
+    #     # - type-level overrides: {'directed': 'green', ...}
+    #     # - edge-level overrides: {(u, v): 'blue', frozenset(...): 'red', ...}
+    #     type_level_spec = {}
+    #     edge_level_spec = {}
+
+    #     for key, val in aes_to.items():
+    #         # Optional: support nested dict: {'directed': {edge1: 'red', ...}}
+    #         if isinstance(key, str) and key in edges_by_type:
+    #             # If the value is a mapping, treat it as edge-level for that type.
+    #             if isinstance(val, Mapping):
+    #                 for e, c in val.items():
+    #                     edge_level_spec[e] = c
+    #             else:
+    #                 type_level_spec[key] = val
+    #         else:
+    #             edge_level_spec[key] = val
+
+    #     # Apply type-level defaults first
+    #     for etype, color in type_level_spec.items():
+    #         for e in edges_by_type[etype]:
+    #             result[etype][e] = color
+
+    #     # Apply per-edge overrides next (take precedence over type-level)
+    #     for edge_key, color in edge_level_spec.items():
+    #         # Direct lookup
+    #         if edge_key in edge_type_by_edge:
+    #             etype = edge_type_by_edge[edge_key]
+    #             result[etype][edge_key] = color
+    #             continue
+
+    #         # If we get here, we didn't recognize the edge. You can either:
+    #         # - raise an error, or
+    #         # - silently ignore. I’ll raise to catch mistakes.
+    #         raise ValueError(f"Unknown edge key in aes_to: {edge_key!r}")
+
+    #     return result
+
+    def _plot_parse_aes_edge(self,
+                             aes_name: str,
+                             aes_to: Union[Any, Mapping[Any, Any], None],
+                             style_default: Mapping[str, Any]):
+        # """
+        # Parse one edge aesthetic (given by `aes_name`) using STYLE_DEFAULT
+        # and an arbitrary user `aes_to`.
+
+        # Parameters
+        # ----------
+        # aes_name : str
+        #     Name of the aesthetic in STYLE_DEFAULT["edges"],
+        #     e.g. "edge_head_size", "edge_color", "edge_style", ...
+        # aes_to : scalar, dict, or None
+        #     Arbitrary user specification for this aesthetic (same rules as
+        #     _plot_parse_aes_edge_anc).
+        # style_default : mapping
+        #     Typically your STYLE_DEFAULT.
+
+        # Returns
+        # -------
+        # Dict[edge, value]
+        #     Flat mapping from edge object to that aesthetic value.
+        # """
+        edges_defaults = style_default["edges"][aes_name]
+        # edges_defaults is e.g. STYLE_DEFAULT["edges"]["edge_head_size"]
+        # == {"directed": 20, "bidirected": 20, "undirected": 0}
+
+        res = self._plot_parse_aes_edge_anc(directed=self.directed,
+                                            bidirected=self.bidirected,
+                                            undirected=self.undirected,
+                                            spec=aes_to,
+                                            defaults=edges_defaults)
+
+        return res
+
+    def _plot_parse_aes_edge_anc(self, 
+                                 directed, bidirected, undirected,
+                                 spec: Union[Any, Mapping[Any, Any], None],
+                                 defaults: Mapping[str, Any],
+                                 ):
+        # """
+        # Low-level helper: parse a *single* edge aesthetic.
+
+        # Parameters
+        # ----------
+        # directed : iterable of (u, v)
+        # bidirected : iterable of ((u, v), (v, u))
+        # undirected : iterable of sets/frozensets {u, v}
+        # spec : scalar, dict, or None
+        #     - scalar -> apply to all edges
+        #     - None   -> use defaults by type
+        #     - dict   -> keys can be:
+        #         * 'directed', 'bidirected', 'undirected' (case-insensitive)
+        #         * actual edges:
+        #             - ('D', 'Y') for directed
+        #             - (('D', 'Y'), ('Y', 'D')) for bidirected
+        #             - {'M1', 'M2'} or frozenset({'M1', 'M2'}) for undirected
+        # defaults : mapping
+        #     e.g. STYLE_DEFAULT["edges"]["edge_head_size"], i.e.
+        #     {
+        #       "directed": 20,
+        #       "bidirected": 20,
+        #       "undirected": 0,
+        #     }
+
+        # Returns
+        # -------
+        # Dict[edge, value]
+        #     Flat mapping from *edge object* to the aesthetic value.
+        #     Undirected edges use frozenset({u, v}) as key.
+        # """
+        # Normalize containers
+        directed_edges: List[DirectedEdge] = list(directed)
+        bidirected_edges: List[BidirectedEdge] = list(bidirected)
+        undirected_edges: List[frozenset] = [frozenset(e) for e in undirected]
+
+        # --- Case 1: scalar spec (apply to all edges) --------------------------
+        if spec is not None and not isinstance(spec, Mapping):
+            value = spec
+            result: Dict[Hashable, Any] = {}
+            for e in directed_edges:
+                result[e] = value
+            for e in bidirected_edges:
+                result[e] = value
+            for e in undirected_edges:
+                result[e] = value
+            return result
+
+        # --- Case 2: None -> use defaults only ---------------------------------
+        if spec is None:
+            d_default = defaults["directed"]
+            b_default = defaults["bidirected"]
+            u_default = defaults["undirected"]
+
+            result: Dict[Hashable, Any] = {}
+            for e in directed_edges:
+                result[e] = d_default
+            for e in bidirected_edges:
+                result[e] = b_default
+            for e in undirected_edges:
+                result[e] = u_default
+            return result
+
+        # --- Case 3: dict spec with type-level & edge-level overrides ----------
+        spec_dict: Mapping[Any, Any] = spec
+
+        known_kinds = {"directed", "bidirected", "undirected"}
+
+        # Type-level overrides (case-insensitive)
+        kind_overrides: Dict[str, Any] = {}
+        for k, v in spec_dict.items():
+            if isinstance(k, str):
+                kl = k.lower()
+                if kl in known_kinds:
+                    kind_overrides[kl] = v
+
+        # Precompute sets for membership checks
+        directed_set   = set(directed_edges)
+        bidirected_set = set(bidirected_edges)
+        undirected_set = set(undirected_edges)
+
+        # Per-edge overrides
+        directed_overrides: Dict[DirectedEdge, Any]   = {}
+        bidirected_overrides: Dict[BidirectedEdge, Any] = {}
+        undirected_overrides: Dict[frozenset, Any]    = {}
+
+        for k, v in spec_dict.items():
+            # skip kind keys already handled
+            if isinstance(k, str) and k.lower() in known_kinds:
+                continue
+
+            # directed edge override: ('u', 'v')
+            if isinstance(k, tuple) and len(k) == 2 and all(
+                isinstance(x, str) for x in k
+            ):
+                if k in directed_set:
+                    directed_overrides[k] = v
+                    continue
+
+            # bidirected edge override: ((u,v), (v,u))
+            if (
+                isinstance(k, tuple)
+                and len(k) == 2
+                and all(isinstance(x, tuple) and len(x) == 2 for x in k)
+            ):
+                if k in bidirected_set:
+                    bidirected_overrides[k] = v
+                    continue
+
+            # undirected edge override: {'u','v'} / frozenset({'u','v'})
+            if isinstance(k, (set, frozenset)):
+                fk = frozenset(k)
+                if fk in undirected_set:
+                    undirected_overrides[fk] = v
+                    continue
+
+        d_default = defaults["directed"]
+        b_default = defaults["bidirected"]
+        u_default = defaults["undirected"]
+
+        result: Dict[Hashable, Any] = {}
+
+        # Build final values with precedence: default -> kind -> per-edge
+
+        for e in directed_edges:
+            val = d_default
+            if "directed" in kind_overrides:
+                val = kind_overrides["directed"]
+            if e in directed_overrides:
+                val = directed_overrides[e]
+            result[e] = val
+
+        for e in bidirected_edges:
+            val = b_default
+            if "bidirected" in kind_overrides:
+                val = kind_overrides["bidirected"]
+            if e in bidirected_overrides:
+                val = bidirected_overrides[e]
+            result[e] = val
+
+        for e in undirected_edges:
+            val = u_default
+            if "undirected" in kind_overrides:
+                val = kind_overrides["undirected"]
+            if e in undirected_overrides:
+                val = undirected_overrides[e]
+            result[e] = val
+
+        return result
+
+    def _plot_parse_aes_node(self,
+                             aes_name,
+                             aes_to: Union[str, Dict[Any, str], None],
+                             defaults: Dict[str, Dict[str, Any]]):
+        # """
+        # Parse arbitrary node aesthetic specifications (e.g., aes_to)
+        # and return a dict mapping each node to its final aesthetic value.
+
+        # Parameters
+        # ----------
+        # aes_to : str or dict or None
+        #     Arbitrary user input:
+        #         - str → apply to all nodes
+        #         - dict → may contain:
+        #             {node_name: color, node_type: color}
+        # defaults : dict
+        #     Default aesthetics by node type, e.g.
+        #     {
+        #         "Exposure": {"aes_to": "lightgray", ...},
+        #         "Observed": {"aes_to": "white", ...},
+        #     }
+
+        # Returns
+        # -------
+        # dict: {node_name: color}
+        # """
+        defaults = defaults['nodes']
+        result = {}
+
+        nodes = self.nodes
+        node_roles = {n:info['role'] for n, info in self.nodes_info.items()}
+
+        # 1. Case: global color
+        if isinstance(aes_to, str | float | int):
+            return {node: aes_to for node in nodes}
+
+        # 2. Case: None → all defaults
+        if aes_to is None:
+            
+            return {
+                node: defaults.get(node_roles[node], defaults['Observed'])[aes_name]
+                for node in nodes
+            }
+
+        # 3. Case: dict with type-level and node-level assignments
+        if isinstance(aes_to, dict):
+            # Normalize type keys (case-insensitive)
+            type_map = {k.lower(): v for k, v in aes_to.items()
+                        if isinstance(k, str) and k.lower() in {t.lower() for t in self.nodes_role}}
+
+            # Node-specific overrides
+            node_map = {k: v for k, v in aes_to.items()
+                        if k in nodes}
+
+            for node in nodes:
+                node_type = node_roles[node]
+                type_key = node_type.lower()
+
+                if node in node_map:
+                    # highest priority
+                    result[node] = node_map[node]
+                elif type_key in type_map:
+                    # type-level override
+                    result[node] = type_map[type_key]
+                else:
+                    # default for node type
+                    result[node] = defaults.get(node_type, defaults['Observed'])[aes_name]
+
+            return result
+
+        raise TypeError("aes_to must be either a string, dict, number, or None.")
 
 class identification:
 
@@ -4459,3 +4644,204 @@ class examples:
                  }
         labels = None
         return dict(graph=dag, nodes_role=roles, nodes_position=pos, nodes_label=labels)
+
+
+def get_styles(which=None):
+    """
+    Print the attributes of the built-in styles of DAG plots.
+
+    Parameters
+    ----------
+    which : str or None  
+        If ``None``, returns the names of the built-in styles. 
+        If ``str``, it can be:
+
+        * The name of the built-in style: returns a dictionary with the  
+          parameters of the respective style  
+        * 'current': returns the dictionary with the current global style  
+          set in options  
+
+    Returns
+    -------
+    dict or None
+
+    """
+    if not which:
+        print(f"To see the style dictionary, use the 'which' argument with the name of a built-in style.")
+        print(f"Built-in styles available: \n- {' \n- '.join(GRAPH_STYLES.keys())}")
+        print(f"Use which='current' to get the current global style.")
+        res = None
+    else:
+        if which=='current':
+            res = get_options('graph_style')
+        else:
+            res = copy_style(which)
+    return res
+
+def copy_style(which='default'):
+    """Return a mutable copy of a built-in style.
+
+    Parameters
+    ----------
+    which : str
+        String with the name of the built-in style.
+    """
+    resolve_graph_style(which, GRAPH_STYLES)
+    return _copy_style(GRAPH_STYLES[which])
+
+def make_style(new_style: Mapping[str, Any], baseline: str = 'default') -> dict:
+    """
+    Construct a customized, mutable graph style dictionary by applying a set of
+    user-provided overrides (`new_style`) to a baseline built-in style template.
+
+    Parameters
+    ----------
+    new_style : Mapping[str, Any]
+        A dictionary describing style modifications. The structure may range from
+        flat (broadcast) updates to arbitrarily nested overrides.
+        The function recursively matches keys against the baseline schema and applies
+        overrides to the appropriate subtrees. Unknown keys or incompatible structures
+        raise informative errors. To see the visual properties available to set
+        use ``causalinf.gcm.get_styles(which='default')``, and see ``Notes`` below.
+        The output of this function can be used to set the plot style locally using
+       ``causalinf.gcm.plot(graph_style=<dict>)`` or globally using 
+       ``causalinf.options.set_options(graph_style=<dict>)``.
+        Supported patterns include:
+
+        * Flat parameter override (propagate style option to all nodes). Ex:
+            {"node_shape": "."}
+
+        * Scoped override for a specific node type. Ex (propagate to Exposure nodes only):
+            {"Exposure": {"node_shape": "."}}
+
+        * Fully explicit nesting is accepted:
+            {"nodes": {"Exposure": {"node_shape": "."}}}
+
+        * Edge-level overrides (same as for node options):
+            {"edge_color": "red"}               <= all edges become red
+            {"edges": {"edge_color": "red"}}    <= all edges become red
+            {"Directed": {"edge_color": "red"}} <= only directed edges become red
+
+
+    baseline : str, optional
+        Name of the baseline built-in style (see ``causalinf.gcm.get_styles()``).
+
+    Returns
+    -------
+    dict
+        A **mutable** style dictionary derived from the baseline but modified according
+        to ``new_style``. The returned structure is fully detached from the immutable
+        baseline, so changes to the result do not affect the built-in styles.
+
+    Notes
+    -----
+    * This function does **not** mutate the baseline style.
+    * Flat parameters (e.g., {"node_size": 800}) are automatically broadcast to every
+      location in the schema where that parameter exists.
+    * Nested dictionaries target specific nodes/edges or structural locations.
+    * The override mechanism is schema-guided: only fields that exist in the baseline
+      structure can be modified.
+
+    Examples
+    --------
+    >>> make_style({"node_shape": "."})
+    # returns a dictionary with node_shape='.' to all node types
+
+    >>> make_style({"Exposure": {"node_shape": "."}})
+    # returns a dictionary with node_shape='.' only for the Exposure node
+
+    >>> make_style({"edges": {"edge_color": "red"}})
+    # returns a dictionary with  all edge colors (directed, bidirected, undirected) to red
+    """
+    if not isinstance(new_style, Mapping):
+        raise TypeError("new_style must be a dict-like mapping")
+
+    style = copy_style(baseline)
+    schema = GRAPH_STYLES[baseline]
+
+    _make_style_apply_style_update(style, new_style, schema)
+    return style
+
+
+
+def _copy_style(obj):
+    # """Recursively convert MappingProxyType / mappings into plain mutable containers."""
+    # First handle mappingproxy / dict-like
+    if isinstance(obj, Mapping):
+        return {k: _copy_style(v) for k, v in obj.items()}
+
+    # Optionally handle lists/tuples/sets if they appear in your style
+    if isinstance(obj, Sequence) and not isinstance(obj, (str, bytes, bytearray)):
+        t = type(obj)
+        return t(_copy_style(v) for v in obj)
+
+    # Everything else is left as is (ints, floats, strings, etc.)
+    return obj
+
+def _make_style_schema_has_key(schema, param: str) -> bool:
+    if not isinstance(schema, Mapping):
+        return False
+    if param in schema:
+        return True
+    return any(
+        _make_style_schema_has_key(v, param)
+        for v in schema.values()
+        if isinstance(v, Mapping)
+    )
+
+def _make_style_broadcast_param(target: dict, schema, param: str, value):
+    if not (isinstance(target, Mapping) and isinstance(schema, Mapping)):
+        return
+
+    if param in schema:
+        schema_val = schema[param]
+
+        if not isinstance(schema_val, Mapping):
+            target[param] = value
+        else:
+            tgt_param = target.get(param)
+            if isinstance(tgt_param, Mapping) and all(
+                not isinstance(v, Mapping) for v in schema_val.values()
+            ):
+                for k in tgt_param.keys():
+                    tgt_param[k] = value
+
+    for k, child_schema in schema.items():
+        child_target = target.get(k)
+        if isinstance(child_target, Mapping) and isinstance(child_schema, Mapping):
+            _make_style_broadcast_param(child_target, child_schema, param, value)
+
+def _make_style_apply_style_update(target: dict, patch, schema):
+    if not isinstance(patch, Mapping):
+        raise TypeError("new_style must contain only mapping values at each level")
+
+    for key, val in patch.items():
+        if key in target:
+            if isinstance(target[key], Mapping) and isinstance(val, Mapping):
+                sub_schema = schema.get(key, target[key])
+                _make_style_apply_style_update(target[key], val, sub_schema)
+            else:
+                target[key] = val
+            continue
+
+        if isinstance(val, Mapping):
+            placed = False
+            for child_name, child_schema in schema.items():
+                child_target = target.get(child_name)
+                if isinstance(child_target, Mapping) and isinstance(child_schema, Mapping):
+                    if key in child_schema:
+                        sub_schema = child_schema[key]
+                        sub_target = child_target.get(key)
+                        if sub_target is None:
+                            child_target[key] = {}
+                            sub_target = child_target[key]
+                        _make_style_apply_style_update(sub_target, val, sub_schema)
+                        placed = True
+                        break
+
+            if not placed:
+                raise KeyError(f"Unknown nested style key {key!r} for this baseline")
+        else:
+            if not _make_style_schema_has_key(schema, key):
+                raise KeyError(f"Unknown style parameter {key!r} for this baseline")
+            _make_style_broadcast_param(target, schema, key, val)

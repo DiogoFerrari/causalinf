@@ -15,7 +15,7 @@
 /* ================== Font, BACKGROUND COLOR etc ================== */
 /* body text fontsize */
 .md-typeset {
-  font-size: 0.72rem; /* Example: Adjust this value as needed */
+  /* font-size: 0.72rem; /\* Example: Adjust this value as needed *\/ */
   line-height: 1.4; /* Adjust this value as needed (e.g., 1.5, 1.8) */
 }
 .md-typeset .highlight {

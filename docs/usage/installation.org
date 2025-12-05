@@ -9,7 +9,7 @@ hide:
 You can install ~causalinf~ with ~pip~:
 
 #+begin_src sh
-$ pip3 install causalinf
+$ pip install causalinf
 #+end_src
 
 #+RESULTS:

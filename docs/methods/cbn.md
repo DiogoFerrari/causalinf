@@ -1,5 +1,0 @@
-## Assumptions
-
-## Estimation
-
-## Reporting

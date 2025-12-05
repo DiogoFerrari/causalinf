@@ -14,7 +14,8 @@ To import a submodule, use:
 from causalinf import <submodule name>
 ```
 
-Here are some examples:
+See [Methods](../../methods/overview/) for the full list of submodules
+available. Here are some examples:
 
 ``` {.python exports="code" results="silent" tangle="src-overview.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="never"}
 from causalinf import did # (1)!
@@ -25,6 +26,3 @@ from causalinf import iv  # (3)!
 1.  Load the Difference-in-Differences (DiD) module
 2.  Load the Causal Graphical Models (GCM) module
 3.  Load the Instrumental Variable (IV) module
-
-See [Methods](../methods/overview.md) for details of the submodules
-(i.e., methods) available.

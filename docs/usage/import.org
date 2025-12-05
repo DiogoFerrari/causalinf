@@ -13,8 +13,8 @@ The ~causalinf~ module provides the implementation of many causal inference meth
 from causalinf import <submodule name>
 #+END_SRC
 
-Here are some examples:
-# 
+See [[file:../../methods/overview/][Methods]] for the full list of submodules available. Here are some examples:
+
 #+BEGIN_SRC python :exports code :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1  :eval never
 from causalinf import did # (1)!
 from causalinf import gcm # (2)!
@@ -24,7 +24,4 @@ from causalinf import iv  # (3)!
 1. Load the Difference-in-Differences (DiD) module
 2. Load the Causal Graphical Models (GCM) module
 3. Load the Instrumental Variable (IV) module
-
-
-See [[file:../methods/overview.md][Methods]] for details of the submodules (i.e., methods) available.
 

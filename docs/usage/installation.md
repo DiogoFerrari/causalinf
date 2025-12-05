@@ -9,7 +9,7 @@ hide:
 You can install `causalinf` with `pip`:
 
 ``` {.bash org-language="sh"}
-$ pip3 install causalinf
+$ pip install causalinf
 ```
 
 Or through `conda`:

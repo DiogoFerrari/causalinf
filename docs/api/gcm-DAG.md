@@ -1,5 +1,7 @@
 ## Examples
 
+### Full example
+
 The example below shows how to
 
 1.  Create a DAG using a string `dag` and the function `DAG`
@@ -10,6 +12,7 @@ The example below shows how to
     with LaTeX expressions
 5.  Set labels for the edges using a dictionary `edge_labels`, including
     with LaTeX expressions
+6.  Customize nodes and edges visual features
 
 ``` {.python exports="both" results="silent" tangle="src-gcm-DAG.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="always"}
 from causalinf import gcm
@@ -51,9 +54,42 @@ edge_labels = {
      ( 'M2', 'M1' ) : 1234, # 
 }
 
-G = gcm.DAG(dag, nodes_label=node_labels, nodes_position=pos, edge_label=edge_labels)
+G = gcm.DAG(dag, nodes_label=node_labels, nodes_position=pos, edge_label=edge_labels, nodes_role=roles)
 G.plot()
 ```
 
 ![](./tables-and-figures/gcm-DAG-with-labels.png)
 
+### Visual features all at once
+
+Features of nodes and edges can be customized by the name of the edge or
+node, their type, or all at once. To customize all at once (for example,
+with color for nodes and line style for edges):
+
+``` {.python exports="both" results="silent" tangle="src-gcm-DAG.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="always"}
+G.plot(node_color="orange", edge_style='dotted')
+```
+
+![](./tables-and-figures/gcm-DAG-with-labels-customize-all.png)
+
+### Visual features by name
+
+To customize by name of nodes and edges, say node M1 and edge
+$Z \to Y $:
+
+``` {.python exports="both" results="silent" tangle="src-gcm-DAG.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="always"}
+G.plot(node_size={'M1':4000}, edge_color={('Z', 'Y'):'red'}, edge_arc={('Z', 'Y'):.3})
+```
+
+![](./tables-and-figures/gcm-DAG-with-labels-customize-by-name.png)
+
+### Visual features by type
+
+To customize by type of nodes and edges, say node exposure node and
+directed edges
+
+``` {.python exports="both" results="silent" tangle="src-gcm-DAG.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="always"}
+G.plot(node_border_color={'Exposure':'red'}, edge_linewidth={'Directed':3})
+```
+
+![](./tables-and-figures/gcm-DAG-with-labels-customize-by-type.png)

@@ -1,7 +1,0 @@
-## Assumptions
-
-## Identfication Analysis
-
-## Estimation
-
-## Reporting
