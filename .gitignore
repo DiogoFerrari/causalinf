@@ -55,3 +55,14 @@ docs/_build/
 
 # PyBuilder
 target/
+
+
+# # AI -------------------------------------------
+# # Claude AI specific files/directories to ignore
+# .claude/
+# .claudeignore # Uncomment this line if you decide to ignore the project-level ignore file
+
+# # Environment variables and secrets
+# .env
+# *.pem
+# *.secret
