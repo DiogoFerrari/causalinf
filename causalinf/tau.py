@@ -124,7 +124,6 @@ VARIABLES = {
     }
 }
 
-
 PARAMETER = {
     "ACE" : {
         'name'       : "Average Causal Effect",

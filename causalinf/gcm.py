@@ -1545,7 +1545,7 @@ class DAG:
             for node in nodes:
                 label = nodes_label.get(node, node) if use_labels else node
                 role  = self.nodes_info[node]['role']
-                x, y  = nodes_position[node] if nodes_position and nodes_position[node] else \
+                x, y  = nodes_position[node] if nodes_position and all(nodes_position[node]) else \
                     self.nodes_info[node]['position'] 
 
                 if node_label_box[node]:
@@ -1893,8 +1893,10 @@ class DAG:
               f"Generating {len(figs.keys())} figure(s) with a maximum of {max_per_figure} panels per figure\n")
         figs_res = {}
         
-        for fig_number, panels in figs.items():
+        nodes_subset = plot_kws.pop("node_subset", None)
+        legend_show = plot_kws.pop("legend_show", True)
 
+        for fig_number, panels in figs.items():
             # figure
             ncols = int(math.ceil(math.sqrt(max_per_figure)))
             nrows = int(math.ceil(max_per_figure / ncols))
@@ -1910,8 +1912,12 @@ class DAG:
                 print(f"Creating plot {panel_number+1} of {n_eq_dags}...", end='')
                 ax = axs[panel]
                 eq_dag = eq_dags[panels[panel]]
+                panel_legend_show = legend_show and panel_number == 0
                 # baseline plot
-                eq_dag.plot(ax=ax, edge_linewidth=1,
+                eq_dag.plot(ax=ax,
+                            node_subset = nodes_subset,
+                            legend_show=panel_legend_show,
+                            edge_linewidth=1,
                             show_labels=show_labels,
                             use_labels=use_labels,
                             title=title_equivalent_graph,
@@ -1920,15 +1926,20 @@ class DAG:
                 # superimpose edges highlighing the differences
                 edges = self.edge_differences(eq_dag)['G2']
                 nodes = self.__collect_nodes_from_edges__(edges)
-                eq_dag.plot(ax=ax, edge_linewidth=3,
-                            node_subset = nodes,
-                            edge_subset = edges,
-                            show_labels=show_labels,
-                            edge_color=edge_difference_color,
-                            use_labels=use_labels,
-                            title=title_equivalent_graph,
-                            title_fontsize=title_fontsize,
-                            **plot_kws)
+                if nodes_subset is not None:
+                    nodes = list(set(nodes).intersection(nodes_subset))
+
+                if nodes:
+                    eq_dag.plot(ax=ax, edge_linewidth=3,
+                                node_subset = nodes,
+                                edge_subset = edges,
+                                legend_show=False,
+                                show_labels=show_labels,
+                                edge_color=edge_difference_color,
+                                use_labels=use_labels,
+                                title=title_equivalent_graph,
+                                title_fontsize=title_fontsize,
+                                **plot_kws)
                 if show_footnote:
                     # footnote
                     xcoord=1

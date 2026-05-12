@@ -23,12 +23,10 @@ classifiers = [
 	    "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-	     "functools",
-	     'itertools',
 	     "numpy",
-	     "operator",
 	     "pandas",
 	     "polars",
+	     "networkx",
 	     'tools4sci',
 	     "tidypolars4sci"
 ]

@@ -379,3 +379,4 @@ class glm:
             "se": {'type':se, 'description':se_msg},
             'options':{}
         }
+    
