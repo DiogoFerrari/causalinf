@@ -3,7 +3,6 @@ warnings.filterwarnings("ignore", category=UserWarning, module="rpy2.rinterface"
 # 
 from . import utils as ut
 from .models import lsem
-from .scm import estimate as scm_estimate
 from .options import get_options
 from .tau import *
 from .gcm_styles import GRAPH_STYLES, resolve_graph_style
@@ -1209,7 +1208,13 @@ class DAG:
              edge_label_alpha=None,
              edge_label_rotate=None,
              edge_label_position=None,
-             edge_label_sig_level=0.05,
+             edge_label_estimates_sig_level=0.05,
+             edge_label_estimates_colors={"negative":"red", "positive":"blue"},
+             edge_label_estimates_face=None,
+             edge_label_estimates_show_sig=True,
+             edge_label_estimates_show_sig_alpha={"Yes": 1, "No": .2},
+             edge_label_estimates_show_ci=False,
+             edge_label_estimates_show_ci_round=4,
              edge_label_pvalue=None,
              edge_label_font_family = None,
              # legend
@@ -1341,8 +1346,30 @@ class DAG:
         edge_subset : dict[str, list] or None, optional
             Limit plotting to selected edges by type.
 
-        edge_label_sig_level : float, optional
+        edge_label_estimates_sig_level : float, optional
             Significance level used when estimates include confidence bounds.
+        edge_label_estimates_colors : dict or None, optional
+            Colors for negative and positive estimate labels. Use ``None`` to
+            keep the default edge label color. Defaults to
+            ``{"negative": "red", "positive": "blue"}``.
+        edge_label_estimates_face : dict or None, optional
+            Font weight for negative and positive estimate labels, e.g.
+            ``{"negative": "normal", "positive": "bold"}``. Use ``None`` to
+            keep the normal label weight.
+        edge_label_estimates_show_sig : bool, optional
+            Append significance stars from the estimates summary when ``True``.
+            Defaults to ``True``.
+        edge_label_estimates_show_sig_alpha : dict or None, optional
+            Alpha values keyed by ``"Yes"`` and ``"No"``, where ``"Yes"``
+            means the estimate p-value is at or below
+            ``edge_label_estimates_sig_level``. Use ``None`` to keep the
+            default edge label alpha. Defaults to ``{"Yes": .5, "No": 1}``.
+        edge_label_estimates_show_ci : bool, optional
+            Add confidence intervals below the estimate label when ``True``.
+            Defaults to ``False``.
+        edge_label_estimates_show_ci_round : int, optional
+            Number of decimal places used for confidence interval bounds.
+            Defaults to ``4``.
 
         edge_label_pvalue : dict or None, optional
             P-value annotations keyed by edge.
@@ -1457,7 +1484,9 @@ class DAG:
         >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':'})
         >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':', 'Z':'solid'})
         """
-        assert estimates is None or isinstance(estimates, scm_estimate), (
+        from . import scm as causalinf_scm
+
+        assert estimates is None or isinstance(estimates, causalinf_scm.estimate), (
             "'estimates' must be either None or an object of causalinf.scm.estimate ")
         assert isinstance(latex_packages, list) or latex_packages is None, "latex_packages must be None or a list"
 
@@ -1474,9 +1503,20 @@ class DAG:
         args = pars.pop('args') # extra positional
         kws  = pars.pop('kws')  # extra keyword
 
+        estimate_label_sign = {}
+        estimate_label_pvalue = {}
+
         # use estimates as labels
         if estimates is not None:
-            edge_label, edge_label_pvalue = self.__plot_collect_labels_estimate__(estimates)
+            edge_label, edge_label_pvalue, estimate_label_sign = (
+                self.__plot_collect_labels_estimate__(
+                    estimates,
+                    show_sig=edge_label_estimates_show_sig,
+                    show_ci=edge_label_estimates_show_ci,
+                    show_ci_round=edge_label_estimates_show_ci_round
+                )
+            )
+            estimate_label_pvalue = edge_label_pvalue
 
         # figure 
         # ------
@@ -1595,6 +1635,25 @@ class DAG:
         edge_label_position = self._plot_parse_aes_edge("edge_label_position", edge_label_position, style_dict)
         edge_label_color_border     = self._plot_parse_aes_edge("edge_label_color_border", edge_label_color_border, style_dict)
         edge_label_color_background = self._plot_parse_aes_edge("edge_label_color_background", edge_label_color_background, style_dict)
+        edge_label_font_weight = {edge: 'normal' for edge in edge_label_color}
+
+        if estimates is not None:
+            edge_label_color = self.__plot_apply_estimate_sign_feature__(
+                edge_label_color,
+                estimate_label_sign,
+                edge_label_estimates_colors
+            )
+            edge_label_font_weight = self.__plot_apply_estimate_sign_feature__(
+                edge_label_font_weight,
+                estimate_label_sign,
+                edge_label_estimates_face
+            )
+            edge_label_alpha = self.__plot_apply_estimate_sig_alpha__(
+                edge_label_alpha,
+                estimate_label_pvalue,
+                edge_label_estimates_show_sig_alpha,
+                edge_label_estimates_sig_level
+            )
         
         for edge_type in ['directed', 'bidirected', 'undirected']:
             for edge in self.__getattribute__(edge_type):
@@ -1645,6 +1704,7 @@ class DAG:
                         alpha       = edge_label_alpha[edge],
                         font_size   = edge_label_size[edge], 
                         font_color  = edge_label_color[edge], 
+                        font_weight = edge_label_font_weight[edge],
                         rotate      = edge_label_rotate[edge], 
                         label_pos   = edge_label_position[edge], 
                         font_family = edge_label_font_family,
@@ -2600,27 +2660,103 @@ class DAG:
             adj[label] = adj[node]
         return adj
 
-    def __plot_collect_labels_estimate__(self, estimates, show_sig=True, show_se=False, show_ci=False):
-        tab = (estimates.est.parameters
-               .separate('term',  ['_to', '_from'], '~', remove=False)
-               .mutate(_to = tp.str_trim('_to'),
-                       _from = tp.str_trim('_from')
-                       )
-               .filter(tp.col("_from")!='')
-               .filter(tp.col("_to")!='')
-               .drop_null('_from', '_to')
-               )
+    def __plot_collect_labels_estimate__(self, estimates, show_sig=True,
+                                         show_se=False, show_ci=False,
+                                         show_ci_round=4):
+        tab = estimates.summary(output='tibble', style='full')
+        tab = tab.to_pandas() if hasattr(tab, "to_pandas") else tab
         digits = 4
-        ests = {}
+        labels = {}
         pvalues = {}
-        for row in tab.iterrows():
-            est = round(row['estimate'], digits)
-            ests |= {(row['_from'], row['_to']): est}
+        signs = {}
 
-            pvalue = row['pvalue']
-            pvalues |= {(row['_from'], row['_to']): pvalue}
+        for row in tab.to_dict("records"):
+            edge = self.__plot_estimate_row_edge__(row)
+            if edge is None:
+                continue
 
-        return ests, pvalues
+            estimate = self.__plot_as_float__(row.get('estimate'))
+            estimate_label = self.__plot_format_number__(estimate, digits)
+            if show_sig:
+                estimate_label = f"{estimate_label}{self.__plot_as_text__(row.get('sig'))}"
+            if show_ci:
+                lo = self.__plot_format_number__(self.__plot_as_float__(row.get('lo')),
+                                                 show_ci_round)
+                hi = self.__plot_format_number__(self.__plot_as_float__(row.get('hi')),
+                                                 show_ci_round)
+                estimate_label = f"{estimate_label}\n({lo}, {hi})"
+
+            labels[edge] = estimate_label
+
+            pvalue = self.__plot_as_float__(row.get('pvalue'))
+            if pvalue is not None:
+                pvalues[edge] = pvalue
+
+            if estimate is not None:
+                signs[edge] = 'negative' if estimate < 0 else 'positive'
+
+        return labels, pvalues, signs
+
+    def __plot_estimate_row_edge__(self, row):
+        term = str(row.get('term', '')).strip()
+        if not term:
+            return None
+
+        if '~~' in term:
+            left, right = [v.strip() for v in term.split('~~', 1)]
+            edge = ((left, right), (right, left))
+            edge_reverse = ((right, left), (left, right))
+            if edge in self.bidirected:
+                return edge
+            return edge_reverse if edge_reverse in self.bidirected else None
+
+        if '~' in term:
+            to_node, from_node = [v.strip() for v in term.split('~', 1)]
+            edge = (from_node, to_node)
+            return edge if edge in self.directed else None
+
+        return None
+
+    def __plot_as_float__(self, value):
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            return None
+        return None if math.isnan(value) else value
+
+    def __plot_format_number__(self, value, digits):
+        if value is None:
+            return ''
+        return f"{round(value, digits):g}"
+
+    def __plot_as_text__(self, value):
+        if value is None:
+            return ''
+        try:
+            if math.isnan(value):
+                return ''
+        except TypeError:
+            pass
+        return str(value).strip()
+
+    def __plot_apply_estimate_sign_feature__(self, base, signs, feature):
+        if feature is None:
+            return base
+        res = dict(base)
+        for edge, sign in signs.items():
+            if edge in res:
+                res[edge] = feature.get(sign, res[edge])
+        return res
+
+    def __plot_apply_estimate_sig_alpha__(self, base, pvalues, alpha, sig_level):
+        if alpha is None:
+            return base
+        res = dict(base)
+        for edge, pvalue in pvalues.items():
+            if edge in res:
+                key = 'Yes' if pvalue <= sig_level else 'No'
+                res[edge] = alpha.get(key, res[edge])
+        return res
 
     
 
