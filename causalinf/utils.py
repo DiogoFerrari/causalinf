@@ -75,9 +75,9 @@ def detect_variable_type(data, variables=None, ncats_threshold=5) -> dict:
     # Returns:
     #     A dictionary mapping column names to their classified types.
     # """
+    df = data2tibble(data).to_polars()
     cols = variables or df.columns
     cols = [cols] if isinstance(cols, str) else cols
-    df = data.to_polars()
     classifications = {
         col: detect_variable_type_ancillary(df[col], ncats_threshold=ncats_threshold)
         for col in cols
@@ -317,7 +317,7 @@ class summary:
                  digits = 4,
                  digits_fit = 2,
                  col_width = 1000,
-                 col_width_term = 20,
+                 col_width_term = 15,
                  # latex args
                  latex_kws=None,
                  fn = None,
@@ -428,8 +428,8 @@ class summary:
                     se = tp.map(['se'], lambda col: f"({col[0]:.{self.digits}})"))
             .select('term', cols_unite)
             .unite(model_name, cols_unite, sep=' ')
-            .mutate(**{model_name : tp.str_replace_all(model_name, '\(', '\n(')})
-            .mutate(**{model_name : tp.str_replace_all(model_name, ' \*', '*')}) 
+            .mutate(**{model_name : tp.str_replace_all(model_name, r'\(', '\n(')})
+            .mutate(**{model_name : tp.str_replace_all(model_name, r' \*', '*')}) 
         )
 
         return parameters

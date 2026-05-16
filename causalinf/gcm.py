@@ -3,6 +3,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="rpy2.rinterface"
 # 
 from . import utils as ut
 from .models import lsem
+from .scm import estimate as scm_estimate
 from .options import get_options
 from .tau import *
 from .gcm_styles import GRAPH_STYLES, resolve_graph_style
@@ -1456,7 +1457,7 @@ class DAG:
         >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':'})
         >>> G.plot(node_border_color={'Z':'red'}, node_border_style={'D':':', 'Z':'solid'})
         """
-        assert estimates is None or isinstance(estimates, estimate), (
+        assert estimates is None or isinstance(estimates, scm_estimate), (
             "'estimates' must be either None or an object of causalinf.scm.estimate ")
         assert isinstance(latex_packages, list) or latex_packages is None, "latex_packages must be None or a list"
 

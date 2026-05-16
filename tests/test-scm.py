@@ -16,6 +16,7 @@ def test_DAG_regex(pattern, strings):
         "{A, B} -> {D, Y}",
         "{A, B} <- {D, Y}",
         "{A, B} <-> {D, Y}",
+        "{A, B} <-< {D, Y}",
     ]
 
 
