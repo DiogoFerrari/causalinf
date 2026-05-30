@@ -274,7 +274,7 @@ class glm:
 
     # Regression: Gaussian -----------------------------------------------
     def linear(formula, data, se_cluster=None, se_robust=None,
-                          weights=1, *args, **kws):
+               weights=1, *args, **kws):
         """
         Fit a Gaussian linear model (OLS) with optional robust or clustered SEs.
 
