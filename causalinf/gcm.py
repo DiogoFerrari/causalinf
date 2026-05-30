@@ -3516,7 +3516,7 @@ class identification:
     def __identification_analysis_do__(self, G, exposure, outcome, conditional, conduct=False):
         if conduct:
             # identification
-            X = ', '.join(G.get_nodes())
+            X = ', '.join(G.get_nodes(exclude_latent=True))
             Y = outcome
             D = ', '.join(exposure) if isinstance(exposure, list) else exposure
             Z = ', '.join(conditional) if isinstance(conditional, list) else conditional
