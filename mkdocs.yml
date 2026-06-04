@@ -60,6 +60,7 @@ nav:
   ## - API Reference: api.md ## <- usual API
   - API reference: reference/ ## using py to create one docstring per page
   - Releases: releases.md
+  - Contact Me: contact.md
 
 theme:
   name: material
