@@ -1,0 +1,104 @@
+---
+
+hide:
+  - toc
+
+---
+
+* Preamble :noexport:
+
+#+NAME: save-plot
+#+BEGIN_SRC python :exports results :results output raw :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
+import matplotlib.pyplot as plt
+from causalinf import options as opt
+opt.set_options(show_plot=False)
+# Save figures
+fns = ["./tables-and-figures/" + f"{fn}.png",
+       "./tables-and-figures/" + f"{fn}.pdf"]
+[plt.savefig(fn) for fn in fns]
+plt.close('all')
+
+print(# "#+begin_src org \n"# # # 
+      # "#+ATTR_ORG: :width 200/250/300/400/500/600\n"
+      # "#+ATTR_LATEX: :width 1\textwidth :placement [ht!]\n"
+      # "#+CAPTION: Comparing performance for pivot_wide()\n"
+      # "#+Name: fig-pivot-wide\n"
+      f"[[./tables-and-figures/{fn}.png]]\n"
+      # "#+end_src\n"# # # 
+)
+#+END_SRC
+
+#+RESULTS: save-plot
+[[./tables-and-figures/.png]]
+
+* Examples
+
+Pre-defined examples are available in the ~causalinf~ package for some methods. They can be accessed with the function ~examples()~. If no argument is provided, it lists all examples available for the method. The general structure is:
+
+# 
+#+BEGIN_SRC python :exports code :results silent :tangle src-examples.py :cache yes :noweb no :session *Python* :linenums 1 :eval never
+from causalinf import <submodule>
+
+<submodule>.examples()
+
+#+END_SRC
+
+
+For instance, to list the examples available for the Graphical Causal Models (*GCM*) submodule, use:
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-examples.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+from causalinf import gcm
+
+gcm.examples()
+#+END_SRC
+
+#+RESULTS[e06a11def6d9635a7278d4d708158aa483bc07a3]:
+#+begin_src python
+
+List of available examples:
+--------------------------        
+1. Not identifiable
+2. One confounder
+3. Two confounders
+4. Front-door
+5. IV with 1 instrument
+6. IV with 3 instruments
+7. SoO, IV, and do identified with 1 confounder
+8. Mediation: 2 sequential 1 confounder
+9. Pearl Example 1.1 (a)
+10. Pearl Example 1.1 (b)
+11. Pearl Example 1.2
+12. Pearl Example 1.3 (a)
+13. Pearl Example 1.3 (b)
+14. Pearl Example 3.1
+15. Pearl Example 3.4
+16. Pearl Example 3.5
+
+Usage: examples(which='<example name>')
+Example: G = examples(which='Pearl Example 3.5')
+Note: To print the associated DAG of each example, use examples(print_DAG=True)
+#+end_src
+
+As described in the last lines of the output above, to use one of the examples, say Pearl Example 1.1, which is based on example 1.1 from Pearl ([[#sec-refs][2009]]), run:
+
+# 
+#+BEGIN_SRC python :exports both :results silent :cache yes :noweb no :session *Python* :tangle src-scm.py :linenums 1
+G = gcm.examples(which='Pearl Example 1.1 (a)')
+G.plot()
+#+END_SRC
+
+#+CALL: save-plot(fn="example.png") 
+
+#+RESULTS:
+[[./tables-and-figures/example.png.png]]
+
+
+See [[file:./simulate-data.md][Simulate Data]] to generate synthetic data from the graph.
+
+** References
+:PROPERTIES:
+:CUSTOM_ID: sec-refs
+:END:
+
+- Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge Univ Press.

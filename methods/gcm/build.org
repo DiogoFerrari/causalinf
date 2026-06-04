@@ -1,0 +1,288 @@
+
+** Prambule :noexport:
+
+#+NAME: save-plot
+#+BEGIN_SRC python :exports results :results output raw :tangle src-gcm.py :cache no :noweb yes :session *Python* :var fn=""
+#
+from causalinf import options as opt
+opt.set_options(show_plot=False)
+# Save figures
+fns = ["./tables-and-figures/" + f"{fn}.png",
+       "./tables-and-figures/" + f"{fn}.pdf"]
+[plt.savefig(fn) for fn in fns]
+plt.close('all')
+
+print(# "#+begin_src org \n"# # # 
+      # "#+ATTR_ORG: :width 200/250/300/400/500/600\n"
+      # "#+ATTR_LATEX: :width 1\textwidth :placement [ht!]\n"
+      # "#+CAPTION: Comparing performance for pivot_wide()\n"
+      # "#+Name: fig-pivot-wide\n"
+      f"[[./tables-and-figures/{fn}.png]]\n"
+      # "#+end_src\n"# # # 
+)
+#+END_SRC
+
+#+RESULTS: save-plot
+[[./tables-and-figures/.png]]
+
+
+
+** Creating GCM
+:PROPERTIES:
+:CUSTOM_ID: sec-creating-dags
+:END:
+
+Suppose we want to create the following Graphical Causal Model (GCM).
+
+# dag-example-0
+#+BEGIN_SRC python :exports results :results output raw :cache yes :noweb no :session *Python* :tangle src-gcm.py
+from causalinf import gcm
+
+G = gcm.examples('SoO, IV, and do identified with 1 confounder')
+G = G.set_nodes_role({})
+G.plot()
+#+END_SRC
+
+#+RESULTS[2114da31bd90149114c5a9210be0635225185393]:
+
+#+CALL: save-plot(fn="01-creating.gcm") 
+
+#+RESULTS[a059b57d7a9f00c160be5e3b81e9b2e1cbbd63fb]:
+[[./tables-and-figures/01-creating.gcm.png]]
+
+
+
+The graph object can be created using a string describing the graph and the class ~gcm.DAG()~ from the module ~gcm~ of ~causalinf~. There are many options to use for the string syntax. Any combination of the syntax options below will work.
+
+# dag-example-0-str
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm
+
+# option 1: group the parents of each node
+# --------
+dag = """
+Y <- {X1, X2, D}
+D <- {X1, Z}
+Z <- X2
+"""
+# option 2: group the children of each node
+# --------
+dag = """
+Z -> D
+X1 -> {D, Y}
+X2 -> {Z, Y}
+D -> Y
+"""
+# option 3: one or more arrows per line
+# --------
+dag = """
+Y <- X2 -> Z -> D -> Y
+D <- X1 -> Y
+"""
+# or
+dag = """
+Y <- X2 -> Z -> D -> Y
+X1 -> Y
+X1 -> D
+"""
+
+G = gcm.DAG(dag)
+print(G)
+
+#+END_SRC
+
+#+RESULTS[b5863103eb15cad84a2e14c0053410439bae4da8]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Observed: Z, X1, Y, X2, D
+#+end_src
+
+
+
+
+If no further information is provided, all variables (nodes) are assumed to be observed.
+# 
+
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm 
+dag = """
+Y <- {X1, X2, D}
+D <- {X1, Z}
+Z <- X2
+"""
+G = gcm.DAG(dag)
+print(G)
+#+END_SRC
+
+#+RESULTS[4782757ff540a06219525328784e829e42a1be81]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Observed: Z, X1, Y, X2, D
+#+end_src
+
+There are different ways to set the type of variable as /Exposure/, /Outcome/, or /Latent/ using a dictionary.
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+var_types = {
+    "Exposure": "D",
+    "Outcome": "Y",
+    "Latent": "X1"
+}
+# set when when creating the DAG:
+G = gcm.DAG(dag, nodes_role=var_types)
+
+# or using the set_nodes_role()
+G = G.set_nodes_role(var_types)
+
+print(G)
+#+END_SRC
+
+#+RESULTS[c2afa04dd4470da271a38d7b49c356ef8df1b788]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Observed: Z, X2
+Exposure: D
+Outcome: Y
+Latent: X1
+#+end_src
+
+
+But note that resetting the variable types changes all of them, and omitted information assumes that the variables is of the /Observed/ type. For instance:
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+# or using the set_nodes_role()
+G = G.set_nodes_role({"Outcome": "D"})
+
+print(G)
+#+END_SRC
+
+#+RESULTS[e201382f1b1f44b67a671e5fd70b68c631796c53]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Observed: Z, X1, Y, X2
+Outcome: D
+#+end_src
+
+Arbitraty types can be used. These are used only for plotting. For analysis (identification and estimation), only the four basic ones (/Outcome/, /Exposure/, /Latent/, and /Observed/) are used.
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+# or using the set_nodes_role()
+G = G.set_nodes_role({"My favorite var": "D"})
+
+print(G)
+#+END_SRC
+
+#+RESULTS[2c3fea59594ddc68eb058f9c277772ec588636f7]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Observed: Z, X1, Y, X2
+My favorite var: D
+#+end_src
+
+** Bidirected/undirected edges
+
+It is possible to define /undirected/ and /bidirected/  edges as well with ~--~ and ~<->~. /Bidirected edges/ in the context of causal inference with DAGs indicate an omitted common cause between the variables connected by the bidirected arrow. /Undirected edges/, on the other hand, in the context of causal inference with DAGs, are used to represent the skeleton of the DAG or observationally equivalent edges. That is, they are edges whose direction cannot be decided inferentially using observational data unless other parametric assumptions are adopted. 
+
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm 
+dag = """
+Y <- {X1, X2, D}
+D <- {X1, Z}
+Z <- X2
+Z2 <-> X2
+X1 -- Y
+"""
+G = gcm.DAG(dag)
+print(G)
+#+END_SRC
+
+#+RESULTS[d4ef542004692b4289616cd87b29c540e9a39486]:
+#+begin_src python
+Graph:
+Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
+X2 -> Z
+D -> Y
+Z2 <-> X2
+X1 -- Y
+Observed: Z, X1, Z2, Y, X2, D
+#+end_src
+
+** GCM Object
+
+The Graphical Causal Model (GCM) object has many useful properties.
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-creating.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm 
+dag = """
+Y <- {X1, X2, D}
+D <- {X1, Z}
+Z <- X2
+Z2 <-> X2
+X1 -- Y
+"""
+G = gcm.DAG(dag)
+print(f"""
+Nodes:
+{G.nodes}
+Nodes info:
+{G.nodes_info}
+Directed edges:
+{G.directed}
+Bidirected edges:
+{G.bidirected}
+Undirected edges:
+{G.undirected}
+""")
+#+END_SRC
+
+#+RESULTS[2b4239e5fae8c49b89e722a28494db9ef6368678]:
+#+begin_src python
+
+Nodes:
+{'Z', 'X1', 'Z2', 'Y', 'X2', 'D'}
+Nodes info:
+{'Z': {'role': 'Observed', 'label': 'Z'}, 'X1': {'role': 'Observed', 'label': 'X1'}, 'Z2': {'role': 'Observed', 'label': 'Z2'}, 'Y': {'role': 'Observed', 'label': 'Y'}, 'X2': {'role': 'Observed', 'label': 'X2'}, 'D': {'role': 'Observed', 'label': 'D'}}
+Directed edges:
+[('Z', 'D'), ('X2', 'Y'), ('X1', 'D'), ('X1', 'Y'), ('X2', 'Z'), ('D', 'Y')]
+Bidirected edges:
+[(('Z2', 'X2'), ('X2', 'Z2'))]
+Undirected edges:
+[{'X1', 'Y'}]
+#+end_src
+

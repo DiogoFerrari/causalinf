@@ -1,5 +1,23 @@
+/* Apply to all headings */
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4,
+.md-content h5,
+.md-content h6 {
+  font-weight: bold;
+  border-bottom: 2px solid var(--md-default-fg-color--light); /* subtle underline */
+  padding-bottom: 0.25em;
+  margin-bottom: 0.75em;
+}
 
-/* ================== Change BACKGROUND COLOR for function signatures ================== */
+
+/* ================== Font, BACKGROUND COLOR etc ================== */
+/* body text fontsize */
+.md-typeset {
+  /* font-size: 0.72rem; /\* Example: Adjust this value as needed *\/ */
+  line-height: 1.4; /* Adjust this value as needed (e.g., 1.5, 1.8) */
+}
 .md-typeset .highlight {
 /* Dark background color */
   /* background-color: #000000;  */
@@ -15,6 +33,8 @@
 .md-typeset .highlight .n, /* Names (functions, variables) */
 .md-typeset .highlight .o { /* Operators */
     color: #A41034; /* Green for keywords, names, and operators */
+  line-height: 1; /* Adjust this value as needed (e.g., 1.5, 1.8) */
+  /* font-size: 0.75rem; /\* Example: Adjust this value as needed *\/ */
 }
 
 .md-typeset .highlight .kt { 
@@ -22,13 +42,51 @@
 }
 
 .md-typeset .highlight .p {
-  color: #FF5722; /* Orange for parameters */
+  color: #FF.822; /* Orange for parameters */
 }
 
-/* Optional: Add a subtle shadow to the code block */
-.md-typeset .highlight {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 1);
+
+
+/* ================== CODE BLOCKS styles ================== */
+/* /\* Optional: Add a subtle shadow to the code block *\/ */
+/* .md-typeset .highlight { */
+/*   box-shadow: 0 2px 4px rgba(0, 0, 0, 1); */
+/* } */
+.md-typeset .highlight pre {
+  /* background-color: #2d2d2d; /\* Change the background color *\/ */
+  /* color: #f8f8f2;            /\* line number colors *\/ */
+  padding: 0px;             /* Adjust the padding */
+  border-radius: 4px;        /* Optional: round the corners */
+  overflow: auto;            /* Enable scrolling for long code lines */
+ /* Border customization */
+  /* border: 1px solid #E0E0E0; /\* 2px width, solid style, red color *\/ */
 }
+/* /\* Highlighting specific lines (if configured) *\/ */
+/* .md-typeset .highlight .hll { */
+/*   background-color: rgba(255, 255, 0, 0.2); /\* Change highlighted line color *\/ */
+/* } */
+/* Inline code */
+/* pre > code { */
+/*   font-size: 0.8em; /\* Adjust this value as needed *\/ */
+/* } */
+/* .md-typeset code { */
+/*   font-size: .75rem;  /\* Adjust font size as needed *\/ */
+/*   /\* background-color: #f5f5f5; /\\* Background for inline code *\\/ *\/ */
+/*   /\* color: #333;             /\\* Text color for inline code *\\/ *\/ */
+/*   padding: 0.0rem 0.0rem;    /\* Padding for inline code *\/ */
+/*   border-radius: 3px;        /\* Optional: slight rounding *\/ */
+  
+/*   /\* Border customization *\/ */
+/*   border: 1px solid #E0E0E0; /\* 1px width, solid style, red color *\/ */
+/* } */
+/* .highlight .linenos { */
+/*      font-size: 0.85em; /\* Adjust as needed *\/ */
+/*             /\* Further adjustments if needed, e.g., font-size, color *\/ */
+/*   padding: 0rem 0.0rem;    /\* Padding for inline code *\/ */
+/*   /\* border-radius: 3px;        /\\* Optional: slight rounding *\\/ *\/ */
+/*   /\* /\\* Border customization *\\/ *\/ */
+/*   /\* border: 1px solid #E0E0E0; /\\* 1px width, solid style, red color *\\/ *\/ */
+/* } */
 
 
 
@@ -70,29 +128,286 @@
 
 
 
+/* ------------------------ NAVIGATION MENU --------------------------- */
 /* ================== Customize TOC/SECTIONS header styles ================== */
-/* Style for top-level and important subsections (Usage, Data Manipulation, Statistics, Reporting) */
-.md-nav__list > .md-nav__item > .md-nav__link,
-.md-nav__list .md-nav__item .md-nav__list .md-nav__item > .md-nav__link {
-  font-size: .8rem;    /* Large font */
-  color: #A41034;       /* Subsection color */
+/* -----------------   */
+/* LEFT AND RIGHT TOC */
+/* ------------------ */
+/* Hover (both left and rigth) */
+.md-sidebar .md-nav__link:hover {
+  /* font-size: .8rem;    /\* Adjust to your desired font size *\/ */
+  color: #A41034;     /* Change to a different color on hover */
+}
+/* Optional: Active navigation item style */
+/* .md-sidebar .md-nav__item > .md-nav__link { */
+/*   /\* font-size: .8rem;    /\\* Adjust to your desired font size *\\/ *\/ */
+/*   /\* font-weight: bold; *\/ */
+/*   color: #A41034;     /\* Active item color *\/ */
+/* } */
+.md-sidebar .md-nav__item > .md-nav__link:hover {
+  /* font-size: .8rem;    /\* Adjust to your desired font size *\/ */
+  /* font-weight: bold; */
+  color: #264653;       /* Subsection color */
+}
+/* Change the text and background color of the active navigation item */
+.md-sidebar .md-nav__item--active > .md-nav__link {
+  color: #A41034;     /* Active item color */
   font-weight: bold;
-  /* padding-top: 1px; */
-  /* padding-bottom: 1px; */
-  /* text-transform: uppercase; /\* Optional uppercase *\/ */
+  /* text-decoration: underline  #A41034; */
+  /* background-color: #f0f0f0;   /\* Optional: set a background color *\/ */
+}
+/* right-sidebar font etc. */
+.md-sidebar .md-nav__link {
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  line-height: 1;  /* Adjust line-height if needed */
+  /* width: 280px; /\* Example: set a fixed width for the navigation right-side sidebar *\/ */
+}
+/* linespace */
+.md-sidebar .md-nav__item {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1;  /* Adjust line-height if needed */
+}
+/* .md-sidebar--primary { */
+/*   width: 350px; /\* Adjust this value as needed *\/ */
+/* } */
+/* /\* To set a specific maximum width for the content area *\/ */
+/* .md-grid { */
+/*   max-width: 1440px; /\* Adjust this value as needed *\/ */
+/* } */
+
+/* /\* To make the content area stretch to the entire available space *\/ */
+/* /\* .md-grid { */
+/*   max-width: initial; */
+/* } *\/ */
+
+
+
+/* -------- */
+/* RIGHT TOC */
+/* -------- */
+/* title "Table of Contents" */
+.md-nav__title {
+  font-size: .8rem;  /* Adjust font size as needed */
+  color: #A41034;     /* Change the text color */
+  font-weight: bold;  /* Set font weight */
+}
+.md-nav__item  {
+  font-size: .7rem;  /* Adjust font size as needed */
+  color: #264653;       /* Subsection color */
+  /* font-weight: bold;  /\* Set font weight *\/ */
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 0;  /* Adjust line-height if needed */
+}
+.md-nav__item .md-nav__link--active {
+  color: #A41034;     /* Change the text color */
+  font-weight: bold;  /* Set font weight */
+  text-decoration: underline overline;
 }
 
-/* Style for regular subsections (e.g., Installation, Basic Usage) */
+/* /\* -------- *\/ */
+/* /\* LEFT TOC *\/ */
+/* /\* -------- *\/ */
+/* /\* section  *\/ */
+/* .md-nav__list .md-nav__item .md-nav__list .md-nav__link { */
+/*   font-size: .8rem;    /\* Medium font for regular subsections *\/ */
+/*   color: #A41034;     /\* Change to a different color on hover *\/ */
+/*   font-weight: bold; */
+/*   padding-top: 0; */
+/*   padding-bottom: 0; */
+/*   line-height: 1;  /\* Adjust line-height if needed *\/ */
+/* } */
+.md-nav__list .md-nav__item--active  .md-nav__list  .md-nav__link--active  {
+  color: #A41034;
+  font-weight: bold;
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  /* line-height: 1; */
+  text-decoration: underline overline;
+}
+.md-nav__list .md-nav__item .md-nav__list .md-nav__link:hover {
+  /* color: #264653;       /\* Subsection color *\/ */
+  font-weight: bold;
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  /* line-height: 1;  /\* Adjust line-height if needed *\/ */
+}
+
+
+/* subsection  */
 .md-nav__list .md-nav__item .md-nav__list .md-nav__item .md-nav__list .md-nav__link {
   font-size: .7rem;    /* Medium font for regular subsections */
   color: #264653;       /* Subsection color */
   font-weight: normal;
+  margin-left: 10px;
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  /* line-height: 1;  /\* Adjust line-height if needed *\/ */
+}
+.md-nav__list .md-nav__item .md-nav__list .md-nav__item .md-nav__list .md-nav__link:hover {
+  color: #264653;       /* Subsection color */
+  font-weight: bold;
+  /* padding-top: 0; */
+  /* padding-bottom: 0; */
+  /* line-height: 1;  /\* Adjust line-height if needed *\/ */
+}
+.md-nav__list .md-nav__item--active .md-nav__list .md-nav__item--active  .md-nav__list  .md-nav__link--active  {
+  font-weight: bold;
+  color: #A41034;
 }
 
-/* Style for third-level subsections (e.g., Mutate, Frequency Tables) */
-.md-nav__list .md-nav__item .md-nav__list .md-nav__item .md-nav__list .md-nav__item .md-nav__link {
-  font-size: .7rem;      /* Smaller font for sub-subsections */
-  color: #555;          /* Subtle color */
-  font-weight: normal;
+
+/* /\* Change only the color of one-level down navigation items *\/ */
+/* .md-nav__list > .md-nav__item > .md-nav__link { */
+/*   color: #A41034; */
+/* } */
+.md-nav__list .md-nav__item--active .md-nav__list .md-nav__item--active  .md-nav__list  .md-nav__link--active  {
+  color: #555;
 }
 
+/* body { */
+/* } */
+/* :root { */
+/*   /\* Increase width of the primary sidebar (left navigation) *\/ */
+/*   --md-sidebar-width: 280px;   /\* tweak this: 260–320px usually works well *\/ */
+/* } */
+
+/* /\* Prevents navigation items from wrapping *\/ */
+.md-nav__link {
+  white-space: nowrap;      /* Keep text on a single line */
+  overflow: hidden;         /* Hide overflow text */
+  text-overflow: ellipsis;  /* Add ellipsis (...) for overflow */
+}
+
+/* /\* Optional: Adjust width if needed to provide more space before ellipsis *\/ */
+/* /\* left side navigation size *\/ */
+/* /\* .md-sidebar--primary { *\/ */
+/* /\*   width: 50px; /\\* Adjust the width as needed, default is often fine *\\/ *\/ */
+/* /\* } *\/ */
+/* /\* /\\* right side navigation size *\\/ *\/ */
+/* /\* .md-sidebar--secondary { *\/ */
+/* /\*     width: 200px; /\\* Adjust this value as needed *\\/ *\/ */
+/* /\* } *\/ */
+
+
+/* /\* .md-sidebar--primary { *\/ */
+/* /\*   width: 450px; /\\* Adjust this value as needed *\\/ *\/ */
+/* /\* } *\/ */
+/* /\* /\\* /\\\* To set a specific maximum width for the content area *\\\/ *\\/ *\/ */
+/* /\* To make the content area stretch to the entire available space *\/ */
+/* /\* .md-grid { *\/ */
+/* /\*     max-width: 1440px; *\/ */
+/* /\* } *\/ */
+
+/* /\* Increase the width of the left navigation panel *\/ */
+/* .md-sidebar--primary { */
+/*   width: 280px;           /\* 🔹 default is ~240px; increase as needed *\/ */
+/* } */
+
+.md-sidebar--primary .md-nav {
+  width: 280px;           /* Keep nav consistent with sidebar */
+}
+
+/* /\* Adjust the main content area to accommodate wider sidebar *\/ */
+/* .md-main { */
+/*   margin-left: 280px;     /\* same value as sidebar width *\/ */
+/* } */
+
+
+
+/* --------------------------- API reference ----------------------- */
+/* Color for the arguments within the signature */
+/* .doc-contents .highlight targets the code block.
+   .n targets variable names, which includes argument names. */
+/* .doc-contents .highlight .n { */
+/*   color: #8c564b; /\* Brown, for example *\/ */
+/* } */
+
+
+/* /\* To target only the class signature and its members, you can use: *\/ */
+/* .doc-class .highlight { */
+/*   /\* font-size: 0.8em; /\\* Smaller font for signatures within a class *\\/ *\/ */
+/*   font-size: 0.8em; /\* Adjust this value to your liking *\/ */
+/* } */
+
+/* .doc-function .highlight { */
+/*   font-size: 0.8em; /\* Adjust this value to your liking *\/ */
+/* } */
+
+
+/* /\* To target only the method signatures within a class, you can use: *\/ */
+/* .doc-class .highlight { */
+/*   font-size: 0.75em; /\* Even smaller font for methods *\/ */
+/* } */
+/* .doc-function .highlight { */
+/*   font-size: 0.7em; /\* Even smaller font for methods *\/ */
+/* } */
+/* /\* /\\* Increase font size for code blocks inside the API reference section *\\/ *\/ */
+/* /\* Selectors to specifically target the source code in your API reference *\/ */
+/* .doc-source .highlight { */
+/*   font-size: 0.95em; /\* Adjust this value as needed *\/ */
+/* } */
+
+
+/* /\* /\\* Custom font size for method and function signatures *\\/ *\/ */
+/* /\* .doc-function > .doc-contents  .highlight { *\/ */
+/* /\*   font-size: 0.7em !important; *\/ */
+/* /\* } *\/ */
+
+/* /\* /\\* Custom font size for the source code blocks *\\/ *\/ */
+/* /\* .doc-source .highlight { *\/ */
+/* /\*   font-size: 0.6em !important; *\/ */
+/* /\* } *\/ */
+
+/* /\* source code *\/ */
+/* .doc-class > .doc-contents  .highlight { */
+/*     font-size: .8em; */
+/* } */
+
+
+
+
+/* ------------ */
+/* Latex table */
+/* ------------ */
+/* /\* Style for tables generated by Pandas with class="latex-style" *\/ */
+/* table.latex-style { */
+/*     border-collapse: collapse; */
+/*     width: 100%; */
+/*     margin: 20px 0; */
+/*     font-family: "Latin Modern Roman", serif; /\* Optional: LaTeX font *\/ */
+/*     font-size: 0.95em; */
+/* } */
+
+/* /\* The "Top Rule" - thick line at the top *\/ */
+/* table.latex-style thead tr:first-child th { */
+/*     border-top: 2px solid #333; */
+/* } */
+
+/* /\* The "Mid Rule" - thin line separating headers from body *\/ */
+/* table.latex-style thead tr:last-child th { */
+/*     border-bottom: 1px solid #333; */
+/* } */
+
+/* /\* The "Bottom Rule" - thick line at the bottom *\/ */
+/* table.latex-style tbody tr:last-child td { */
+/*     border-bottom: 2px solid #333; */
+/* } */
+
+/* /\* Spacing and alignment *\/ */
+/* table.latex-style th, table.latex-style td { */
+/*     padding: 8px 12px; */
+/*     text-align: right; /\* Numbers look better right-aligned *\/ */
+/* } */
+
+/* table.latex-style th { */
+/*     text-align: center; /\* Headers centered *\/ */
+/*     font-weight: bold; */
+/* } */
+
+/* /\* Fix left-alignment for the Index column *\/ */
+/* table.latex-style tbody th { */
+/*     text-align: left; */
+/* } */

@@ -1,0 +1,2483 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://www.diogoferrari.com/causalinf/methods/gcm/identification/">
+      
+      
+        <link rel="prev" href="../visualize/">
+      
+      
+        <link rel="next" href="../assumptions/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Identification Analysis - Causal Inference (causalinf)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../_css/extra.css">
+    
+      <link rel="stylesheet" href="../../../_css/stylesheets.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="white" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Causal Inference (causalinf)" class="md-header__button md-logo" aria-label="Causal Inference (causalinf)" data-md-component="logo">
+      
+  <img src="../../../_css/causalinf-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Causal Inference (causalinf)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Identification Analysis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="white" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DiogoFerrari/causalinf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    causalinf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../usage/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../case-studies/overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Case Studies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/gcm/DAG/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../releases/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Releases
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../contact/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contact Me
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Causal Inference (causalinf)" class="md-nav__button md-logo" aria-label="Causal Inference (causalinf)" data-md-component="logo">
+      
+  <img src="../../../_css/causalinf-icon.png" alt="logo">
+
+    </a>
+    Causal Inference (causalinf)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DiogoFerrari/causalinf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    causalinf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../usage/installation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Methods
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../experiment/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Experiments</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Graphical Causal Models (GCM)</font>
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    <font color="#a41034">Graphical Causal Models (GCM)</font>
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../introduction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introduction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visualize/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visualize
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identification Analysis
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Identification Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concise-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concise output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programmatic-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identification-by-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification by adjustment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identification-by-instrumental-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification by instrumental variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional effects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#print-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Print assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sec-refs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../assumptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Check Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../scm/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Structural Causal Models (SCM)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../cbn/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Causal Bayesian Networds (CBN)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../soo/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Selection on Observables (SoO)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../did/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Difference-in-Differences (DiD)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../iv/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Instrumental Variable (IV)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../rd/introduction/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Regression Discontinuity (RD)</font>
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../case-studies/overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../reference/gcm/DAG/assumptions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contact/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contact Me
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#basic-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#concise-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concise output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detailed-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detailed output
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#programmatic-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Programmatic results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identification-by-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification by adjustment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identification-by-instrumental-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identification by instrumental variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conditional-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional effects
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#print-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Print assumptions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sec-refs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Overview
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../overview/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Methods
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../introduction/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    <font color="#a41034">Graphical Causal Models (GCM)</font>
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>Identification Analysis</h1>
+
+<h2 id="overview">Overview</h2>
+<p><strong>Identification analysis</strong> answers whether a causal parameter can be
+written as a function of the observed data distribution, given a
+Graphical Causal Model (GCM) and its assumptions. In <code>causalinf</code>,
+identification analysis is conducted with the method
+<a href="../../..//reference/gcm/DAG/">identification~analysis~()</a> of a
+<code>gcm.DAG</code> object.</p>
+<p>The analysis is conditional on the graph and on the assumptions
+discussed in <a href="../assumptions">Check Assumptions</a>. It does not determine
+whether the graph is true. Instead, it answers a conditional question:
+<em>if</em> the GCM is a defensible representation of the data-generating
+process, which causal effects are identified and by which strategy?</p>
+<p>The current GCM identification analysis checks the following strategies:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Abbreviation</th>
+<th>What it searches for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selection on Observables</td>
+<td>SoO</td>
+<td>Adjustment sets for total and controlled direct effects.</td>
+</tr>
+<tr>
+<td>Instrumental Variable</td>
+<td>IV</td>
+<td>Instruments, and any required adjustment variables, for the average causal effect.</td>
+</tr>
+<tr>
+<td>do-calculus</td>
+<td>do</td>
+<td>A causal probability expression for the average causal effect.</td>
+</tr>
+</tbody>
+</table>
+<p>The main causal parameters are:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACE</td>
+<td>Average Causal Effect</td>
+</tr>
+<tr>
+<td>ACDE</td>
+<td>Average Controlled Direct Effect</td>
+</tr>
+<tr>
+<td>cACE</td>
+<td>Conditional Average Causal Effect</td>
+</tr>
+<tr>
+<td>cACDE</td>
+<td>Conditional Average Controlled Direct Effect</td>
+</tr>
+</tbody>
+</table>
+<h2 id="basic-analysis">Basic analysis</h2>
+<p>Consider the front-door example included with the package:</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span>
+<span class="normal"><a href="#__codelineno-0-4">4</a></span>
+<span class="normal"><a href="#__codelineno-0-5">5</a></span>
+<span class="normal"><a href="#__codelineno-0-6">6</a></span>
+<span class="normal"><a href="#__codelineno-0-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">causalinf</span><span class="w"> </span><span class="kn">import</span> <span class="n">gcm</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">causalinf</span><span class="w"> </span><span class="kn">import</span> <span class="n">options</span> <span class="k">as</span> <span class="n">opt</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="n">opt</span><span class="o">.</span><span class="n">set_options</span><span class="p">(</span><span class="n">print_assumptions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_assumptions_verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="n">G</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;Front-door&quot;</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Graph</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">U</span> <span class="o">-&gt;</span> <span class="n">Y</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">Z</span> <span class="o">-&gt;</span> <span class="n">Y</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">Z2</span> <span class="o">-&gt;</span> <span class="n">D</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">D</span> <span class="o">-&gt;</span> <span class="n">Z</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">U</span> <span class="o">-&gt;</span> <span class="n">D</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Z2</span> <span class="o">-&gt;</span> <span class="n">Y</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">Observed</span><span class="p">:</span> <span class="n">Z</span><span class="p">,</span> <span class="n">Z2</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">Latent</span><span class="p">:</span> <span class="n">U</span>
+</span></code></pre></div>
+<p>The method <code>identification_analysis()</code> runs the identification search.
+If <code>verbose=True</code> (the default), the result is printed.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="n">G</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="o">---------------------</span>            
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="n">Causal</span> <span class="n">probability</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="n">Y</span> <span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">=</span> <span class="n">sum_</span><span class="p">{</span><span class="n">Z</span><span class="p">,</span><span class="n">Z2</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">Z</span><span class="o">|</span><span class="n">D</span><span class="p">)</span><span class="n">sum_</span><span class="p">{</span><span class="n">D</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span><span class="n">p</span><span class="p">(</span><span class="n">Y</span><span class="o">|</span><span class="n">Z</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="n">No</span> <span class="n">instrument</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">DAG</span><span class="o">.</span>                
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span></code></pre></div>
+<p>The output reports the exposure, outcome, causal parameters,
+identification strategies, and whether each strategy identifies the
+parameter.</p>
+<h2 id="concise-output">Concise output</h2>
+<p>After running <code>identification_analysis()</code>, the result is stored in the
+GCM object. Use <code>G.identification()</code> or <code>G.print(what="identification")</code>
+to print the stored result again.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="n">G</span><span class="o">.</span><span class="n">identification</span><span class="p">(</span><span class="nb">print</span><span class="o">=</span><span class="s2">&quot;concise&quot;</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="o">==============================================================================</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                                              <span class="n">Identified</span><span class="err">?</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">Causal</span> <span class="n">Effects</span><span class="o">*</span>                           <span class="n">SoO</span>  <span class="n">IV</span>   <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> 
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="o">==============================================================================</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">Averave</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>              <span class="n">No</span>    <span class="n">No</span>        <span class="n">Yes</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">Averave</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>  <span class="n">No</span>    <span class="n">NA</span><span class="o">/</span><span class="n">NC</span><span class="o">**</span>    <span class="n">NA</span><span class="o">/</span><span class="n">NC</span><span class="o">**</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="o">==============================================================================</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">Notes</span><span class="p">:</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="o">*</span>  <span class="n">For</span> <span class="n">path</span> <span class="n">effects</span> <span class="p">(</span><span class="n">indirect</span> <span class="n">effects</span><span class="p">),</span> <span class="n">use</span> <span class="n">SEM</span> <span class="n">estimation</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="o">**</span> <span class="n">NA</span><span class="o">/</span><span class="n">NC</span><span class="p">:</span> <span class="n">Identification</span> <span class="n">analysis</span> <span class="ow">not</span> <span class="n">available</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">conducted</span>
+</span></code></pre></div>
+<p>The concise output is useful for quickly checking which causal
+parameters are identified by each strategy.</p>
+<h2 id="detailed-output">Detailed output</h2>
+<p>For more information about a specific strategy and parameter, use
+<code>content="detailed"</code> through <code>G.print()</code>. The argument <code>strategy</code>
+selects the identification strategy, and <code>parameter</code> selects the causal
+parameter.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span>
+<span class="normal"><a href="#__codelineno-6-3">3</a></span>
+<span class="normal"><a href="#__codelineno-6-4">4</a></span>
+<span class="normal"><a href="#__codelineno-6-5">5</a></span>
+<span class="normal"><a href="#__codelineno-6-6">6</a></span>
+<span class="normal"><a href="#__codelineno-6-7">7</a></span>
+<span class="normal"><a href="#__codelineno-6-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="n">G</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a>    <span class="n">what</span><span class="o">=</span><span class="s2">&quot;identification&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a>    <span class="n">identification</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a>        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;detailed&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a>        <span class="s2">&quot;strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;do&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a>        <span class="s2">&quot;parameter&quot;</span><span class="p">:</span> <span class="s2">&quot;ACE&quot;</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a>    <span class="p">},</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">Identification</span> <span class="n">method</span><span class="p">:</span> <span class="n">do</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="o">---------------------</span>            
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">Parameter</span><span class="p">:</span> <span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  <span class="n">tau_</span><span class="p">{</span><span class="n">ACE</span><span class="p">}(</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="s1">&#39;) = E[Yi(d) - Yi(d&#39;</span><span class="p">)]</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">Identification</span><span class="p">:</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  <span class="n">p</span><span class="p">(</span><span class="n">Y</span> <span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">=</span> <span class="n">sum_</span><span class="p">{</span><span class="n">Z</span><span class="p">,</span><span class="n">Z2</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">Z</span><span class="o">|</span><span class="n">D</span><span class="p">)</span><span class="n">sum_</span><span class="p">{</span><span class="n">D</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span><span class="n">p</span><span class="p">(</span><span class="n">Y</span><span class="o">|</span><span class="n">Z</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">Details</span><span class="p">:</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>  <span class="n">tau_</span><span class="p">{</span><span class="n">ACE</span><span class="p">}(</span><span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="s1">&#39;) = E[Yi | do(Di)=d] - E[Yi | do(Di)=d&#39;</span><span class="p">]</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  <span class="n">where</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>   <span class="n">Yi</span><span class="p">:</span> <span class="n">Outcome</span> <span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>   <span class="n">Di</span><span class="p">:</span> <span class="n">Exposure</span> <span class="ow">or</span> <span class="n">treatment</span> <span class="p">(</span><span class="n">D</span><span class="p">)</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">Models</span><span class="p">:</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>  <span class="n">Non</span><span class="o">-</span><span class="n">parametric</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="n">Y</span> <span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">=</span> <span class="n">sum_</span><span class="p">{</span><span class="n">Z</span><span class="p">,</span><span class="n">Z2</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">Z</span><span class="o">|</span><span class="n">D</span><span class="p">)</span><span class="n">sum_</span><span class="p">{</span><span class="n">D</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span><span class="n">p</span><span class="p">(</span><span class="n">Y</span><span class="o">|</span><span class="n">Z</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span>
+</span></code></pre></div>
+<p>When the effect is identified by do-calculus, the detailed output
+includes the causal probability expression. When the effect is
+identified by adjustment or by an instrumental variable strategy, the
+detailed output includes the corresponding adjustment, formula, and
+parameter information.</p>
+<h2 id="programmatic-results">Programmatic results</h2>
+<p>The printed output is convenient for reports, but the identification
+results can also be retrieved as Python objects.</p>
+<p>The full result is available in <code>G.identification_dict</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span>
+<span class="normal"><a href="#__codelineno-8-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="n">pprint</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">identification_dict</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span><span class="s1">&#39;IV&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ACE&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;adjusted&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                <span class="s1">&#39;conditional on&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>                <span class="s1">&#39;conducted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>                <span class="s1">&#39;exposure&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">],</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>                <span class="s1">&#39;formulas&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>                <span class="s1">&#39;identified&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>                <span class="s1">&#39;latex&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>                          <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>                          <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>                                           <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>                                           <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>                <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>                <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="p">{},</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>                <span class="s1">&#39;result str&#39;</span><span class="p">:</span> <span class="s1">&#39;No instrument available in the DAG.&#39;</span><span class="p">,</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>                <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>                         <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>                         <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>                                          <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>                                          <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>                <span class="s1">&#39;variables&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>                <span class="s1">&#39;where&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}},</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a> <span class="s1">&#39;SoO&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ACDE&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;adjusted&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>                  <span class="s1">&#39;conditional on&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>                  <span class="s1">&#39;conducted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>                  <span class="s1">&#39;exposure&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">],</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>                  <span class="s1">&#39;formulas&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>                  <span class="s1">&#39;identified&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>                  <span class="s1">&#39;latex&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>                            <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>                            <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>                                             <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>                                             <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>                  <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>                  <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>                  <span class="s1">&#39;result str&#39;</span><span class="p">:</span> <span class="s1">&#39;Not identifiable by adjustment.&#39;</span><span class="p">,</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>                  <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>                           <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>                           <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>                                            <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>                                            <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-41"><a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>                  <span class="s1">&#39;variables&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-42"><a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>                  <span class="s1">&#39;where&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+</span><span id="__span-9-43"><a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a>         <span class="s1">&#39;ACE&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;adjusted&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-44"><a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>                 <span class="s1">&#39;conditional on&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-45"><a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a>                 <span class="s1">&#39;conducted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-46"><a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a>                 <span class="s1">&#39;exposure&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">],</span>
+</span><span id="__span-9-47"><a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a>                 <span class="s1">&#39;formulas&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">},</span>
+</span><span id="__span-9-48"><a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a>                 <span class="s1">&#39;identified&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-49"><a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a>                 <span class="s1">&#39;latex&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-50"><a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a>                           <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-51"><a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a>                           <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-52"><a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>                                            <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-53"><a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a>                                            <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-54"><a id="__codelineno-9-54" name="__codelineno-9-54" href="#__codelineno-9-54"></a>                 <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span>
+</span><span id="__span-9-55"><a id="__codelineno-9-55" name="__codelineno-9-55" href="#__codelineno-9-55"></a>                 <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-56"><a id="__codelineno-9-56" name="__codelineno-9-56" href="#__codelineno-9-56"></a>                 <span class="s1">&#39;result str&#39;</span><span class="p">:</span> <span class="s1">&#39;Not identifiable by adjustment.&#39;</span><span class="p">,</span>
+</span><span id="__span-9-57"><a id="__codelineno-9-57" name="__codelineno-9-57" href="#__codelineno-9-57"></a>                 <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-58"><a id="__codelineno-9-58" name="__codelineno-9-58" href="#__codelineno-9-58"></a>                          <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-59"><a id="__codelineno-9-59" name="__codelineno-9-59" href="#__codelineno-9-59"></a>                          <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-60"><a id="__codelineno-9-60" name="__codelineno-9-60" href="#__codelineno-9-60"></a>                                           <span class="s1">&#39;(*) Under linearity and no &#39;</span>
+</span><span id="__span-9-61"><a id="__codelineno-9-61" name="__codelineno-9-61" href="#__codelineno-9-61"></a>                                           <span class="s1">&#39;interaction&#39;</span><span class="p">},</span>
+</span><span id="__span-9-62"><a id="__codelineno-9-62" name="__codelineno-9-62" href="#__codelineno-9-62"></a>                 <span class="s1">&#39;variables&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-63"><a id="__codelineno-9-63" name="__codelineno-9-63" href="#__codelineno-9-63"></a>                 <span class="s1">&#39;where&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}},</span>
+</span><span id="__span-9-64"><a id="__codelineno-9-64" name="__codelineno-9-64" href="#__codelineno-9-64"></a> <span class="s1">&#39;do&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ACE&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;adjusted&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-9-65"><a id="__codelineno-9-65" name="__codelineno-9-65" href="#__codelineno-9-65"></a>                <span class="s1">&#39;conditional on&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-9-66"><a id="__codelineno-9-66" name="__codelineno-9-66" href="#__codelineno-9-66"></a>                <span class="s1">&#39;conducted&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-67"><a id="__codelineno-9-67" name="__codelineno-9-67" href="#__codelineno-9-67"></a>                <span class="s1">&#39;exposure&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">],</span>
+</span><span id="__span-9-68"><a id="__codelineno-9-68" name="__codelineno-9-68" href="#__codelineno-9-68"></a>                <span class="s1">&#39;formulas&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;p(Y | do(D)) = sum_{Z,Z2} &#39;</span>
+</span><span id="__span-9-69"><a id="__codelineno-9-69" name="__codelineno-9-69" href="#__codelineno-9-69"></a>                                               <span class="s1">&#39;p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> &#39;</span>
+</span><span id="__span-9-70"><a id="__codelineno-9-70" name="__codelineno-9-70" href="#__codelineno-9-70"></a>                                               <span class="s1">&#39;p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">,</span>
+</span><span id="__span-9-71"><a id="__codelineno-9-71" name="__codelineno-9-71" href="#__codelineno-9-71"></a>                             <span class="s1">&#39;parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;p(Y | do(D)) = sum_{Z,Z2} &#39;</span>
+</span><span id="__span-9-72"><a id="__codelineno-9-72" name="__codelineno-9-72" href="#__codelineno-9-72"></a>                                           <span class="s1">&#39;p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">},</span>
+</span><span id="__span-9-73"><a id="__codelineno-9-73" name="__codelineno-9-73" href="#__codelineno-9-73"></a>                <span class="s1">&#39;identified&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-9-74"><a id="__codelineno-9-74" name="__codelineno-9-74" href="#__codelineno-9-74"></a>                <span class="s1">&#39;latex&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;$p(Y | do(D)) = &#39;</span>
+</span><span id="__span-9-75"><a id="__codelineno-9-75" name="__codelineno-9-75" href="#__codelineno-9-75"></a>                                            <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">sum_{Z,Z2}</span><span class="se">\\</span><span class="s1">left(p(Z|D)</span><span class="se">\\</span><span class="s1">sum_</span><span class="si">{D}</span><span class="se">\\</span><span class="s1">left(p(D,Z2)p(Y|Z,D,Z2)</span><span class="se">\\</span><span class="s1">right)</span><span class="se">\\</span><span class="s1">right)$&#39;</span><span class="p">,</span>
+</span><span id="__span-9-76"><a id="__codelineno-9-76" name="__codelineno-9-76" href="#__codelineno-9-76"></a>                          <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-77"><a id="__codelineno-9-77" name="__codelineno-9-77" href="#__codelineno-9-77"></a>                          <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;$p(Y | do(D)) = &#39;</span>
+</span><span id="__span-9-78"><a id="__codelineno-9-78" name="__codelineno-9-78" href="#__codelineno-9-78"></a>                                           <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">sum_{Z,Z2}</span><span class="se">\\</span><span class="s1">left(p(Z|D)</span><span class="se">\\</span><span class="s1">sum_</span><span class="si">{D}</span><span class="se">\\</span><span class="s1">left(p(D,Z2)p(Y|Z,D,Z2)</span><span class="se">\\</span><span class="s1">right)</span><span class="se">\\</span><span class="s1">right)$&#39;</span><span class="p">},</span>
+</span><span id="__span-9-79"><a id="__codelineno-9-79" name="__codelineno-9-79" href="#__codelineno-9-79"></a>                <span class="s1">&#39;outcome&#39;</span><span class="p">:</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span>
+</span><span id="__span-9-80"><a id="__codelineno-9-80" name="__codelineno-9-80" href="#__codelineno-9-80"></a>                <span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s1">&#39;p(Y | do(D)) = sum_{Z,Z2} p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> &#39;</span>
+</span><span id="__span-9-81"><a id="__codelineno-9-81" name="__codelineno-9-81" href="#__codelineno-9-81"></a>                          <span class="s1">&#39;p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">,</span>
+</span><span id="__span-9-82"><a id="__codelineno-9-82" name="__codelineno-9-82" href="#__codelineno-9-82"></a>                <span class="s1">&#39;result str&#39;</span><span class="p">:</span> <span class="s1">&#39;Causal probability: p(Y | do(D)) = sum_{Z,Z2} &#39;</span>
+</span><span id="__span-9-83"><a id="__codelineno-9-83" name="__codelineno-9-83" href="#__codelineno-9-83"></a>                              <span class="s1">&#39;p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">,</span>
+</span><span id="__span-9-84"><a id="__codelineno-9-84" name="__codelineno-9-84" href="#__codelineno-9-84"></a>                <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Non-parametric&#39;</span><span class="p">:</span> <span class="s1">&#39;p(Y | do(D)) = sum_{Z,Z2} &#39;</span>
+</span><span id="__span-9-85"><a id="__codelineno-9-85" name="__codelineno-9-85" href="#__codelineno-9-85"></a>                                           <span class="s1">&#39;p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">,</span>
+</span><span id="__span-9-86"><a id="__codelineno-9-86" name="__codelineno-9-86" href="#__codelineno-9-86"></a>                         <span class="s1">&#39;Parametric tau&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-9-87"><a id="__codelineno-9-87" name="__codelineno-9-87" href="#__codelineno-9-87"></a>                         <span class="s1">&#39;Parametric(*)&#39;</span><span class="p">:</span> <span class="s1">&#39;p(Y | do(D)) = sum_{Z,Z2} &#39;</span>
+</span><span id="__span-9-88"><a id="__codelineno-9-88" name="__codelineno-9-88" href="#__codelineno-9-88"></a>                                          <span class="s1">&#39;p(Z|D)sum_</span><span class="si">{D}</span><span class="s1"> p(D,Z2)p(Y|Z,D,Z2)&#39;</span><span class="p">},</span>
+</span><span id="__span-9-89"><a id="__codelineno-9-89" name="__codelineno-9-89" href="#__codelineno-9-89"></a>                <span class="s1">&#39;variables&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Di&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">],</span> <span class="s1">&#39;Yi&#39;</span><span class="p">:</span> <span class="s1">&#39;Y&#39;</span><span class="p">},</span>
+</span><span id="__span-9-90"><a id="__codelineno-9-90" name="__codelineno-9-90" href="#__codelineno-9-90"></a>                <span class="s1">&#39;where&#39;</span><span class="p">:</span> <span class="s1">&#39;where</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-91"><a id="__codelineno-9-91" name="__codelineno-9-91" href="#__codelineno-9-91"></a>                         <span class="s1">&#39;  Yi: Outcome (Y)</span><span class="se">\n</span><span class="s1">&#39;</span>
+</span><span id="__span-9-92"><a id="__codelineno-9-92" name="__codelineno-9-92" href="#__codelineno-9-92"></a>                         <span class="s1">&#39;  Di: Exposure or treatment (D)&#39;</span><span class="p">}}}</span>
+</span></code></pre></div>
+<p>To retrieve only the strategies that identify each parameter, use
+<code>G.get_identified()</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="n">pprint</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">get_identified</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span><span class="s1">&#39;ACE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;do&#39;</span><span class="p">]}</span>
+</span></code></pre></div>
+<p>Use <code>by="strategy"</code> to group the result by identification strategy
+instead of by causal parameter.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="n">pprint</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">get_identified</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;strategy&quot;</span><span class="p">))</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span><span class="s1">&#39;do&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ACE&#39;</span><span class="p">]}</span>
+</span></code></pre></div>
+<p>By default, <code>get_identified()</code> omits strategies that do not identify a
+parameter. Use <code>include_all=True</code> when the non-identifying strategies
+should also be shown.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1"></a><span class="n">pprint</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">get_identified</span><span class="p">(</span><span class="n">include_all</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span><span class="s1">&#39;ACDE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SoO&#39;</span><span class="p">],</span> <span class="s1">&#39;ACE&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SoO&#39;</span><span class="p">,</span> <span class="s1">&#39;do&#39;</span><span class="p">,</span> <span class="s1">&#39;IV&#39;</span><span class="p">]}</span>
+</span></code></pre></div>
+<h2 id="identification-by-adjustment">Identification by adjustment</h2>
+<p>For graphs in which adjustment is sufficient,
+<code>identification_analysis()</code> reports the valid adjustment set for the ACE
+and ACDE.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1">1</a></span>
+<span class="normal"><a href="#__codelineno-16-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="n">G_adj</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;Two confounders&quot;</span><span class="p">)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="n">G_adj</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span> <span class="n">skipped</span><span class="o">.</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="n">skipped</span><span class="o">.</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="o">---------------------</span>            
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="n">Adjustments</span><span class="p">:</span> <span class="p">{</span><span class="n">Z1</span><span class="p">,</span> <span class="n">Z2</span><span class="p">}</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="n">Not</span> <span class="n">conducted</span><span class="o">.</span> <span class="n">Identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="ow">or</span> <span class="n">instrumental</span> <span class="n">variable</span> <span class="n">available</span><span class="o">.</span>
+</span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
+</span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="n">Not</span> <span class="n">conducted</span><span class="o">.</span> <span class="n">Identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">available</span><span class="o">.</span>                
+</span><span id="__span-17-23"><a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
+</span><span id="__span-17-24"><a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-17-25"><a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-17-26"><a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-17-27"><a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-17-28"><a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a><span class="n">Adjustments</span><span class="p">:</span> <span class="p">{</span><span class="n">Z1</span><span class="p">,</span> <span class="n">Z2</span><span class="p">}</span>
+</span></code></pre></div>
+<p>If identification by adjustment succeeds, instrumental-variable and
+do-calculus searches are skipped by default when they are not needed. To
+force these searches, use <code>iv="always"</code> and
+<code>causal_probability="always"</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="n">G_adj</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">(</span><span class="n">iv</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">,</span> <span class="n">causal_probability</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="o">---------------------</span>            
+</span><span id="__span-19-12"><a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-19-13"><a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-19-14"><a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a><span class="n">Adjustments</span><span class="p">:</span> <span class="p">{</span><span class="n">Z1</span><span class="p">,</span> <span class="n">Z2</span><span class="p">}</span>
+</span><span id="__span-19-15"><a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>
+</span><span id="__span-19-16"><a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-19-17"><a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-19-18"><a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a><span class="n">Causal</span> <span class="n">probability</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="n">Y</span> <span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">=</span> <span class="n">sum_</span><span class="p">{</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span><span class="n">p</span><span class="p">(</span><span class="n">Y</span><span class="o">|</span><span class="n">D</span><span class="p">,</span><span class="n">Z1</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span>
+</span><span id="__span-19-19"><a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>
+</span><span id="__span-19-20"><a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-19-21"><a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-19-22"><a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a><span class="n">No</span> <span class="n">instrument</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">DAG</span><span class="o">.</span>                
+</span><span id="__span-19-23"><a id="__codelineno-19-23" name="__codelineno-19-23" href="#__codelineno-19-23"></a>
+</span><span id="__span-19-24"><a id="__codelineno-19-24" name="__codelineno-19-24" href="#__codelineno-19-24"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-19-25"><a id="__codelineno-19-25" name="__codelineno-19-25" href="#__codelineno-19-25"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-19-26"><a id="__codelineno-19-26" name="__codelineno-19-26" href="#__codelineno-19-26"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-19-27"><a id="__codelineno-19-27" name="__codelineno-19-27" href="#__codelineno-19-27"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-19-28"><a id="__codelineno-19-28" name="__codelineno-19-28" href="#__codelineno-19-28"></a><span class="n">Adjustments</span><span class="p">:</span> <span class="p">{</span><span class="n">Z1</span><span class="p">,</span> <span class="n">Z2</span><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="identification-by-instrumental-variables">Identification by instrumental variables</h2>
+<p>Instrumental-variable identification is searched for the ACE. It is
+especially useful when the exposure and outcome are confounded but the
+graph contains a valid instrument.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span>
+<span class="normal"><a href="#__codelineno-20-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1"></a><span class="n">G_iv</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;IV with 1 instrument&quot;</span><span class="p">)</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2"></a><span class="n">G_iv</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="n">skipped</span><span class="o">.</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">X</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="o">---------------------</span>            
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="n">Not</span> <span class="n">conducted</span><span class="o">.</span> <span class="n">Identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="ow">or</span> <span class="n">instrumental</span> <span class="n">variable</span> <span class="n">available</span><span class="o">.</span>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="n">Instrument</span><span class="p">:</span> <span class="n">Z</span>                 
+</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>
+</span><span id="__span-21-24"><a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-21-25"><a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-21-26"><a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-21-27"><a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-21-28"><a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span></code></pre></div>
+<p>The IV output reports whether an instrument is available in the DAG. In
+examples with multiple instruments, the result can include instruments
+that require adjustment.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span>
+<span class="normal"><a href="#__codelineno-22-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1"></a><span class="n">G_iv_multi</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;IV with 3 instruments&quot;</span><span class="p">)</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2"></a><span class="n">G_iv_multi</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">ACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="n">skipped</span><span class="o">.</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="o">---------------------</span>            
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>
+</span><span id="__span-23-16"><a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-23-17"><a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-23-18"><a id="__codelineno-23-18" name="__codelineno-23-18" href="#__codelineno-23-18"></a><span class="n">Not</span> <span class="n">conducted</span><span class="o">.</span> <span class="n">Identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="ow">or</span> <span class="n">instrumental</span> <span class="n">variable</span> <span class="n">available</span><span class="o">.</span>
+</span><span id="__span-23-19"><a id="__codelineno-23-19" name="__codelineno-23-19" href="#__codelineno-23-19"></a>
+</span><span id="__span-23-20"><a id="__codelineno-23-20" name="__codelineno-23-20" href="#__codelineno-23-20"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-23-21"><a id="__codelineno-23-21" name="__codelineno-23-21" href="#__codelineno-23-21"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-23-22"><a id="__codelineno-23-22" name="__codelineno-23-22" href="#__codelineno-23-22"></a><span class="n">Instrument</span><span class="p">:</span> <span class="n">Z1</span> <span class="p">(</span><span class="k">if</span> <span class="n">adjusted</span> <span class="n">by</span> <span class="n">Z2</span><span class="p">)</span> <span class="ow">or</span> 
+</span><span id="__span-23-23"><a id="__codelineno-23-23" name="__codelineno-23-23" href="#__codelineno-23-23"></a>            <span class="n">Z3</span>  <span class="ow">or</span> 
+</span><span id="__span-23-24"><a id="__codelineno-23-24" name="__codelineno-23-24" href="#__codelineno-23-24"></a>            <span class="n">Z4</span> <span class="p">(</span><span class="k">if</span> <span class="n">adjusted</span> <span class="n">by</span> <span class="n">X2</span><span class="p">,</span> <span class="n">Z2</span><span class="p">)</span>                
+</span><span id="__span-23-25"><a id="__codelineno-23-25" name="__codelineno-23-25" href="#__codelineno-23-25"></a>
+</span><span id="__span-23-26"><a id="__codelineno-23-26" name="__codelineno-23-26" href="#__codelineno-23-26"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-23-27"><a id="__codelineno-23-27" name="__codelineno-23-27" href="#__codelineno-23-27"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-23-28"><a id="__codelineno-23-28" name="__codelineno-23-28" href="#__codelineno-23-28"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-23-29"><a id="__codelineno-23-29" name="__codelineno-23-29" href="#__codelineno-23-29"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-23-30"><a id="__codelineno-23-30" name="__codelineno-23-30" href="#__codelineno-23-30"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span></code></pre></div>
+<h2 id="conditional-effects">Conditional effects</h2>
+<p>Conditional causal effects can be requested with the argument
+<code>conditional</code>. The argument can be a string for one conditioning
+variable or a list for more than one.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1">1</a></span>
+<span class="normal"><a href="#__codelineno-24-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1"></a><span class="n">G_cond</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;Two confounders&quot;</span><span class="p">)</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2"></a><span class="n">G_cond</span><span class="o">.</span><span class="n">identification_analysis</span><span class="p">(</span><span class="n">conditional</span><span class="o">=</span><span class="s2">&quot;Z1&quot;</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">cACE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">for</span> <span class="n">cACDE</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">instrumental</span> <span class="n">variables</span> <span class="n">skipped</span><span class="o">.</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">Searching</span> <span class="k">for</span> <span class="n">identification</span> <span class="n">by</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="n">skipped</span><span class="o">.</span>
+</span></code></pre></div>
+<p>For conditional effects, the reported parameters are prefixed with <code>c</code>,
+such as <code>cACE</code> and <code>cACDE</code>. Instrumental-variable identification is not
+available for conditional average effects in the current implementation.</p>
+<h2 id="print-assumptions">Print assumptions</h2>
+<p>Identification results are conditional on the assumptions encoded in the
+GCM. To print the identification result together with the identification
+assumptions, set <code>print_assumptions=True</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-1">1</a></span>
+<span class="normal"><a href="#__codelineno-26-2">2</a></span>
+<span class="normal"><a href="#__codelineno-26-3">3</a></span>
+<span class="normal"><a href="#__codelineno-26-4">4</a></span>
+<span class="normal"><a href="#__codelineno-26-5">5</a></span>
+<span class="normal"><a href="#__codelineno-26-6">6</a></span>
+<span class="normal"><a href="#__codelineno-26-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1"></a><span class="n">G</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2"></a>    <span class="n">what</span><span class="o">=</span><span class="s2">&quot;identification&quot;</span><span class="p">,</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3"></a>    <span class="n">identification</span><span class="o">=</span><span class="p">{</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4"></a>        <span class="s2">&quot;print_assumptions&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5"></a>        <span class="s2">&quot;print_assumptions_verbose&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6"></a>    <span class="p">},</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7"></a><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">Exposure</span><span class="p">:</span> <span class="n">D</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">Outcome</span><span class="p">:</span> <span class="n">Y</span>        
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="n">Average</span> <span class="n">Causal</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACE</span><span class="p">)</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="o">---------------------</span>            
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="n">Method</span><span class="p">:</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="p">(</span><span class="n">do</span><span class="p">)</span>
+</span><span id="__span-27-12"><a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">True</span>
+</span><span id="__span-27-13"><a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a><span class="n">Causal</span> <span class="n">probability</span><span class="p">:</span> <span class="n">p</span><span class="p">(</span><span class="n">Y</span> <span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">D</span><span class="p">))</span> <span class="o">=</span> <span class="n">sum_</span><span class="p">{</span><span class="n">Z</span><span class="p">,</span><span class="n">Z2</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">Z</span><span class="o">|</span><span class="n">D</span><span class="p">)</span><span class="n">sum_</span><span class="p">{</span><span class="n">D</span><span class="p">}</span> <span class="n">p</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span><span class="n">p</span><span class="p">(</span><span class="n">Y</span><span class="o">|</span><span class="n">Z</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">Z2</span><span class="p">)</span>
+</span><span id="__span-27-14"><a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>
+</span><span id="__span-27-15"><a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Instrumental</span> <span class="n">Variable</span> <span class="p">(</span><span class="n">IV</span><span class="p">)</span>
+</span><span id="__span-27-16"><a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-27-17"><a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a><span class="n">No</span> <span class="n">instrument</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">DAG</span><span class="o">.</span>                
+</span><span id="__span-27-18"><a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>
+</span><span id="__span-27-19"><a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a><span class="n">Average</span> <span class="n">Controlled</span> <span class="n">Direct</span> <span class="n">Effect</span> <span class="p">(</span><span class="n">ACDE</span><span class="p">)</span>
+</span><span id="__span-27-20"><a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a><span class="o">--------------------------------</span>            
+</span><span id="__span-27-21"><a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a><span class="n">Method</span><span class="p">:</span> <span class="n">Selection</span> <span class="n">on</span> <span class="n">Observables</span> <span class="p">(</span><span class="n">SoO</span><span class="p">)</span>
+</span><span id="__span-27-22"><a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a><span class="n">Identified</span><span class="p">:</span> <span class="kc">False</span>
+</span><span id="__span-27-23"><a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a><span class="n">Not</span> <span class="n">identifiable</span> <span class="n">by</span> <span class="n">adjustment</span><span class="o">.</span>                
+</span><span id="__span-27-24"><a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>
+</span><span id="__span-27-25"><a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a><span class="n">Assumptions</span> <span class="k">for</span> <span class="n">identification</span><span class="p">:</span>
+</span><span id="__span-27-26"><a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a><span class="o">------------------------------</span>
+</span><span id="__span-27-27"><a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a><span class="mf">1.</span> <span class="n">Correct</span> <span class="n">DAG</span>
+</span><span id="__span-27-28"><a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>   <span class="o">-</span> <span class="n">Definition</span><span class="p">:</span> <span class="n">DAG</span> <span class="n">structure</span> <span class="n">matches</span> <span class="n">the</span> <span class="n">true</span> <span class="n">causal</span> <span class="n">relations</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="n">A</span> <span class="n">directed</span> <span class="n">arrow</span> <span class="kn">from</span><span class="w"> </span><span class="nn">a</span> <span class="n">variable</span> <span class="n">A</span> <span class="n">to</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">B</span> <span class="n">means</span> <span class="n">that</span> <span class="n">there</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">causal</span> <span class="n">effect</span> <span class="n">of</span> <span class="n">A</span> <span class="n">on</span> <span class="n">B</span><span class="p">,</span> <span class="n">which</span> <span class="n">may</span> <span class="ow">or</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">zero</span><span class="p">;</span> <span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="n">Absence</span> <span class="n">of</span> <span class="n">an</span> <span class="n">arrow</span> <span class="kn">from</span><span class="w"> </span><span class="nn">a</span> <span class="n">variable</span> <span class="n">C</span> <span class="n">to</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">D</span> <span class="n">implies</span> <span class="n">certainty</span> <span class="n">that</span> <span class="n">C</span> <span class="n">does</span> <span class="ow">not</span> <span class="n">cause</span> <span class="n">D</span><span class="p">;</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="n">A</span> <span class="n">bidirected</span> <span class="n">arrow</span> <span class="n">between</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">E</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">variable</span> <span class="n">F</span> <span class="n">means</span> <span class="n">that</span> <span class="n">they</span> <span class="n">share</span> <span class="n">a</span> <span class="n">common</span> <span class="n">unobserved</span> <span class="ow">or</span> <span class="n">latent</span> <span class="n">cause</span><span class="o">.</span>
+</span><span id="__span-27-29"><a id="__codelineno-27-29" name="__codelineno-27-29" href="#__codelineno-27-29"></a>   <span class="o">-</span> <span class="n">Scope</span><span class="p">:</span> <span class="n">Connection</span> <span class="n">between</span> <span class="n">reality</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">DAG</span> <span class="n">model</span>
+</span><span id="__span-27-30"><a id="__codelineno-27-30" name="__codelineno-27-30" href="#__codelineno-27-30"></a>   <span class="o">-</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Ensures</span> <span class="n">adjustment</span> <span class="n">sets</span> <span class="ow">and</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span> <span class="k">yield</span> <span class="n">the</span> <span class="n">correct</span> <span class="n">identifiable</span> <span class="n">causal</span> <span class="n">effect</span><span class="o">.</span>
+</span><span id="__span-27-31"><a id="__codelineno-27-31" name="__codelineno-27-31" href="#__codelineno-27-31"></a>   <span class="o">-</span> <span class="n">Usage</span><span class="p">:</span> <span class="n">identification</span>
+</span><span id="__span-27-32"><a id="__codelineno-27-32" name="__codelineno-27-32" href="#__codelineno-27-32"></a>   <span class="o">-</span> <span class="n">Violation</span><span class="p">:</span> <span class="n">Biased</span> <span class="ow">or</span> <span class="n">invalid</span> <span class="n">causal</span> <span class="n">effect</span> <span class="n">estimates</span> <span class="ow">and</span> <span class="n">incorrect</span> <span class="n">adjustment</span> <span class="n">sets</span><span class="o">.</span>            
+</span><span id="__span-27-33"><a id="__codelineno-27-33" name="__codelineno-27-33" href="#__codelineno-27-33"></a><span class="mf">2.</span> <span class="n">Causal</span> <span class="n">Markov</span> <span class="n">Condition</span> <span class="p">(</span><span class="n">CMC</span><span class="p">)</span>
+</span><span id="__span-27-34"><a id="__codelineno-27-34" name="__codelineno-27-34" href="#__codelineno-27-34"></a>   <span class="o">-</span> <span class="n">Definition</span><span class="p">:</span> <span class="n">Each</span> <span class="n">variable</span> <span class="ow">is</span> <span class="n">independent</span> <span class="n">of</span> <span class="n">its</span> <span class="n">non</span><span class="o">-</span><span class="n">descendants</span> <span class="n">given</span> <span class="n">its</span> <span class="n">parents</span>
+</span><span id="__span-27-35"><a id="__codelineno-27-35" name="__codelineno-27-35" href="#__codelineno-27-35"></a>   <span class="o">-</span> <span class="n">Scope</span><span class="p">:</span> <span class="n">Connects</span> <span class="n">the</span> <span class="n">DAG</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">conditional</span> <span class="n">distribution</span> <span class="n">of</span> <span class="n">each</span> <span class="n">variable</span>
+</span><span id="__span-27-36"><a id="__codelineno-27-36" name="__codelineno-27-36" href="#__codelineno-27-36"></a>   <span class="o">-</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Links</span> <span class="n">d</span><span class="o">-</span><span class="n">separation</span> <span class="n">to</span> <span class="n">conditional</span> <span class="n">independencies</span><span class="p">,</span> <span class="n">grounding</span> <span class="n">do</span><span class="o">-</span><span class="n">calculus</span><span class="o">.</span>
+</span><span id="__span-27-37"><a id="__codelineno-27-37" name="__codelineno-27-37" href="#__codelineno-27-37"></a>   <span class="o">-</span> <span class="n">Usage</span><span class="p">:</span> <span class="n">identification</span><span class="p">,</span> <span class="n">discovery</span>
+</span><span id="__span-27-38"><a id="__codelineno-27-38" name="__codelineno-27-38" href="#__codelineno-27-38"></a>   <span class="o">-</span> <span class="n">Violation</span><span class="p">:</span> <span class="n">Graph</span><span class="err">–</span><span class="n">distribution</span> <span class="n">link</span> <span class="n">breaks</span> <span class="ow">and</span> <span class="n">identification</span> <span class="n">results</span> <span class="n">may</span> <span class="n">be</span> <span class="n">incorrect</span><span class="o">.</span>            
+</span><span id="__span-27-39"><a id="__codelineno-27-39" name="__codelineno-27-39" href="#__codelineno-27-39"></a><span class="mf">3.</span> <span class="n">Positivity</span> <span class="p">(</span><span class="n">Overlap</span><span class="p">)</span>
+</span><span id="__span-27-40"><a id="__codelineno-27-40" name="__codelineno-27-40" href="#__codelineno-27-40"></a>   <span class="o">-</span> <span class="n">Definition</span><span class="p">:</span> <span class="n">Each</span> <span class="n">treatment</span> <span class="n">level</span> <span class="n">has</span> <span class="n">a</span> <span class="n">positive</span> <span class="n">probability</span> <span class="n">of</span> <span class="n">occurring</span><span class="p">,</span> <span class="n">including</span> <span class="n">at</span> <span class="nb">all</span> <span class="n">relevant</span> <span class="n">levels</span> <span class="n">of</span> <span class="n">the</span> <span class="n">adjustment</span> <span class="n">variables</span> <span class="k">if</span> <span class="n">they</span> <span class="n">are</span> <span class="n">used</span> <span class="k">for</span> <span class="n">identification</span><span class="o">.</span>
+</span><span id="__span-27-41"><a id="__codelineno-27-41" name="__codelineno-27-41" href="#__codelineno-27-41"></a>   <span class="o">-</span> <span class="n">Scope</span><span class="p">:</span> <span class="n">Variables</span><span class="s1">&#39; distributions</span>
+</span><span id="__span-27-42"><a id="__codelineno-27-42" name="__codelineno-27-42" href="#__codelineno-27-42"></a>   <span class="o">-</span> <span class="n">Role</span><span class="p">:</span> <span class="n">Required</span> <span class="k">for</span> <span class="n">the</span> <span class="n">g</span><span class="o">-</span><span class="n">formula</span><span class="p">,</span> <span class="n">IPW</span><span class="p">,</span> <span class="ow">and</span> <span class="n">many</span> <span class="n">identification</span> <span class="ow">and</span> <span class="n">estimation</span> <span class="n">strategies</span><span class="o">.</span>
+</span><span id="__span-27-43"><a id="__codelineno-27-43" name="__codelineno-27-43" href="#__codelineno-27-43"></a>   <span class="o">-</span> <span class="n">Usage</span><span class="p">:</span> <span class="n">identification</span><span class="p">,</span> <span class="n">estimation</span><span class="p">,</span> <span class="n">inference</span>
+</span><span id="__span-27-44"><a id="__codelineno-27-44" name="__codelineno-27-44" href="#__codelineno-27-44"></a>   <span class="o">-</span> <span class="n">Violation</span><span class="p">:</span> <span class="n">Effects</span> <span class="n">are</span> <span class="n">undefined</span> <span class="ow">or</span> <span class="n">non</span><span class="o">-</span><span class="n">estimable</span> <span class="ow">in</span> <span class="n">certain</span> <span class="n">regions</span> <span class="n">of</span> <span class="n">the</span> <span class="n">covariate</span> <span class="n">space</span><span class="o">.</span>
+</span></code></pre></div>
+<p>For a fuller discussion of the assumptions themselves, see <a href="../assumptions">Check
+Assumptions</a>.</p>
+<h2 id="practical-workflow">Practical workflow</h2>
+<p>A typical GCM identification workflow is:</p>
+<ol>
+<li>Build the graph with the exposure, outcome, observed variables, and
+    latent variables.</li>
+<li>Check whether the graph represents the intended causal assumptions.</li>
+<li>Run <code>G.identification_analysis()</code>.</li>
+<li>Inspect the default or concise output to see which parameters are
+    identified.</li>
+<li>Use detailed output for the strategy and parameter that will be
+    reported.</li>
+<li>Retrieve <code>G.identification_dict</code> or <code>G.get_identified()</code> when the
+    result is needed programmatically.</li>
+<li>If an assumption is uncertain, compare the identification result
+    with an alternative graph.</li>
+</ol>
+<h2 id="sec-refs">References</h2>
+<ul>
+<li>Ferrari, D. (forthcoming). The Identification of Causal Effects.
+  Cambridge University Press.</li>
+<li>Pearl, J. (2009). Causality: Models, Reasoning and Inference.
+  Cambridge University Press.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "content.tabs.link", "content.code.copy", "content.code.select", "content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.prune", "navigation.tracking", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../js/mkdocs-charts-plugin.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+        <script src="../../../src/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

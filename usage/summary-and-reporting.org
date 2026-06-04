@@ -1,0 +1,415 @@
+
+** Preamble :noexport:
+
+
+#+BEGIN_SRC python :exports none :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+from docs.src.constants import *
+from docs.src.config import *
+#+END_SRC
+
+#+NAME: save-plot
+#+BEGIN_SRC python :exports results :results output raw :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
+#
+# Save figures
+import matplotlib.pyplot as plt
+from causalinf import options as opt
+import os
+opt.set_options(show_plot=False)
+# Save figures
+fn = os.path.splitext(fn)[0]
+fns = ["./tables-and-figures/" + f"{fn}.png",
+              "./tables-and-figures/" + f"{fn}.pdf"]
+[plt.savefig(fn) for fn in fns]
+plt.close('all')
+
+print(# "#+begin_src org \n"# # # 
+          # "#+ATTR_ORG: :width 200/250/300/400/500/600\n"
+      # "#+ATTR_LATEX: :width 1\textwidth :placement [ht!]\n"
+      # "#+CAPTION: Comparing performance for pivot_wide()\n"
+      # "#+Name: fig-pivot-wide\n"
+      f"[[./tables-and-figures/{fn}.png]]\n"
+      # "#+end_src\n"# # # 
+)
+#+END_SRC
+
+#+RESULTS: save-plot
+[[./tables-and-figures/.png]]
+
+
+** Default Summary
+
+The module ~causalinf~ provides many functionalities to summarize and report the results, including the assessment of the assumptions, estimation, inference, and sensitivity analysis. Check [[file:../../case-studies/overview/][Case Studies]] for more comprehensive examples.
+
+The function ~summary()~ is used across all submodules (i.e., different methods) to summarize the estimation. The summary can be easily exported and saved in ~LaTeX~, text, or tabular format (.csv, .xlsx, etc.). Here is the basic code structure to estimate the model and summarize the estimation, using a *DiD* model as an example:
+
+
+#+BEGIN_SRC python :exports code :results silent :tangle src-overview.py :cache yes :noweb no :session *Python* :linenums 1 :eval never
+from causalinf import did
+
+mod = did.estimate(<args>, data=<DataFrame>)
+mod.summary(<args>)
+#+END_SRC
+
+Some ~<args>~ vary across submodules depending on the method used.
+
+Continuing the example above from [[file:../estimation][Estimation]] (repeated below for completeness), here is the default summary of the *SCM* estimation using simulated data:
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-estimation.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+from causalinf import simulate
+from causalinf import gcm
+from causalinf import scm
+
+# get the example
+G = gcm.examples('Two confounders')
+# simulate the data from LSEM
+sim = simulate.lsem(G, seed=1)
+df = sim.data
+# estimate
+mod = scm.estimate(G, data=df)
+
+# summary
+mod.summary()
+#+END_SRC
+
+#+RESULTS[4b8082d54700a46f293256b7accb88f95f5c72a5]:
+#+begin_src python
+Estimating LSEM...done!
+
+================================================================================
+Model: Model 1
+Identification: SCM
+Outcome: Y
+Exposure: D
+Formula: 
+# LSEM:
+Y ~ (beta_0Y)*1 + (beta_D.Y)*D + (beta_Z2.Y)*Z2 + (beta_Z1.Y)*Z1
+D ~ (beta_0D)*1 + (beta_Z2.D)*Z2 + (beta_Z1.D)*Z1
+# Direct effect:
+Direct_effect := (beta_D.Y)
+# Total effect:
+Total_effect := Direct_effect
+Summary:
+--------        
+ term                  label          estimate    sig  se      lo       hi       statistic  pvalue 
+ Y ~ 1                 beta_0Y        -0.2693     ***  0.0343  -0.3366  -0.202   -7.8409    0.0    
+ Y ~ D                 beta_D.Y       -0.3624     ***  0.032   -0.4252  -0.2997  -11.3225   0.0    
+ Y ~ Z2                beta_Z2.Y      -0.2178     ***  0.0377  -0.2917  -0.1439  -5.7766    0.0    
+ Y ~ Z1                beta_Z1.Y      -0.89       ***  0.0397  -0.9678  -0.8121  -22.3978   0.0    
+ D ~ 1                 beta_0D        0.4151      ***  0.0313  0.3538   0.4765   13.2691    0.0    
+ D ~ Z2                beta_Z2.D      -0.6829     ***  0.0303  -0.7423  -0.6234  -22.5017   0.0    
+ D ~ Z1                beta_Z1.D      0.725       ***  0.0319  0.6626   0.7875   22.7538    0.0    
+ Y ~~ Y                               1.0006      ***  0.0447  0.9129   1.0883   22.3607    0.0    
+ D ~~ D                               0.9766      ***  0.0437  0.891    1.0622   22.3607    0.0    
+ Z2 ~~ Z2                             1.061            0.0     1.061    1.061    --         --     
+ Z2 ~~ Z1                             0.0221           0.0     0.0221   0.0221   --         --     
+ Z1 ~~ Z1                             0.9624           0.0     0.9624   0.9624   --         --     
+ Z2 ~ 1                               0.0273           0.0     0.0273   0.0273   --         --     
+ Z1 ~ 1                               0.0388           0.0     0.0388   0.0388   --         --     
+ Direct_effect := (be  Direct_effect  -0.3624     ***  0.032   -0.4252  -0.2997  -11.3225   0.0    
+ Total_effect := Dire  Total_effect   -0.3624     ***  0.032   -0.4252  -0.2997  -11.3225   0.0    
+ Model                 --             (footnote)  --   --      --       --       --         --     
+ Outcome type          --             (footnote)  --   --      --       --       --         --     
+ Estimator             --             ML          --   --      --       --       --         --     
+ Std.Error             --             classic     --   --      --       --       --         --     
+ N.obs                 --             1000        --   --      --       --       --         --     
+ RMSE                  --             0.0         --   --      --       --       --         --     
+ AIC                   --             5670.74     --   --      --       --       --         --     
+ BIC                   --             5714.91     --   --      --       --       --         --     
+ DF (model)            --             0           --   --      --       --       --         --     
+================================================================================
+,*** p<0.001; ** p<0.01; * p<0.05; + p<0.1
+Model 1: Endogenous variable types: Continuous (Y, D); Models: Linear (Y, D)
+#+end_src
+
+
+** Concise Summary
+The function ~summary()~ provides many convenient options. Check the function documentation [[file:../../reference/utils/summary][here]].
+
+For instance, to obtain a concise summary showing only the estimates and their confidence intervals, use:
+
+#+BEGIN_SRC python :exports both :results output code :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+mod.summary(style="concise")
+#+END_SRC
+
+#+RESULTS[ef611086c7ac88f96f4067db0c9be11f6886151b]:
+#+begin_src python
+
+================================================================================
+Model: Model 1
+Identification: SCM
+Outcome: Y
+Exposure: D
+Formula: 
+# LSEM:
+Y ~ (beta_0Y)*1 + (beta_D.Y)*D + (beta_Z2.Y)*Z2 + (beta_Z1.Y)*Z1
+D ~ (beta_0D)*1 + (beta_Z2.D)*Z2 + (beta_Z1.D)*Z1
+# Direct effect:
+Direct_effect := (beta_D.Y)
+# Total effect:
+Total_effect := Direct_effect
+Summary:
+--------        
+ term                  Model 1            
+ Y ~ 1                 -0.2693***         
+                       (-0.3366, -0.202)  
+ Y ~ D                 -0.3624***         
+                       (-0.4252, -0.2997) 
+ Y ~ Z2                -0.2178***         
+                       (-0.2917, -0.1439) 
+ Y ~ Z1                -0.89***           
+                       (-0.9678, -0.8121) 
+ D ~ 1                 0.4151***          
+                       (0.3538, 0.4765)   
+ D ~ Z2                -0.6829***         
+                       (-0.7423, -0.6234) 
+ D ~ Z1                0.725***           
+                       (0.6626, 0.7875)   
+ Y ~~ Y                1.0006***          
+                       (0.9129, 1.088)    
+ D ~~ D                0.9766***          
+                       (0.891, 1.062)     
+ Z2 ~~ Z2              1.061              
+                       (1.061, 1.061)     
+ Z2 ~~ Z1              0.0221             
+                       (0.02209, 0.02209) 
+ Z1 ~~ Z1              0.9624             
+                       (0.9624, 0.9624)   
+ Z2 ~ 1                0.0273             
+                       (0.02733, 0.02733) 
+ Z1 ~ 1                0.0388             
+                       (0.03881, 0.03881) 
+ Direct_effect := (be  -0.3624***         
+                       (-0.4252, -0.2997) 
+ Total_effect := Dire  -0.3624***         
+                       (-0.4252, -0.2997) 
+ Model                 (footnote)         
+ Outcome type          (footnote)         
+ Estimator             ML                 
+ Std.Error             classic            
+ N.obs                 1000               
+ RMSE                  0.0                
+ AIC                   5670.74            
+ BIC                   5714.91            
+ DF (model)            0                  
+================================================================================
+,*** p<0.001; ** p<0.01; * p<0.05; + p<0.1
+Model 1: Endogenous variable types: Continuous (Y, D); Models: Linear (Y, D)
+#+end_src
+
+** Compare Models
+
+To compare the results to any other estimation side-by-side, including from different GCMs, use the argument ~compare~. This works for all causal methods, not only GCMs, anc to compare models estimated using different causal inference methods. For instance, the following example compares a full LSEM estimation against two different linear regression models:
+
+# 
+#+BEGIN_SRC python :exports code :results silent :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+formula = "Y ~ D"
+mod2 = scm.estimate(G, formula=formula, data=df)
+formula = "Y ~ D + Z1"
+mod3 = scm.estimate(G, formula=formula, data=df)
+#+END_SRC
+
+# 
+#+BEGIN_SRC python :exports both :results output code :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+mod.summary(compare={"Reg. 1": mod2, "Reg. 2": mod3}) # It is also possible to use compare=[mod2, mod3] instead
+#+END_SRC
+
+#+RESULTS[f749686022eef814428baaeab94d48990214bb65]:
+#+begin_src python
+
+================================================================================
+Model: Model 1
+Identification: SCM
+Outcome: Y
+Exposure: D
+Formula: 
+# LSEM:
+Y ~ (beta_0Y)*1 + (beta_D.Y)*D + (beta_Z2.Y)*Z2 + (beta_Z1.Y)*Z1
+D ~ (beta_0D)*1 + (beta_Z2.D)*Z2 + (beta_Z1.D)*Z1
+# Direct effect:
+Direct_effect := (beta_D.Y)
+# Total effect:
+Total_effect := Direct_effect
+Summary:
+--------        
+ term                  Model 1             Reg. 1              Reg. 2             
+ Y ~ 1                 -0.2693***          --                  --                 
+                       (-0.3366, -0.202)                                          
+ Y ~ D                 -0.3624***          -0.5942***          -0.2552***         
+                       (-0.4252, -0.2997)  (-0.6523, -0.5361)  (-0.3072, -0.2033) 
+ Y ~ Z2                -0.2178***          --                  --                 
+                       (-0.2917, -0.1439)                                         
+ Y ~ Z1                -0.89***            --                  -0.971***          
+                       (-0.9678, -0.8121)                      (-1.045, -0.8969)  
+ D ~ 1                 0.4151***           --                  --                 
+                       (0.3538, 0.4765)                                           
+ D ~ Z2                -0.6829***          --                  --                 
+                       (-0.7423, -0.6234)                                         
+ D ~ Z1                0.725***            --                  --                 
+                       (0.6626, 0.7875)                                           
+ Y ~~ Y                1.0006***           1.7167***           1.034***           
+                       (0.9129, 1.088)     (1.566, 1.867)      (0.9434, 1.125)    
+ D ~~ D                0.9766***           1.9554              1.9554             
+                       (0.891, 1.062)      (1.955, 1.955)      (1.955, 1.955)     
+ Z2 ~~ Z2              1.061               --                  --                 
+                       (1.061, 1.061)                                             
+ Z2 ~~ Z1              0.0221              --                  --                 
+                       (0.02209, 0.02209)                                         
+ Z1 ~~ Z1              0.9624              --                  0.9624             
+                       (0.9624, 0.9624)                        (0.9624, 0.9624)   
+ Z2 ~ 1                0.0273              --                  --                 
+                       (0.02733, 0.02733)                                         
+ Z1 ~ 1                0.0388              --                  --                 
+                       (0.03881, 0.03881)                                         
+ Direct_effect := (be  -0.3624***          --                  --                 
+                       (-0.4252, -0.2997)                                         
+ Total_effect := Dire  -0.3624***          --                  --                 
+                       (-0.4252, -0.2997)                                         
+ D ~~ Z1               --                  --                  0.6827             
+                                                               (0.6827, 0.6827)   
+ Model                 (footnote)          (footnote)          (footnote)         
+ Outcome type          (footnote)          (footnote)          (footnote)         
+ Estimator             ML                  ML                  ML                 
+ Std.Error             classic             classic             classic            
+ N.obs                 1000                1000                1000               
+ RMSE                  0.0                 0.0                 0.0                
+ AIC                   5670.74             3382.27             2877.33            
+ BIC                   5714.91             3392.08             2892.05            
+ DF (model)            0                   0                   0                  
+================================================================================
+,*** p<0.001; ** p<0.01; * p<0.05; + p<0.1
+Model 1: Endogenous variable types: Continuous (Y, D); Models: Linear (Y, D);
+Reg. 1: Endogenous variable types: Continuous (Y); Models: Linear (Y); Reg. 2:
+Endogenous variable types: Continuous (Y); Models: Linear (Y)
+#+end_src
+
+#+RESULTS:
+
+** Export to LaTeX
+
+To export to latex:
+
+# 
+#+BEGIN_SRC python :exports both :results output code latex :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+print(mod.summary(compare=[mod2, mod3], output="latex"))
+#+END_SRC
+
+#+RESULTS[4c4aa68a5f762c6882ba1f21317bd39a7cf04f75]:
+#+begin_export latex
+\begin{table}[!htb]
+\centering
+\resizebox{\ifdim\width>\linewidth\linewidth\else\width\fi}{!}{
+\begin{tabular}{lccc}
+\toprule
+   &  Model 1  &  Model 2  &  Model 3 \\
+\midrule
+Y \leftarrow  1  & \makecell{-0.2693***\\(-0.3366, -0.202)} &    &   \\
+Y \leftarrow  D  & \makecell{-0.3624***\\(-0.4252, -0.2997)} & \makecell{-0.5942***\\(-0.6523, -0.5361)} & \makecell{-0.2552***\\(-0.3072, -0.2033)}\\
+Y \leftarrow  Z2  & \makecell{-0.2178***\\(-0.2917, -0.1439)} &    &   \\
+Y \leftarrow  Z1  & \makecell{-0.89***\\(-0.9678, -0.8121)} &    & \makecell{-0.971***\\(-1.045, -0.8969)}\\
+D \leftarrow  1  & \makecell{0.4151***\\(0.3538, 0.4765)} &    &   \\
+D \leftarrow  Z2  & \makecell{-0.6829***\\(-0.7423, -0.6234)} &    &   \\
+D \leftarrow  Z1  & \makecell{0.725***\\(0.6626, 0.7875)} &    &   \\
+Y \leftrightarrow  Y  & \makecell{1.0006***\\(0.9129, 1.088)} & \makecell{1.7167***\\(1.566, 1.867)} & \makecell{1.034***\\(0.9434, 1.125)}\\
+D \leftrightarrow  D  & \makecell{0.9766***\\(0.891, 1.062)} & \makecell{1.9554\\(1.955, 1.955)} & \makecell{1.9554\\(1.955, 1.955)}\\
+Z2 \leftrightarrow  Z2  & \makecell{1.061\\(1.061, 1.061)} &    &   \\
+Z2 \leftrightarrow  Z1  & \makecell{0.0221\\(0.02209, 0.02209)} &    &   \\
+Z1 \leftrightarrow  Z1  & \makecell{0.9624\\(0.9624, 0.9624)} &    & \makecell{0.9624\\(0.9624, 0.9624)}\\
+Z2 \leftarrow  1  & \makecell{0.0273\\(0.02733, 0.02733)} &    &   \\
+Z1 \leftarrow  1  & \makecell{0.0388\\(0.03881, 0.03881)} &    &   \\
+Direct_effect := (beta_D.Y)  & \makecell{-0.3624***\\(-0.4252, -0.2997)} &    &   \\
+Total_effect := Direct_effect  & \makecell{-0.3624***\\(-0.4252, -0.2997)} &    &   \\
+D \leftrightarrow  Z1  &    &    & \makecell{0.6827\\(0.6827, 0.6827)}\\
+Model  &  (footnote)  &  (footnote)  &  (footnote) \\
+Outcome type  &  (footnote)  &  (footnote)  &  (footnote) \\
+Estimator  &  ML  &  ML  &  ML \\
+Std.Error  &  classic  &  classic  &  classic \\
+N.obs  &  1000  &  1000  &  1000 \\
+RMSE  &  0.0  &  0.0  &  0.0 \\
+AIC  &  5670.74  &  3382.27  &  2877.33 \\
+BIC  &  5714.91  &  3392.08  &  2892.05 \\
+DF (model)  &  0  &  0  &  0 \\
+\bottomrule
+\multicolumn{4}{@{}p{\dimexpr \linewidth\relax}@{}}{\footnotesize *** $p<0.001$; ** $p<0.01$; * $p<0.05$; + $p<0.1$}\\
+\multicolumn{4}{@{}p{\dimexpr \linewidth\relax}@{}}{\footnotesize Model 1: Endogenous variable types: Continuous (Y, D); Models: Linear (Y, D); Model 2: Endogenous variable types: Continuous (Y); Models: Linear (Y); Model 3: Endogenous variable types: Continuous (Y); Models: Linear (Y)}\\
+\end{tabular}}
+\end{table}
+#+end_export
+
+Which produces something like:
+
+
+#+BEGIN_SRC python :exports results :results output code :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval always
+mod.summary(compare=[mod2, mod3], output="tibble").replace_null(" ").print()
+#+END_SRC
+
+#+RESULTS[03e1d3ed94a796ef1237441b7ab4abf15dc440e3]:
+#+begin_src python
+shape: (26, 4)
+┌──────────────────────────────────────────────────────────────────────────────────────────────┐
+│ term                            Model 1              Model 2              Model 3            │
+│ str                             str                  str                  str                │
+╞══════════════════════════════════════════════════════════════════════════════════════════════╡
+│ Y ~ 1                           -0.2693***                                                   │
+│                                 (-0.3366, -0.202)                                            │
+│ Y ~ D                           -0.3624***           -0.5942***           -0.2552***         │
+│                                 (-0.4252, -0.2997)   (-0.6523, -0.5361)   (-0.3072, -0.2033) │
+│ Y ~ Z2                          -0.2178***                                                   │
+│                                 (-0.2917, -0.1439)                                           │
+│ Y ~ Z1                          -0.89***                                  -0.971***          │
+│                                 (-0.9678, -0.8121)                        (-1.045, -0.8969)  │
+│ D ~ 1                           0.4151***                                                    │
+│                                 (0.3538, 0.4765)                                             │
+│ D ~ Z2                          -0.6829***                                                   │
+│                                 (-0.7423, -0.6234)                                           │
+│ D ~ Z1                          0.725***                                                     │
+│                                 (0.6626, 0.7875)                                             │
+│ Y ~~ Y                          1.0006***            1.7167***            1.034***           │
+│                                 (0.9129, 1.088)      (1.566, 1.867)       (0.9434, 1.125)    │
+│ D ~~ D                          0.9766***            1.9554               1.9554             │
+│                                 (0.891, 1.062)       (1.955, 1.955)       (1.955, 1.955)     │
+│ Z2 ~~ Z2                        1.061                                                        │
+│                                 (1.061, 1.061)                                               │
+│ Z2 ~~ Z1                        0.0221                                                       │
+│                                 (0.02209, 0.02209)                                           │
+│ Z1 ~~ Z1                        0.9624                                    0.9624             │
+│                                 (0.9624, 0.9624)                          (0.9624, 0.9624)   │
+│ Z2 ~ 1                          0.0273                                                       │
+│                                 (0.02733, 0.02733)                                           │
+│ Z1 ~ 1                          0.0388                                                       │
+│                                 (0.03881, 0.03881)                                           │
+│ Direct_effect := (beta_D.Y)     -0.3624***                                                   │
+│                                 (-0.4252, -0.2997)                                           │
+│ Total_effect := Direct_effect   -0.3624***                                                   │
+│                                 (-0.4252, -0.2997)                                           │
+│ D ~~ Z1                                                                   0.6827             │
+│                                                                           (0.6827, 0.6827)   │
+│ Model                           (footnote)           (footnote)           (footnote)         │
+│ Outcome type                    (footnote)           (footnote)           (footnote)         │
+│ Estimator                       ML                   ML                   ML                 │
+│ Std.Error                       classic              classic              classic            │
+│ N.obs                           1000                 1000                 1000               │
+│ RMSE                            0.0                  0.0                  0.0                │
+│ AIC                             5670.74              3382.27              2877.33            │
+│ BIC                             5714.91              3392.08              2892.05            │
+│ DF (model)                      0                    0                    0                  │
+└──────────────────────────────────────────────────────────────────────────────────────────────┘
+#+end_src
+
+#+RESULTS:
+
+** Save to File
+
+It is possible to save the summary table in different file formats by specifying the file name in the argument ~fn~. The format is defined by the extension of the filename.
+
+For instance, to save the summary in ~.xlsx~ format, use ~fn='<path>/<filename>.xlsx~. To save to LaTeX, use ~fn='<path>/<filename>.tex~. When saving to LaTeX using a ~.tex~ file extension, two extra files are created by default: one ~.csv~ and one ~.xlsx~ copy. To prevent this, set ~save_copies=None~.
+
+Here is an example:
+
+
+#+BEGIN_SRC python :exports code :results silent :tangle src-summary-and-reporting.py :cache yes :noweb no :session *Python* :linenums 1 :eval never
+mod.summary(compare=[mod2, mod3], fn='~/Documents/my-table.tex')
+#+END_SRC
+
+The code above saves the files ~my-table.tex~, ~my-table.csv~, and ~my-table.xlsx~ in the folder ~~/Documents/~.
+
