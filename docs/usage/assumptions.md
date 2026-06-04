@@ -13,7 +13,7 @@ assumptions:
 2.  **Statistical modeling assumptions**
 
 Details about each of them can be found in specialized literature
-(Ferrari, [2026](#sec-refs)).
+(Ferrari, [forthcoming](#sec-refs)).
 
 Although some checks for **statistical modeling assumptions** are
 provided, the `causalinf` module puts emphasis on the first type of
@@ -40,7 +40,7 @@ validity depends on three things:
     what the assumptions mean (and do not mean) in terms of the
     relations between the variables *used* and *omitted* in the model.
     The literature on causal inference methods provides guidance in this
-    regard. Ferrari ([2026](#sec-refs)) is the reference text used for
+    regard. Ferrari ([forthcoming](#sec-refs)) is the reference text used for
     the `causalinf` implementation.
 2.  *Domain knowledge expertise*, which refers to the understanding of
     how the data was generated and whether the assumptions plausibly
@@ -67,5 +67,5 @@ did.check_assumptions(<args>)
 
 ## References {#sec-refs}
 
--   Ferrari, D. (2026). The Identification of Causal Effects. Cambridge
-    Universty Press.
+-   Ferrari, D. (forthcoming). The Identification of Causal Effects.
+    Cambridge University Press.

@@ -2,7 +2,7 @@
 ** Prambule :noexport:
 
 #+NAME: save-plot
-#+BEGIN_SRC python :exports results :results output raw :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
+#+BEGIN_SRC python :exports results :results output raw :tangle src-gcm.py :cache no :noweb yes :session *Python* :var fn=""
 #
 from causalinf import options as opt
 opt.set_options(show_plot=False)
@@ -35,15 +35,15 @@ print(# "#+begin_src org \n"# # #
 Suppose we want to create the following Graphical Causal Model (GCM).
 
 # dag-example-0
-#+BEGIN_SRC python :exports results :results output raw :cache yes :noweb no :session *Python* :tangle src-scm.py
-from causalinf import scm
+#+BEGIN_SRC python :exports results :results output raw :cache yes :noweb no :session *Python* :tangle src-gcm.py
+from causalinf import gcm
 
-G = scm.examples('SoO, IV, and do identified with 1 confounder')
+G = gcm.examples('SoO, IV, and do identified with 1 confounder')
 G = G.set_nodes_role({})
 G.plot()
 #+END_SRC
 
-#+RESULTS[c7612b2b301f2eca37f33f96edd44ea8fef27ddd]:
+#+RESULTS[2114da31bd90149114c5a9210be0635225185393]:
 
 #+CALL: save-plot(fn="01-creating.gcm") 
 
@@ -52,11 +52,11 @@ G.plot()
 
 
 
-The graph object can be created using a string describing the graph and the class ~scm.DAG()~ from the module ~scm~ of ~causalinf~. There are many options to use for the string syntax. Any combination of the syntax options below will work.
+The graph object can be created using a string describing the graph and the class ~gcm.DAG()~ from the module ~gcm~ of ~causalinf~. There are many options to use for the string syntax. Any combination of the syntax options below will work.
 
 # dag-example-0-str
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
-from causalinf import scm
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm
 
 # option 1: group the parents of each node
 # --------
@@ -86,21 +86,21 @@ X1 -> Y
 X1 -> D
 """
 
-G = scm.DAG(dag)
+G = gcm.DAG(dag)
 print(G)
 
 #+END_SRC
 
-#+RESULTS[e09b63a30f3d352168e0ed7df8fc375c42172ac6]:
+#+RESULTS[b5863103eb15cad84a2e14c0053410439bae4da8]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
-Observed: X2, D, Z, Y, X1
+Observed: Z, X1, Y, X2, D
 #+end_src
 
 
@@ -109,40 +109,40 @@ Observed: X2, D, Z, Y, X1
 If no further information is provided, all variables (nodes) are assumed to be observed.
 # 
 
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
-from causalinf import scm 
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm 
 dag = """
 Y <- {X1, X2, D}
 D <- {X1, Z}
 Z <- X2
 """
-G = scm.DAG(dag)
+G = gcm.DAG(dag)
 print(G)
 #+END_SRC
 
-#+RESULTS[b4a0c46738714dca6b38c6fadee65a79b3ce9b8c]:
+#+RESULTS[4782757ff540a06219525328784e829e42a1be81]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
-Observed: X2, D, Z, Y, X1
+Observed: Z, X1, Y, X2, D
 #+end_src
 
 There are different ways to set the type of variable as /Exposure/, /Outcome/, or /Latent/ using a dictionary.
 
 # 
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
 var_types = {
     "Exposure": "D",
     "Outcome": "Y",
     "Latent": "X1"
 }
 # set when when creating the DAG:
-G = scm.DAG(dag, nodes_role=var_types)
+G = gcm.DAG(dag, nodes_role=var_types)
 
 # or using the set_nodes_role()
 G = G.set_nodes_role(var_types)
@@ -150,16 +150,16 @@ G = G.set_nodes_role(var_types)
 print(G)
 #+END_SRC
 
-#+RESULTS[6da884e60dc7f5892d009709050df2ac068d46d8]:
+#+RESULTS[c2afa04dd4470da271a38d7b49c356ef8df1b788]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
-Observed: X2, Z
+Observed: Z, X2
 Exposure: D
 Outcome: Y
 Latent: X1
@@ -168,46 +168,46 @@ Latent: X1
 
 But note that resetting the variable types changes all of them, and omitted information assumes that the variables is of the /Observed/ type. For instance:
 # 
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
 # or using the set_nodes_role()
 G = G.set_nodes_role({"Outcome": "D"})
 
 print(G)
 #+END_SRC
 
-#+RESULTS[df69d33f6f5017bce2a5db861fe1856eed42422a]:
+#+RESULTS[e201382f1b1f44b67a671e5fd70b68c631796c53]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
-Observed: X2, Z, Y, X1
+Observed: Z, X1, Y, X2
 Outcome: D
 #+end_src
 
 Arbitraty types can be used. These are used only for plotting. For analysis (identification and estimation), only the four basic ones (/Outcome/, /Exposure/, /Latent/, and /Observed/) are used.
 
 # 
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
 # or using the set_nodes_role()
 G = G.set_nodes_role({"My favorite var": "D"})
 
 print(G)
 #+END_SRC
 
-#+RESULTS[383473a1247c7e3c746d5afbf2adc0321d7922c2]:
+#+RESULTS[2c3fea59594ddc68eb058f9c277772ec588636f7]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
-Observed: X2, Z, Y, X1
+Observed: Z, X1, Y, X2
 My favorite var: D
 #+end_src
 
@@ -215,8 +215,8 @@ My favorite var: D
 
 It is possible to define /undirected/ and /bidirected/  edges as well with ~--~ and ~<->~. /Bidirected edges/ in the context of causal inference with DAGs indicate an omitted common cause between the variables connected by the bidirected arrow. /Undirected edges/, on the other hand, in the context of causal inference with DAGs, are used to represent the skeleton of the DAG or observationally equivalent edges. That is, they are edges whose direction cannot be decided inferentially using observational data unless other parametric assumptions are adopted. 
 
-#+BEGIN_SRC python :exports both :results output code :tangle src-scm.py :cache yes :noweb no :session *Python* :linenums 1
-from causalinf import scm 
+#+BEGIN_SRC python :exports both :results output code :tangle src-gcm.py :cache yes :noweb no :session *Python* :linenums 1
+from causalinf import gcm 
 dag = """
 Y <- {X1, X2, D}
 D <- {X1, Z}
@@ -224,31 +224,31 @@ Z <- X2
 Z2 <-> X2
 X1 -- Y
 """
-G = scm.DAG(dag)
+G = gcm.DAG(dag)
 print(G)
 #+END_SRC
 
-#+RESULTS[f4049ae5eb16108a35eadd6ff168cf0ecd36e1a2]:
+#+RESULTS[d4ef542004692b4289616cd87b29c540e9a39486]:
 #+begin_src python
 Graph:
 Z -> D
+X2 -> Y
+X1 -> D
+X1 -> Y
 X2 -> Z
 D -> Y
-X1 -> Y
-X1 -> D
-X2 -> Y
 Z2 <-> X2
-Y -- X1
-Observed: Z2, X2, D, Z, Y, X1
+X1 -- Y
+Observed: Z, X1, Z2, Y, X2, D
 #+end_src
 
 ** GCM Object
 
-The Graphical Causal Model (SCM) object has many useful properties.
+The Graphical Causal Model (GCM) object has many useful properties.
 
 # 
 #+BEGIN_SRC python :exports both :results output code :tangle src-creating.py :cache yes :noweb no :session *Python* :linenums 1
-from causalinf import scm 
+from causalinf import gcm 
 dag = """
 Y <- {X1, X2, D}
 D <- {X1, Z}
@@ -256,7 +256,7 @@ Z <- X2
 Z2 <-> X2
 X1 -- Y
 """
-G = scm.DAG(dag)
+G = gcm.DAG(dag)
 print(f"""
 Nodes:
 {G.nodes}
@@ -271,18 +271,18 @@ Undirected edges:
 """)
 #+END_SRC
 
-#+RESULTS[466de18f6897b96403164fb0308263eba06404d4]:
+#+RESULTS[2b4239e5fae8c49b89e722a28494db9ef6368678]:
 #+begin_src python
 
 Nodes:
-{'Z2', 'X2', 'D', 'Z', 'Y', 'X1'}
+{'Z', 'X1', 'Z2', 'Y', 'X2', 'D'}
 Nodes info:
-{'Z2': {'role': 'Observed', 'label': 'Z2'}, 'X2': {'role': 'Observed', 'label': 'X2'}, 'D': {'role': 'Observed', 'label': 'D'}, 'Z': {'role': 'Observed', 'label': 'Z'}, 'Y': {'role': 'Observed', 'label': 'Y'}, 'X1': {'role': 'Observed', 'label': 'X1'}}
+{'Z': {'role': 'Observed', 'label': 'Z'}, 'X1': {'role': 'Observed', 'label': 'X1'}, 'Z2': {'role': 'Observed', 'label': 'Z2'}, 'Y': {'role': 'Observed', 'label': 'Y'}, 'X2': {'role': 'Observed', 'label': 'X2'}, 'D': {'role': 'Observed', 'label': 'D'}}
 Directed edges:
-[('Z', 'D'), ('X2', 'Z'), ('D', 'Y'), ('X1', 'Y'), ('X1', 'D'), ('X2', 'Y')]
+[('Z', 'D'), ('X2', 'Y'), ('X1', 'D'), ('X1', 'Y'), ('X2', 'Z'), ('D', 'Y')]
 Bidirected edges:
 [(('Z2', 'X2'), ('X2', 'Z2'))]
 Undirected edges:
-[{'Y', 'X1'}]
+[{'X1', 'Y'}]
 #+end_src
 

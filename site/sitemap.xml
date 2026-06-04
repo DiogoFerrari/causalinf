@@ -2,158 +2,470 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://www.diogoferrari.com/causalinf/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/api/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/releases/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/api/gcm-DAG-plot/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/api/gcm-DAG/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/api/gcm-examples/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/api/scm-estimate/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/case-studies/did-card1994minimum/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/methods/cbn/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/case-studies/overview/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
-         <loc>https://www.diogoferrari.com/causalinf/methods/scm/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <loc>https://www.diogoferrari.com/causalinf/methods/overview/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/cbn/assumptions/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/cbn/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/cbn/introduction/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/cbn/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/did/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/did/introduction/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/did/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/experiment/experiment/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/experiment/introduction/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/assumptions/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/build/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/identification/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/introduction/</loc>
-         <lastmod>2025-11-05</lastmod>
-    </url>
-    <url>
-         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/plot/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/gcm/scm/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/gcm/visualize/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/iv/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/iv/introduction/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/iv/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/rd/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/rd/introduction/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/rd/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/scm/assumptions/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/scm/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/scm/introduction/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/scm/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/soo/estimate/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/methods/soo/introduction/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/methods/soo/report/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/SUMMARY/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/copy_style/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/examples/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/get_styles/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/make_style/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/assumptions/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/dseparated/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/dseparation/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/edge_add/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/edge_differences/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/edge_exist/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/edge_remove/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/edge_replace/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/equivalence_class/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/equivalent_dags/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/get_nodes/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/identification_analysis/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/identification_dict/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/local_independencies/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/mediators/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/observationally_equivalent/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/paths/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/plot/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/plot_equivalence_class/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/plot_equivalent_dags/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/plot_identification/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/plot_paths/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/print/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/set_edge_label/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/set_node_label/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/set_node_position/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm/DAG/set_nodes_role/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/examples/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/assumptions/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/dseparated/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/dseparation/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/edge_add/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/edge_differences/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/edge_exist/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/edge_remove/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/edge_replace/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/equivalence_class/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/equivalent_dags/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/get_nodes/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/identification_analysis/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/identification_dict/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/local_independencies/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/mediators/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/observationally_equivalent/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/paths/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/plot/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/plot_equivalence_class/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/plot_equivalent_dags/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/plot_identification/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/plot_paths/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/print/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/set_edge_label/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/set_node_label/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/set_node_position/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/gcm_original/DAG/set_nodes_role/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/models/glm/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/models/lsem/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/models/glm/linear/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/scm/estimate/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/simulate/lsem/</loc>
+         <lastmod>2026-06-04</lastmod>
+    </url>
+    <url>
+         <loc>https://www.diogoferrari.com/causalinf/reference/utils/summary/</loc>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/assumptions/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/estimation/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/examples/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/import/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/installation/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/overview/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/sensitivity/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/simulate-data/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
     <url>
          <loc>https://www.diogoferrari.com/causalinf/usage/summary-and-reporting/</loc>
-         <lastmod>2025-11-05</lastmod>
+         <lastmod>2026-06-04</lastmod>
     </url>
 </urlset>

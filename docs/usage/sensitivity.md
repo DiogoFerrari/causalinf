@@ -24,5 +24,4 @@ sens = soo.sensitivity_analysis(<args>)
 
 `<args>` vary across submodules depending on the method used.
 
-table
 

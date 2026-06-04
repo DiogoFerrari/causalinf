@@ -16,11 +16,9 @@ Some core functions in ~causalinf~ are standardized across the many submodules u
 | Summarize the results             | ~<submodule>.summary()~              |
 | Examples(1)                        | ~<submodule>examples()~      |
 
-/Note: (1) Each submodule contains some pre-defined examples to illustrate ~causalinf~ usage. See [[file:../examples/][Examples.]]/
+/(1) Each submodule contains some pre-defined examples to illustrate ~causalinf~ application. See [[file:../examples/][Examples.]]/
 
-For details of these functions, see [[file:../assumptions/][Basic Functions]] subsections.
+There are many other method-specific functions. See [[file:../methods/overview.md][Methods]] for details.
 
-For method-specific features, see [[file:../../methods/gcm/introduction][Methods]].
-
-For comprehensive applied examples, see [[file:../../case-studies/did-card1994minimum][Case Studies]].
+For comprehensive applied examples, see [[file:../../case-studies/overview][Case Studies]].
 

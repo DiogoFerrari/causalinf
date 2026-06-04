@@ -25,8 +25,8 @@ nav:
       - Introduction: methods/gcm/introduction.md
       - Build: methods/gcm/build.md
       - Visualize: methods/gcm/visualize.md
-      - Check Assumptions: methods/gcm/assumptions.md
       - Identification Analysis: methods/gcm/identification.md
+      - Check Assumptions: methods/gcm/assumptions.md
     - <font color="#a41034">Structural Causal Models (SCM)</font>:
       - Introduction: methods/scm/introduction.md
       # - Assumptions: methods/scm/assumptions.md

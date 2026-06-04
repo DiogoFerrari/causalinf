@@ -1,1 +1,388 @@
+## Overview
 
+A **Graphical Causal Model** (GCM) is a compact way to write assumptions
+about the data-generating process. The arrows, missing arrows, latent
+nodes, and bidirected edges all carry substantive claims about which
+causal relations are present, absent, observed, or omitted from the
+analysis. For that reason, checking assumptions in a GCM is different
+from running a conventional statistical diagnostic.
+
+The assumptions encoded by a DAG are not usually testable by a single
+statistical test. Instead, the goal is to make the assumptions explicit,
+inspect their role in the identification analysis, and compare
+alternative graphs when the substantive assumptions are uncertain. In
+`causalinf`, GCM assumptions can be retrieved with the method
+[assumptions()](../../..//reference/gcm/DAG/) after creating a `gcm.DAG`
+object.
+
+For identification analysis, `causalinf` currently records three main
+assumptions:
+
+| Assumption | What it concerns | Why it matters |
+|----|----|----|
+| Correct DAG | Connection between the real data-generating process and the graph | Identification results are conditional on the graph being a defensible representation of the relevant causal relations. |
+| Causal Markov Condition | Connection between the graph and the joint distribution of variables | It links graphical separation statements to conditional independence relations used by do-calculus and adjustment reasoning. |
+| Positivity (Overlap) | Support of the observed variables | It ensures that causal contrasts are defined and estimable in the relevant regions of the covariate distribution. |
+
+## Retrieve assumptions
+
+Consider this example:
+
+``` {.python exports="both" results="output code" tangle="src-assumptions.py" cache="yes" noweb="no" session="*Python*" linenums="1"}
+from causalinf import gcm
+
+# use a DAG provided with the package as an example
+G = gcm.examples("Front-door")
+G.identification_analysis()
+```
+
+``` python
+Searching for identification by adjustment variables for ACE...done!
+Searching for identification by adjustment variables for ACDE...done!
+Searching for identification by instrumental variables...done!
+Searching for identification by do-calculus...done!
+
+Exposure: D
+Outcome: Y        
+
+
+Average Causal Effect (ACE)
+---------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.
+
+Method: do-calculus (do)
+Identified: True
+Causal probability: p(Y | do(D)) = sum_{Z,Z2} p(Z|D)sum_{D} p(D,Z2)p(Y|Z,D,Z2)
+
+Method: Instrumental Variable (IV)
+Identified: False
+No instrument available in the DAG.                
+
+Average Controlled Direct Effect (ACDE)
+--------------------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.                
+
+Assumptions for identification:
+------------------------------
+1. Correct DAG
+   - Definition: DAG structure matches the true causal relations: (a) A directed arrow from a variable A to a variable B means that there is a causal effect of A on B, which may or may not be zero; (b) Absence of an arrow from a variable C to a variable D implies certainty that C does not cause D; (c) A bidirected arrow between a variable E and a variable F means that they share a common unobserved or latent cause.
+   - Scope: Connection between reality and the DAG model
+   - Role: Ensures adjustment sets and do-calculus yield the correct identifiable causal effect.
+   - Usage: identification
+   - Violation: Biased or invalid causal effect estimates and incorrect adjustment sets.            
+2. Causal Markov Condition (CMC)
+   - Definition: Each variable is independent of its non-descendants given its parents
+   - Scope: Connects the DAG and the conditional distribution of each variable
+   - Role: Links d-separation to conditional independencies, grounding do-calculus.
+   - Usage: identification, discovery
+   - Violation: Graph–distribution link breaks and identification results may be incorrect.            
+3. Positivity (Overlap)
+   - Definition: Each treatment level has a positive probability of occurring, including at all relevant levels of the adjustment variables if they are used for identification.
+   - Scope: Variables' distributions
+   - Role: Required for the g-formula, IPW, and many identification and estimation strategies.
+   - Usage: identification, estimation, inference
+   - Violation: Effects are undefined or non-estimable in certain regions of the covariate space.
+```
+
+Use `G.assumptions()` to retrieve the assumptions associated with a
+graph. The argument `category` selects the type of analysis for which
+the assumptions are used.
+
+``` {.python exports="both" results="output code" tangle="src-assumptions.py" cache="yes" noweb="no" session="*Python*" linenums="1"}
+G.assumptions()
+```
+
+``` python
+Categories available:
+- estimation
+- inference
+- identification
+- discovery
+```
+
+For identification, use `category="identification"`.
+
+``` {.python exports="code" results="silent" tangle="src-assumptions.py" cache="yes" noweb="no" eval="never" session="*Python*" linenums="1"}
+G.assumptions(category="identification")
+```
+
+``` python
+['DAG structure matches the true causal relations: (a) A directed arrow from a '
+ 'variable A to a variable B means that there is a causal effect of A on B, '
+ 'which may or may not be zero; (b) Absence of an arrow from a variable C to a '
+ 'variable D implies certainty that C does not cause D; (c) A bidirected arrow '
+ 'between a variable E and a variable F means that they share a common '
+ 'unobserved or latent cause.',
+ 'Each variable is independent of its non-descendants given its parents',
+ 'Each treatment level has a positive probability of occurring, including at '
+ 'all relevant levels of the adjustment variables if they are used for '
+ 'identification.']
+```
+
+To include more detail about the scope, role, and possible consequence
+of violating each assumption, use `verbose=True`.
+
+``` {.python exports="code" results="silent" tangle="src-assumptions.py" cache="yes" noweb="no" eval="never" session="*Python*" linenums="1"}
+G.assumptions(category="identification", verbose=True)
+```
+
+``` python
+Correct DAG
+   - Definition: DAG structure matches the true causal relations: (a) A directed arrow from a variable A to a variable B means that there is a causal effect of A on B, which may or may not be zero; (b) Absence of an arrow from a variable C to a variable D implies certainty that C does not cause D; (c) A bidirected arrow between a variable E and a variable F means that they share a common unobserved or latent cause.
+   - Scope: Connection between reality and the DAG model
+   - Role: Ensures adjustment sets and do-calculus yield the correct identifiable causal effect.
+   - Usage: identification
+   - Violation: Biased or invalid causal effect estimates and incorrect adjustment sets.            
+Causal Markov Condition (CMC)
+   - Definition: Each variable is independent of its non-descendants given its parents
+   - Scope: Connects the DAG and the conditional distribution of each variable
+   - Role: Links d-separation to conditional independencies, grounding do-calculus.
+   - Usage: identification, discovery
+   - Violation: Graph–distribution link breaks and identification results may be incorrect.            
+Positivity (Overlap)
+   - Definition: Each treatment level has a positive probability of occurring, including at all relevant levels of the adjustment variables if they are used for identification.
+   - Scope: Variables' distributions
+   - Role: Required for the g-formula, IPW, and many identification and estimation strategies.
+   - Usage: identification, estimation, inference
+   - Violation: Effects are undefined or non-estimable in certain regions of the covariate space.
+```
+
+The verbose output is useful when preparing a report because it
+separates the definition of each assumption from its role in the
+analysis.
+
+## Interpret the assumptions
+
+### Correct DAG
+
+The **Correct DAG** assumption says that the graph is a defensible
+representation of the causal relations relevant to the estimand. A
+directed arrow means that a causal effect may exist; the absence of an
+arrow means that the analyst is ruling out that direct causal effect;
+and a bidirected arrow means that the two variables share an unobserved
+or latent common cause.
+
+This is the central modeling assumption. If it fails, the identification
+result may still be unaffected in some cases, but in other cases the
+selected adjustment set, instrumental-variable strategy, or do-calculus
+result can be wrong.
+
+### Causal Markov Condition
+
+The **Causal Markov Condition** says that each variable is independent
+of its non-descendants after conditioning on its parents. This
+assumption is what makes graphical reasoning operational: it connects
+d-separation in the DAG to conditional independence restrictions in the
+joint distribution.
+
+For identification, this assumption supports the use of graphical
+criteria such as adjustment and do-calculus. If the distribution does
+not behave as the DAG implies, then graphical identification claims may
+not correspond to the target causal effect.
+
+### Positivity
+
+**Positivity** or **overlap** says that each treatment level has
+positive probability in the relevant parts of the covariate
+distribution. When adjustment variables are used for identification,
+each treatment level must be possible at the relevant values of those
+adjustment variables.
+
+This assumption is not only conceptual; it also affects estimation. If
+overlap is absent, the causal effect may be undefined for part of the
+target population or may require extrapolation beyond the observed data.
+
+## Print assumptions with identification output
+
+Assumptions can also be printed together with identification results.
+This is useful when the assumptions need to travel with the identified
+estimand in a report.
+
+``` {.python exports="code" results="code output" tangle="src-assumptions.py" cache="yes" noweb="no" session="*Python*" linenums="1"}
+from causalinf import gcm
+
+G = gcm.examples("Front-door")
+G.identification_analysis(verbose=False)
+G.print('identification', identification={"print_assumptions":True})
+```
+
+``` python
+
+Exposure: D
+Outcome: Y        
+
+
+Average Causal Effect (ACE)
+---------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.
+
+Method: do-calculus (do)
+Identified: True
+Causal probability: p(Y | do(D)) = sum_{Z,Z2} p(Z|D)sum_{D} p(D,Z2)p(Y|Z,D,Z2)
+
+Method: Instrumental Variable (IV)
+Identified: False
+No instrument available in the DAG.                
+
+Average Controlled Direct Effect (ACDE)
+--------------------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.                
+
+Assumptions for identification:
+------------------------------
+1. Correct DAG
+   - Definition: DAG structure matches the true causal relations: (a) A directed arrow from a variable A to a variable B means that there is a causal effect of A on B, which may or may not be zero; (b) Absence of an arrow from a variable C to a variable D implies certainty that C does not cause D; (c) A bidirected arrow between a variable E and a variable F means that they share a common unobserved or latent cause.
+   - Scope: Connection between reality and the DAG model
+   - Role: Ensures adjustment sets and do-calculus yield the correct identifiable causal effect.
+   - Usage: identification
+   - Violation: Biased or invalid causal effect estimates and incorrect adjustment sets.            
+2. Causal Markov Condition (CMC)
+   - Definition: Each variable is independent of its non-descendants given its parents
+   - Scope: Connects the DAG and the conditional distribution of each variable
+   - Role: Links d-separation to conditional independencies, grounding do-calculus.
+   - Usage: identification, discovery
+   - Violation: Graph–distribution link breaks and identification results may be incorrect.            
+3. Positivity (Overlap)
+   - Definition: Each treatment level has a positive probability of occurring, including at all relevant levels of the adjustment variables if they are used for identification.
+   - Scope: Variables' distributions
+   - Role: Required for the g-formula, IPW, and many identification and estimation strategies.
+   - Usage: identification, estimation, inference
+   - Violation: Effects are undefined or non-estimable in certain regions of the covariate space.
+```
+
+The printed assumptions correspond to the identification category. To
+make the output more detailed, set the global options or pass the
+corresponding print options in the identification print configuration.
+
+``` {.python exports="both" results="code output" tangle="src-assumptions.py" cache="yes" noweb="no" session="*Python*" linenums="1"}
+from causalinf import options as opt
+
+opt.set_options(print_assumptions=True, print_assumptions_verbose=True)
+G.print(what="identification")
+```
+
+``` python
+
+Exposure: D
+Outcome: Y        
+
+
+Average Causal Effect (ACE)
+---------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.
+
+Method: do-calculus (do)
+Identified: True
+Causal probability: p(Y | do(D)) = sum_{Z,Z2} p(Z|D)sum_{D} p(D,Z2)p(Y|Z,D,Z2)
+
+Method: Instrumental Variable (IV)
+Identified: False
+No instrument available in the DAG.                
+
+Average Controlled Direct Effect (ACDE)
+--------------------------------            
+Method: Selection on Observables (SoO)
+Identified: False
+Not identifiable by adjustment.                
+
+Assumptions for identification:
+------------------------------
+1. Correct DAG
+   - Definition: DAG structure matches the true causal relations: (a) A directed arrow from a variable A to a variable B means that there is a causal effect of A on B, which may or may not be zero; (b) Absence of an arrow from a variable C to a variable D implies certainty that C does not cause D; (c) A bidirected arrow between a variable E and a variable F means that they share a common unobserved or latent cause.
+   - Scope: Connection between reality and the DAG model
+   - Role: Ensures adjustment sets and do-calculus yield the correct identifiable causal effect.
+   - Usage: identification
+   - Violation: Biased or invalid causal effect estimates and incorrect adjustment sets.            
+2. Causal Markov Condition (CMC)
+   - Definition: Each variable is independent of its non-descendants given its parents
+   - Scope: Connects the DAG and the conditional distribution of each variable
+   - Role: Links d-separation to conditional independencies, grounding do-calculus.
+   - Usage: identification, discovery
+   - Violation: Graph–distribution link breaks and identification results may be incorrect.            
+3. Positivity (Overlap)
+   - Definition: Each treatment level has a positive probability of occurring, including at all relevant levels of the adjustment variables if they are used for identification.
+   - Scope: Variables' distributions
+   - Role: Required for the g-formula, IPW, and many identification and estimation strategies.
+   - Usage: identification, estimation, inference
+   - Violation: Effects are undefined or non-estimable in certain regions of the covariate space.
+```
+
+## Compare alternative graphs
+
+When an assumption is uncertain, a useful workflow is to create a second
+graph that represents the alternative causal claim and then repeat the
+identification analysis. This does not test which graph is true, but it
+clarifies whether the causal conclusion depends on the disputed
+assumption.
+
+For example, the first graph below assumes no unobserved common cause
+between `D` and `Y`. The second graph adds a bidirected edge,
+representing an omitted common cause.
+
+``` {.python exports="code" results="silent" tangle="src-assumptions.py" cache="yes" noweb="no" session="*Python*" linenums="1" eval="never"}
+from causalinf import gcm
+
+dag_without_latent = """
+Z -> D
+D -> Y
+Z -> Y
+"""
+
+dag_with_latent = """
+Z -> D
+D -> Y
+Z -> Y
+D <-> Y
+"""
+
+roles = {"Exposure": "D", "Outcome": "Y"}
+
+G1 = gcm.DAG(dag_without_latent, nodes_role=roles)
+G2 = gcm.DAG(dag_with_latent, nodes_role=roles)
+
+G1.identification_analysis(verbose=False)
+G2.identification_analysis(verbose=False)
+```
+
+The comparison answers a practical question: does the intended
+identification strategy survive the alternative graph, or does the
+causal effect become unidentified under that revised assumption?
+
+## Practical checklist
+
+Before moving from a GCM to estimation, it is useful to record the
+following:
+
+1.  Which arrows are included because a direct causal effect is
+    plausible?
+2.  Which arrows are omitted because a direct causal effect is being
+    ruled out?
+3.  Which variables are observed, and which relevant common causes are
+    represented as latent or bidirected edges?
+4.  Which adjustment, instrumental-variable, or do-calculus strategy is
+    implied by the graph?
+5.  Which parts of the graph are uncertain enough to justify a
+    sensitivity analysis or an alternative identification analysis?
+6.  Whether positivity is plausible for the treatment and adjustment
+    variables used by the identification strategy.
+
+This checklist should be read together with the more general discussion
+in [Model Assumptions](../../../usage/assumptions) and the
+identification workflow in [Identification Analysis](../identification).
+
+## References {#sec-refs}
+
+- Ferrari, D. (forthcoming). The Identification of Causal Effects.
+  Cambridge University Press.
+- Pearl, J. (2009). Causality: Models, Reasoning and Inference.
+  Cambridge University Press.

@@ -1,7 +1,7 @@
 
 
 #+NAME: save-plot
-#+BEGIN_SRC python :exports results :results silent :tangle src-scm.py :cache no :noweb yes :session *Python* :var fn=""
+#+BEGIN_SRC python :exports results :results silent :tangle src-gcm.py :cache no :noweb yes :session *Python* :var fn=""
 import matplotlib.pyplot as plt
 from causalinf import options as opt
 import os
@@ -29,14 +29,14 @@ print(# "#+begin_src org \n"# # #
 For instance, consider the following graph:
 
 # 
-#+BEGIN_SRC python :exports none :results silent :cache yes :noweb no :session *Python* :tangle src-scm.py :linenums 1
-from causalinf import scm
+#+BEGIN_SRC python :exports none :results silent :cache yes :noweb no :session *Python* :tangle src-gcm.py :linenums 1
+from causalinf import gcm
 dag = """
 X -> {Z, Y}
 Z -> Y
 """
 pos = {"X":(0,0), "Y":(1, 0), "Z":(0.5, 0.5)}
-G = scm.DAG(dag, nodes_position=pos)
+G = gcm.DAG(dag, nodes_position=pos)
 G.plot(figsize=[4,3])
 #+END_SRC
 
@@ -55,8 +55,8 @@ It states that:
 
 On the other hand, consider these graphs:
 
-#+BEGIN_SRC python :exports none :results silent :cache yes :noweb no :session *Python* :tangle src-scm.py :linenums 1
-from causalinf import scm
+#+BEGIN_SRC python :exports none :results silent :cache yes :noweb no :session *Python* :tangle src-gcm.py :linenums 1
+from causalinf import gcm
 dag1 = """
 X -> {Z, Y}
 Z -> Y
@@ -70,8 +70,8 @@ U -> Z
 """
 pos1 = {"X":(0,0), "Y":(1, 0), "Z":(0.5, 0.5)}
 pos2 = {"X":(0,0), "Y":(1, 0), "Z":(0.5, 0.5), "U":(1, .5)}
-G1 = scm.DAG(dag1, nodes_position=pos1)
-G2 = scm.DAG(dag2, nodes_position=pos2, nodes_role={"Latent": 'U'})
+G1 = gcm.DAG(dag1, nodes_position=pos1)
+G2 = gcm.DAG(dag2, nodes_position=pos2, nodes_role={"Latent": 'U'})
 fig, ax = plt.subplots(nrows=1, ncols=2, figsize=[10, 3], tight_layout=True)
 fig.show()
 #

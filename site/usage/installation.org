@@ -6,15 +6,15 @@ hide:
 ---
 
 
-You can install causalinf with =pip=:
+You can install ~causalinf~ with ~pip~:
 
 #+begin_src sh
-$ pip3 install causalinf
+$ pip install causalinf
 #+end_src
 
 #+RESULTS:
 
-Or through =conda=:
+Or through ~conda~:
 
 #+begin_src sh
 $ conda install -c conda-forge causalinf

@@ -1,3 +1,5 @@
+# tmp
+import matplotlib.pyplot as plt
 
 class estimate():
     
@@ -28,6 +30,13 @@ class estimate():
         
     def plot_effects(self):
         pass
+
+class parallel_trends():
+
+    def __new__(self):
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=[10, 6], tight_layout=True)
+        #
+        ax.plot()
 
 
 

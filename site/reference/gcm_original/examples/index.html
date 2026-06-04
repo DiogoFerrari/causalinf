@@ -1,0 +1,2540 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://www.diogoferrari.com/causalinf/reference/gcm_original/examples/">
+      
+      
+        <link rel="prev" href="../DAG/set_nodes_role/">
+      
+      
+        <link rel="next" href="../../../releases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>examples - Causal Inference (causalinf)</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../_css/extra.css">
+    
+      <link rel="stylesheet" href="../../../_css/stylesheets.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="white" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#signatureparameters" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Causal Inference (causalinf)" class="md-header__button md-logo" aria-label="Causal Inference (causalinf)" data-md-component="logo">
+      
+  <img src="../../../_css/causalinf-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Causal Inference (causalinf)
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              <code class='doc-symbol doc-symbol-toc doc-symbol-class'></code> examples
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="white" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DiogoFerrari/causalinf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    causalinf
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Overview
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../usage/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Usage
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../methods/overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Methods
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../case-studies/overview/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Case Studies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../gcm/DAG/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  API reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../releases/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Releases
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Causal Inference (causalinf)" class="md-nav__button md-logo" aria-label="Causal Inference (causalinf)" data-md-component="logo">
+      
+  <img src="../../../_css/causalinf-icon.png" alt="logo">
+
+    </a>
+    Causal Inference (causalinf)
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DiogoFerrari/causalinf" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    causalinf
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../usage/installation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../methods/overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methods
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../case-studies/overview/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Case Studies
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../gcm/DAG/assumptions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01) Graphical Causal Models (GCM)
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../scm/estimate/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02) Structural Causal Models (SCM)
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../models/glm/linear/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Models
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../utils/summary/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04) Utils
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../simulate/lsem/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05) Simulate Data
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06) gcm_original
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    06) gcm_original
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../DAG/assumptions/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <code class='doc-symbol doc-symbol-toc doc-symbol-class'></code> DAG
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <code class='doc-symbol doc-symbol-toc doc-symbol-class'></code> examples
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <code class='doc-symbol doc-symbol-toc doc-symbol-class'></code> examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#signatureparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signature/Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#signatureparameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signature/Parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Overview
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../gcm/DAG/assumptions/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    API reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../DAG/assumptions/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    06) gcm_original
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1><code class='doc-symbol doc-symbol-toc doc-symbol-class'></code> examples</h1>
+
+<h2 id="signatureparameters">Signature/Parameters</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">examples</span>
+</span></code></pre></div>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Retrieve a predefined example DAG or list available examples.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>which</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Name of the example to load. When <code>None</code>, the function prints the
+list of available examples (optionally with their DAG representations)
+and returns <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>print_DAG</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>True</code> and <code>which</code> is <code>None</code>, print the textual
+representation of each example DAG. Defaults to <code>False</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>*args</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional positional arguments forwarded to the example factory.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>**kws</code>
+            </td>
+            <td>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Additional keyword arguments forwarded to the example factory.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="gcm_original.DAG">DAG</span> or None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Instantiated <code>DAG</code> object when <code>which</code> matches an example; otherwise
+<code>None</code>.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Examples:</span></p>
+    <div class="language-pycon highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">examples</span><span class="p">()</span> <span class="c1"># print the list of predefined examples</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">examples</span><span class="p">(</span><span class="s1">&#39;Frontdoor&#39;</span><span class="p">)</span> <span class="c1"># load DAG from predefined example</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">DAG</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">True</span>
+</span></code></pre></div>
+
+
+
+
+
+
+
+
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>causalinf/gcm_original.py</code></summary>
+                <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4124">4124</a></span>
+<span class="normal"><a href="#__codelineno-0-4125">4125</a></span>
+<span class="normal"><a href="#__codelineno-0-4126">4126</a></span>
+<span class="normal"><a href="#__codelineno-0-4127">4127</a></span>
+<span class="normal"><a href="#__codelineno-0-4128">4128</a></span>
+<span class="normal"><a href="#__codelineno-0-4129">4129</a></span>
+<span class="normal"><a href="#__codelineno-0-4130">4130</a></span>
+<span class="normal"><a href="#__codelineno-0-4131">4131</a></span>
+<span class="normal"><a href="#__codelineno-0-4132">4132</a></span>
+<span class="normal"><a href="#__codelineno-0-4133">4133</a></span>
+<span class="normal"><a href="#__codelineno-0-4134">4134</a></span>
+<span class="normal"><a href="#__codelineno-0-4135">4135</a></span>
+<span class="normal"><a href="#__codelineno-0-4136">4136</a></span>
+<span class="normal"><a href="#__codelineno-0-4137">4137</a></span>
+<span class="normal"><a href="#__codelineno-0-4138">4138</a></span>
+<span class="normal"><a href="#__codelineno-0-4139">4139</a></span>
+<span class="normal"><a href="#__codelineno-0-4140">4140</a></span>
+<span class="normal"><a href="#__codelineno-0-4141">4141</a></span>
+<span class="normal"><a href="#__codelineno-0-4142">4142</a></span>
+<span class="normal"><a href="#__codelineno-0-4143">4143</a></span>
+<span class="normal"><a href="#__codelineno-0-4144">4144</a></span>
+<span class="normal"><a href="#__codelineno-0-4145">4145</a></span>
+<span class="normal"><a href="#__codelineno-0-4146">4146</a></span>
+<span class="normal"><a href="#__codelineno-0-4147">4147</a></span>
+<span class="normal"><a href="#__codelineno-0-4148">4148</a></span>
+<span class="normal"><a href="#__codelineno-0-4149">4149</a></span>
+<span class="normal"><a href="#__codelineno-0-4150">4150</a></span>
+<span class="normal"><a href="#__codelineno-0-4151">4151</a></span>
+<span class="normal"><a href="#__codelineno-0-4152">4152</a></span>
+<span class="normal"><a href="#__codelineno-0-4153">4153</a></span>
+<span class="normal"><a href="#__codelineno-0-4154">4154</a></span>
+<span class="normal"><a href="#__codelineno-0-4155">4155</a></span>
+<span class="normal"><a href="#__codelineno-0-4156">4156</a></span>
+<span class="normal"><a href="#__codelineno-0-4157">4157</a></span>
+<span class="normal"><a href="#__codelineno-0-4158">4158</a></span>
+<span class="normal"><a href="#__codelineno-0-4159">4159</a></span>
+<span class="normal"><a href="#__codelineno-0-4160">4160</a></span>
+<span class="normal"><a href="#__codelineno-0-4161">4161</a></span>
+<span class="normal"><a href="#__codelineno-0-4162">4162</a></span>
+<span class="normal"><a href="#__codelineno-0-4163">4163</a></span>
+<span class="normal"><a href="#__codelineno-0-4164">4164</a></span>
+<span class="normal"><a href="#__codelineno-0-4165">4165</a></span>
+<span class="normal"><a href="#__codelineno-0-4166">4166</a></span>
+<span class="normal"><a href="#__codelineno-0-4167">4167</a></span>
+<span class="normal"><a href="#__codelineno-0-4168">4168</a></span>
+<span class="normal"><a href="#__codelineno-0-4169">4169</a></span>
+<span class="normal"><a href="#__codelineno-0-4170">4170</a></span>
+<span class="normal"><a href="#__codelineno-0-4171">4171</a></span>
+<span class="normal"><a href="#__codelineno-0-4172">4172</a></span>
+<span class="normal"><a href="#__codelineno-0-4173">4173</a></span>
+<span class="normal"><a href="#__codelineno-0-4174">4174</a></span>
+<span class="normal"><a href="#__codelineno-0-4175">4175</a></span>
+<span class="normal"><a href="#__codelineno-0-4176">4176</a></span>
+<span class="normal"><a href="#__codelineno-0-4177">4177</a></span>
+<span class="normal"><a href="#__codelineno-0-4178">4178</a></span>
+<span class="normal"><a href="#__codelineno-0-4179">4179</a></span>
+<span class="normal"><a href="#__codelineno-0-4180">4180</a></span>
+<span class="normal"><a href="#__codelineno-0-4181">4181</a></span>
+<span class="normal"><a href="#__codelineno-0-4182">4182</a></span>
+<span class="normal"><a href="#__codelineno-0-4183">4183</a></span>
+<span class="normal"><a href="#__codelineno-0-4184">4184</a></span>
+<span class="normal"><a href="#__codelineno-0-4185">4185</a></span>
+<span class="normal"><a href="#__codelineno-0-4186">4186</a></span>
+<span class="normal"><a href="#__codelineno-0-4187">4187</a></span>
+<span class="normal"><a href="#__codelineno-0-4188">4188</a></span>
+<span class="normal"><a href="#__codelineno-0-4189">4189</a></span>
+<span class="normal"><a href="#__codelineno-0-4190">4190</a></span>
+<span class="normal"><a href="#__codelineno-0-4191">4191</a></span>
+<span class="normal"><a href="#__codelineno-0-4192">4192</a></span>
+<span class="normal"><a href="#__codelineno-0-4193">4193</a></span>
+<span class="normal"><a href="#__codelineno-0-4194">4194</a></span>
+<span class="normal"><a href="#__codelineno-0-4195">4195</a></span>
+<span class="normal"><a href="#__codelineno-0-4196">4196</a></span>
+<span class="normal"><a href="#__codelineno-0-4197">4197</a></span>
+<span class="normal"><a href="#__codelineno-0-4198">4198</a></span>
+<span class="normal"><a href="#__codelineno-0-4199">4199</a></span>
+<span class="normal"><a href="#__codelineno-0-4200">4200</a></span>
+<span class="normal"><a href="#__codelineno-0-4201">4201</a></span>
+<span class="normal"><a href="#__codelineno-0-4202">4202</a></span>
+<span class="normal"><a href="#__codelineno-0-4203">4203</a></span>
+<span class="normal"><a href="#__codelineno-0-4204">4204</a></span>
+<span class="normal"><a href="#__codelineno-0-4205">4205</a></span>
+<span class="normal"><a href="#__codelineno-0-4206">4206</a></span>
+<span class="normal"><a href="#__codelineno-0-4207">4207</a></span>
+<span class="normal"><a href="#__codelineno-0-4208">4208</a></span>
+<span class="normal"><a href="#__codelineno-0-4209">4209</a></span>
+<span class="normal"><a href="#__codelineno-0-4210">4210</a></span>
+<span class="normal"><a href="#__codelineno-0-4211">4211</a></span>
+<span class="normal"><a href="#__codelineno-0-4212">4212</a></span>
+<span class="normal"><a href="#__codelineno-0-4213">4213</a></span>
+<span class="normal"><a href="#__codelineno-0-4214">4214</a></span>
+<span class="normal"><a href="#__codelineno-0-4215">4215</a></span>
+<span class="normal"><a href="#__codelineno-0-4216">4216</a></span>
+<span class="normal"><a href="#__codelineno-0-4217">4217</a></span>
+<span class="normal"><a href="#__codelineno-0-4218">4218</a></span>
+<span class="normal"><a href="#__codelineno-0-4219">4219</a></span>
+<span class="normal"><a href="#__codelineno-0-4220">4220</a></span>
+<span class="normal"><a href="#__codelineno-0-4221">4221</a></span>
+<span class="normal"><a href="#__codelineno-0-4222">4222</a></span>
+<span class="normal"><a href="#__codelineno-0-4223">4223</a></span>
+<span class="normal"><a href="#__codelineno-0-4224">4224</a></span>
+<span class="normal"><a href="#__codelineno-0-4225">4225</a></span>
+<span class="normal"><a href="#__codelineno-0-4226">4226</a></span>
+<span class="normal"><a href="#__codelineno-0-4227">4227</a></span>
+<span class="normal"><a href="#__codelineno-0-4228">4228</a></span>
+<span class="normal"><a href="#__codelineno-0-4229">4229</a></span>
+<span class="normal"><a href="#__codelineno-0-4230">4230</a></span>
+<span class="normal"><a href="#__codelineno-0-4231">4231</a></span>
+<span class="normal"><a href="#__codelineno-0-4232">4232</a></span>
+<span class="normal"><a href="#__codelineno-0-4233">4233</a></span>
+<span class="normal"><a href="#__codelineno-0-4234">4234</a></span>
+<span class="normal"><a href="#__codelineno-0-4235">4235</a></span>
+<span class="normal"><a href="#__codelineno-0-4236">4236</a></span>
+<span class="normal"><a href="#__codelineno-0-4237">4237</a></span>
+<span class="normal"><a href="#__codelineno-0-4238">4238</a></span>
+<span class="normal"><a href="#__codelineno-0-4239">4239</a></span>
+<span class="normal"><a href="#__codelineno-0-4240">4240</a></span>
+<span class="normal"><a href="#__codelineno-0-4241">4241</a></span>
+<span class="normal"><a href="#__codelineno-0-4242">4242</a></span>
+<span class="normal"><a href="#__codelineno-0-4243">4243</a></span>
+<span class="normal"><a href="#__codelineno-0-4244">4244</a></span>
+<span class="normal"><a href="#__codelineno-0-4245">4245</a></span>
+<span class="normal"><a href="#__codelineno-0-4246">4246</a></span>
+<span class="normal"><a href="#__codelineno-0-4247">4247</a></span>
+<span class="normal"><a href="#__codelineno-0-4248">4248</a></span>
+<span class="normal"><a href="#__codelineno-0-4249">4249</a></span>
+<span class="normal"><a href="#__codelineno-0-4250">4250</a></span>
+<span class="normal"><a href="#__codelineno-0-4251">4251</a></span>
+<span class="normal"><a href="#__codelineno-0-4252">4252</a></span>
+<span class="normal"><a href="#__codelineno-0-4253">4253</a></span>
+<span class="normal"><a href="#__codelineno-0-4254">4254</a></span>
+<span class="normal"><a href="#__codelineno-0-4255">4255</a></span>
+<span class="normal"><a href="#__codelineno-0-4256">4256</a></span>
+<span class="normal"><a href="#__codelineno-0-4257">4257</a></span>
+<span class="normal"><a href="#__codelineno-0-4258">4258</a></span>
+<span class="normal"><a href="#__codelineno-0-4259">4259</a></span>
+<span class="normal"><a href="#__codelineno-0-4260">4260</a></span>
+<span class="normal"><a href="#__codelineno-0-4261">4261</a></span>
+<span class="normal"><a href="#__codelineno-0-4262">4262</a></span>
+<span class="normal"><a href="#__codelineno-0-4263">4263</a></span>
+<span class="normal"><a href="#__codelineno-0-4264">4264</a></span>
+<span class="normal"><a href="#__codelineno-0-4265">4265</a></span>
+<span class="normal"><a href="#__codelineno-0-4266">4266</a></span>
+<span class="normal"><a href="#__codelineno-0-4267">4267</a></span>
+<span class="normal"><a href="#__codelineno-0-4268">4268</a></span>
+<span class="normal"><a href="#__codelineno-0-4269">4269</a></span>
+<span class="normal"><a href="#__codelineno-0-4270">4270</a></span>
+<span class="normal"><a href="#__codelineno-0-4271">4271</a></span>
+<span class="normal"><a href="#__codelineno-0-4272">4272</a></span>
+<span class="normal"><a href="#__codelineno-0-4273">4273</a></span>
+<span class="normal"><a href="#__codelineno-0-4274">4274</a></span>
+<span class="normal"><a href="#__codelineno-0-4275">4275</a></span>
+<span class="normal"><a href="#__codelineno-0-4276">4276</a></span>
+<span class="normal"><a href="#__codelineno-0-4277">4277</a></span>
+<span class="normal"><a href="#__codelineno-0-4278">4278</a></span>
+<span class="normal"><a href="#__codelineno-0-4279">4279</a></span>
+<span class="normal"><a href="#__codelineno-0-4280">4280</a></span>
+<span class="normal"><a href="#__codelineno-0-4281">4281</a></span>
+<span class="normal"><a href="#__codelineno-0-4282">4282</a></span>
+<span class="normal"><a href="#__codelineno-0-4283">4283</a></span>
+<span class="normal"><a href="#__codelineno-0-4284">4284</a></span>
+<span class="normal"><a href="#__codelineno-0-4285">4285</a></span>
+<span class="normal"><a href="#__codelineno-0-4286">4286</a></span>
+<span class="normal"><a href="#__codelineno-0-4287">4287</a></span>
+<span class="normal"><a href="#__codelineno-0-4288">4288</a></span>
+<span class="normal"><a href="#__codelineno-0-4289">4289</a></span>
+<span class="normal"><a href="#__codelineno-0-4290">4290</a></span>
+<span class="normal"><a href="#__codelineno-0-4291">4291</a></span>
+<span class="normal"><a href="#__codelineno-0-4292">4292</a></span>
+<span class="normal"><a href="#__codelineno-0-4293">4293</a></span>
+<span class="normal"><a href="#__codelineno-0-4294">4294</a></span>
+<span class="normal"><a href="#__codelineno-0-4295">4295</a></span>
+<span class="normal"><a href="#__codelineno-0-4296">4296</a></span>
+<span class="normal"><a href="#__codelineno-0-4297">4297</a></span>
+<span class="normal"><a href="#__codelineno-0-4298">4298</a></span>
+<span class="normal"><a href="#__codelineno-0-4299">4299</a></span>
+<span class="normal"><a href="#__codelineno-0-4300">4300</a></span>
+<span class="normal"><a href="#__codelineno-0-4301">4301</a></span>
+<span class="normal"><a href="#__codelineno-0-4302">4302</a></span>
+<span class="normal"><a href="#__codelineno-0-4303">4303</a></span>
+<span class="normal"><a href="#__codelineno-0-4304">4304</a></span>
+<span class="normal"><a href="#__codelineno-0-4305">4305</a></span>
+<span class="normal"><a href="#__codelineno-0-4306">4306</a></span>
+<span class="normal"><a href="#__codelineno-0-4307">4307</a></span>
+<span class="normal"><a href="#__codelineno-0-4308">4308</a></span>
+<span class="normal"><a href="#__codelineno-0-4309">4309</a></span>
+<span class="normal"><a href="#__codelineno-0-4310">4310</a></span>
+<span class="normal"><a href="#__codelineno-0-4311">4311</a></span>
+<span class="normal"><a href="#__codelineno-0-4312">4312</a></span>
+<span class="normal"><a href="#__codelineno-0-4313">4313</a></span>
+<span class="normal"><a href="#__codelineno-0-4314">4314</a></span>
+<span class="normal"><a href="#__codelineno-0-4315">4315</a></span>
+<span class="normal"><a href="#__codelineno-0-4316">4316</a></span>
+<span class="normal"><a href="#__codelineno-0-4317">4317</a></span>
+<span class="normal"><a href="#__codelineno-0-4318">4318</a></span>
+<span class="normal"><a href="#__codelineno-0-4319">4319</a></span>
+<span class="normal"><a href="#__codelineno-0-4320">4320</a></span>
+<span class="normal"><a href="#__codelineno-0-4321">4321</a></span>
+<span class="normal"><a href="#__codelineno-0-4322">4322</a></span>
+<span class="normal"><a href="#__codelineno-0-4323">4323</a></span>
+<span class="normal"><a href="#__codelineno-0-4324">4324</a></span>
+<span class="normal"><a href="#__codelineno-0-4325">4325</a></span>
+<span class="normal"><a href="#__codelineno-0-4326">4326</a></span>
+<span class="normal"><a href="#__codelineno-0-4327">4327</a></span>
+<span class="normal"><a href="#__codelineno-0-4328">4328</a></span>
+<span class="normal"><a href="#__codelineno-0-4329">4329</a></span>
+<span class="normal"><a href="#__codelineno-0-4330">4330</a></span>
+<span class="normal"><a href="#__codelineno-0-4331">4331</a></span>
+<span class="normal"><a href="#__codelineno-0-4332">4332</a></span>
+<span class="normal"><a href="#__codelineno-0-4333">4333</a></span>
+<span class="normal"><a href="#__codelineno-0-4334">4334</a></span>
+<span class="normal"><a href="#__codelineno-0-4335">4335</a></span>
+<span class="normal"><a href="#__codelineno-0-4336">4336</a></span>
+<span class="normal"><a href="#__codelineno-0-4337">4337</a></span>
+<span class="normal"><a href="#__codelineno-0-4338">4338</a></span>
+<span class="normal"><a href="#__codelineno-0-4339">4339</a></span>
+<span class="normal"><a href="#__codelineno-0-4340">4340</a></span>
+<span class="normal"><a href="#__codelineno-0-4341">4341</a></span>
+<span class="normal"><a href="#__codelineno-0-4342">4342</a></span>
+<span class="normal"><a href="#__codelineno-0-4343">4343</a></span>
+<span class="normal"><a href="#__codelineno-0-4344">4344</a></span>
+<span class="normal"><a href="#__codelineno-0-4345">4345</a></span>
+<span class="normal"><a href="#__codelineno-0-4346">4346</a></span>
+<span class="normal"><a href="#__codelineno-0-4347">4347</a></span>
+<span class="normal"><a href="#__codelineno-0-4348">4348</a></span>
+<span class="normal"><a href="#__codelineno-0-4349">4349</a></span>
+<span class="normal"><a href="#__codelineno-0-4350">4350</a></span>
+<span class="normal"><a href="#__codelineno-0-4351">4351</a></span>
+<span class="normal"><a href="#__codelineno-0-4352">4352</a></span>
+<span class="normal"><a href="#__codelineno-0-4353">4353</a></span>
+<span class="normal"><a href="#__codelineno-0-4354">4354</a></span>
+<span class="normal"><a href="#__codelineno-0-4355">4355</a></span>
+<span class="normal"><a href="#__codelineno-0-4356">4356</a></span>
+<span class="normal"><a href="#__codelineno-0-4357">4357</a></span>
+<span class="normal"><a href="#__codelineno-0-4358">4358</a></span>
+<span class="normal"><a href="#__codelineno-0-4359">4359</a></span>
+<span class="normal"><a href="#__codelineno-0-4360">4360</a></span>
+<span class="normal"><a href="#__codelineno-0-4361">4361</a></span>
+<span class="normal"><a href="#__codelineno-0-4362">4362</a></span>
+<span class="normal"><a href="#__codelineno-0-4363">4363</a></span>
+<span class="normal"><a href="#__codelineno-0-4364">4364</a></span>
+<span class="normal"><a href="#__codelineno-0-4365">4365</a></span>
+<span class="normal"><a href="#__codelineno-0-4366">4366</a></span>
+<span class="normal"><a href="#__codelineno-0-4367">4367</a></span>
+<span class="normal"><a href="#__codelineno-0-4368">4368</a></span>
+<span class="normal"><a href="#__codelineno-0-4369">4369</a></span>
+<span class="normal"><a href="#__codelineno-0-4370">4370</a></span>
+<span class="normal"><a href="#__codelineno-0-4371">4371</a></span>
+<span class="normal"><a href="#__codelineno-0-4372">4372</a></span>
+<span class="normal"><a href="#__codelineno-0-4373">4373</a></span>
+<span class="normal"><a href="#__codelineno-0-4374">4374</a></span>
+<span class="normal"><a href="#__codelineno-0-4375">4375</a></span>
+<span class="normal"><a href="#__codelineno-0-4376">4376</a></span>
+<span class="normal"><a href="#__codelineno-0-4377">4377</a></span>
+<span class="normal"><a href="#__codelineno-0-4378">4378</a></span>
+<span class="normal"><a href="#__codelineno-0-4379">4379</a></span>
+<span class="normal"><a href="#__codelineno-0-4380">4380</a></span>
+<span class="normal"><a href="#__codelineno-0-4381">4381</a></span>
+<span class="normal"><a href="#__codelineno-0-4382">4382</a></span>
+<span class="normal"><a href="#__codelineno-0-4383">4383</a></span>
+<span class="normal"><a href="#__codelineno-0-4384">4384</a></span>
+<span class="normal"><a href="#__codelineno-0-4385">4385</a></span>
+<span class="normal"><a href="#__codelineno-0-4386">4386</a></span>
+<span class="normal"><a href="#__codelineno-0-4387">4387</a></span>
+<span class="normal"><a href="#__codelineno-0-4388">4388</a></span>
+<span class="normal"><a href="#__codelineno-0-4389">4389</a></span>
+<span class="normal"><a href="#__codelineno-0-4390">4390</a></span>
+<span class="normal"><a href="#__codelineno-0-4391">4391</a></span>
+<span class="normal"><a href="#__codelineno-0-4392">4392</a></span>
+<span class="normal"><a href="#__codelineno-0-4393">4393</a></span>
+<span class="normal"><a href="#__codelineno-0-4394">4394</a></span>
+<span class="normal"><a href="#__codelineno-0-4395">4395</a></span>
+<span class="normal"><a href="#__codelineno-0-4396">4396</a></span>
+<span class="normal"><a href="#__codelineno-0-4397">4397</a></span>
+<span class="normal"><a href="#__codelineno-0-4398">4398</a></span>
+<span class="normal"><a href="#__codelineno-0-4399">4399</a></span>
+<span class="normal"><a href="#__codelineno-0-4400">4400</a></span>
+<span class="normal"><a href="#__codelineno-0-4401">4401</a></span>
+<span class="normal"><a href="#__codelineno-0-4402">4402</a></span>
+<span class="normal"><a href="#__codelineno-0-4403">4403</a></span>
+<span class="normal"><a href="#__codelineno-0-4404">4404</a></span>
+<span class="normal"><a href="#__codelineno-0-4405">4405</a></span>
+<span class="normal"><a href="#__codelineno-0-4406">4406</a></span>
+<span class="normal"><a href="#__codelineno-0-4407">4407</a></span>
+<span class="normal"><a href="#__codelineno-0-4408">4408</a></span>
+<span class="normal"><a href="#__codelineno-0-4409">4409</a></span>
+<span class="normal"><a href="#__codelineno-0-4410">4410</a></span>
+<span class="normal"><a href="#__codelineno-0-4411">4411</a></span>
+<span class="normal"><a href="#__codelineno-0-4412">4412</a></span>
+<span class="normal"><a href="#__codelineno-0-4413">4413</a></span>
+<span class="normal"><a href="#__codelineno-0-4414">4414</a></span>
+<span class="normal"><a href="#__codelineno-0-4415">4415</a></span>
+<span class="normal"><a href="#__codelineno-0-4416">4416</a></span>
+<span class="normal"><a href="#__codelineno-0-4417">4417</a></span>
+<span class="normal"><a href="#__codelineno-0-4418">4418</a></span>
+<span class="normal"><a href="#__codelineno-0-4419">4419</a></span>
+<span class="normal"><a href="#__codelineno-0-4420">4420</a></span>
+<span class="normal"><a href="#__codelineno-0-4421">4421</a></span>
+<span class="normal"><a href="#__codelineno-0-4422">4422</a></span>
+<span class="normal"><a href="#__codelineno-0-4423">4423</a></span>
+<span class="normal"><a href="#__codelineno-0-4424">4424</a></span>
+<span class="normal"><a href="#__codelineno-0-4425">4425</a></span>
+<span class="normal"><a href="#__codelineno-0-4426">4426</a></span>
+<span class="normal"><a href="#__codelineno-0-4427">4427</a></span>
+<span class="normal"><a href="#__codelineno-0-4428">4428</a></span>
+<span class="normal"><a href="#__codelineno-0-4429">4429</a></span>
+<span class="normal"><a href="#__codelineno-0-4430">4430</a></span>
+<span class="normal"><a href="#__codelineno-0-4431">4431</a></span>
+<span class="normal"><a href="#__codelineno-0-4432">4432</a></span>
+<span class="normal"><a href="#__codelineno-0-4433">4433</a></span>
+<span class="normal"><a href="#__codelineno-0-4434">4434</a></span>
+<span class="normal"><a href="#__codelineno-0-4435">4435</a></span>
+<span class="normal"><a href="#__codelineno-0-4436">4436</a></span>
+<span class="normal"><a href="#__codelineno-0-4437">4437</a></span>
+<span class="normal"><a href="#__codelineno-0-4438">4438</a></span>
+<span class="normal"><a href="#__codelineno-0-4439">4439</a></span>
+<span class="normal"><a href="#__codelineno-0-4440">4440</a></span>
+<span class="normal"><a href="#__codelineno-0-4441">4441</a></span>
+<span class="normal"><a href="#__codelineno-0-4442">4442</a></span>
+<span class="normal"><a href="#__codelineno-0-4443">4443</a></span>
+<span class="normal"><a href="#__codelineno-0-4444">4444</a></span>
+<span class="normal"><a href="#__codelineno-0-4445">4445</a></span>
+<span class="normal"><a href="#__codelineno-0-4446">4446</a></span>
+<span class="normal"><a href="#__codelineno-0-4447">4447</a></span>
+<span class="normal"><a href="#__codelineno-0-4448">4448</a></span>
+<span class="normal"><a href="#__codelineno-0-4449">4449</a></span>
+<span class="normal"><a href="#__codelineno-0-4450">4450</a></span>
+<span class="normal"><a href="#__codelineno-0-4451">4451</a></span>
+<span class="normal"><a href="#__codelineno-0-4452">4452</a></span>
+<span class="normal"><a href="#__codelineno-0-4453">4453</a></span>
+<span class="normal"><a href="#__codelineno-0-4454">4454</a></span>
+<span class="normal"><a href="#__codelineno-0-4455">4455</a></span>
+<span class="normal"><a href="#__codelineno-0-4456">4456</a></span>
+<span class="normal"><a href="#__codelineno-0-4457">4457</a></span>
+<span class="normal"><a href="#__codelineno-0-4458">4458</a></span>
+<span class="normal"><a href="#__codelineno-0-4459">4459</a></span>
+<span class="normal"><a href="#__codelineno-0-4460">4460</a></span>
+<span class="normal"><a href="#__codelineno-0-4461">4461</a></span>
+<span class="normal"><a href="#__codelineno-0-4462">4462</a></span>
+<span class="normal"><a href="#__codelineno-0-4463">4463</a></span>
+<span class="normal"><a href="#__codelineno-0-4464">4464</a></span>
+<span class="normal"><a href="#__codelineno-0-4465">4465</a></span>
+<span class="normal"><a href="#__codelineno-0-4466">4466</a></span>
+<span class="normal"><a href="#__codelineno-0-4467">4467</a></span>
+<span class="normal"><a href="#__codelineno-0-4468">4468</a></span>
+<span class="normal"><a href="#__codelineno-0-4469">4469</a></span>
+<span class="normal"><a href="#__codelineno-0-4470">4470</a></span>
+<span class="normal"><a href="#__codelineno-0-4471">4471</a></span>
+<span class="normal"><a href="#__codelineno-0-4472">4472</a></span>
+<span class="normal"><a href="#__codelineno-0-4473">4473</a></span>
+<span class="normal"><a href="#__codelineno-0-4474">4474</a></span>
+<span class="normal"><a href="#__codelineno-0-4475">4475</a></span>
+<span class="normal"><a href="#__codelineno-0-4476">4476</a></span>
+<span class="normal"><a href="#__codelineno-0-4477">4477</a></span>
+<span class="normal"><a href="#__codelineno-0-4478">4478</a></span>
+<span class="normal"><a href="#__codelineno-0-4479">4479</a></span>
+<span class="normal"><a href="#__codelineno-0-4480">4480</a></span>
+<span class="normal"><a href="#__codelineno-0-4481">4481</a></span>
+<span class="normal"><a href="#__codelineno-0-4482">4482</a></span>
+<span class="normal"><a href="#__codelineno-0-4483">4483</a></span>
+<span class="normal"><a href="#__codelineno-0-4484">4484</a></span>
+<span class="normal"><a href="#__codelineno-0-4485">4485</a></span>
+<span class="normal"><a href="#__codelineno-0-4486">4486</a></span>
+<span class="normal"><a href="#__codelineno-0-4487">4487</a></span>
+<span class="normal"><a href="#__codelineno-0-4488">4488</a></span>
+<span class="normal"><a href="#__codelineno-0-4489">4489</a></span>
+<span class="normal"><a href="#__codelineno-0-4490">4490</a></span>
+<span class="normal"><a href="#__codelineno-0-4491">4491</a></span>
+<span class="normal"><a href="#__codelineno-0-4492">4492</a></span>
+<span class="normal"><a href="#__codelineno-0-4493">4493</a></span>
+<span class="normal"><a href="#__codelineno-0-4494">4494</a></span>
+<span class="normal"><a href="#__codelineno-0-4495">4495</a></span>
+<span class="normal"><a href="#__codelineno-0-4496">4496</a></span>
+<span class="normal"><a href="#__codelineno-0-4497">4497</a></span>
+<span class="normal"><a href="#__codelineno-0-4498">4498</a></span>
+<span class="normal"><a href="#__codelineno-0-4499">4499</a></span>
+<span class="normal"><a href="#__codelineno-0-4500">4500</a></span>
+<span class="normal"><a href="#__codelineno-0-4501">4501</a></span>
+<span class="normal"><a href="#__codelineno-0-4502">4502</a></span>
+<span class="normal"><a href="#__codelineno-0-4503">4503</a></span>
+<span class="normal"><a href="#__codelineno-0-4504">4504</a></span>
+<span class="normal"><a href="#__codelineno-0-4505">4505</a></span>
+<span class="normal"><a href="#__codelineno-0-4506">4506</a></span>
+<span class="normal"><a href="#__codelineno-0-4507">4507</a></span>
+<span class="normal"><a href="#__codelineno-0-4508">4508</a></span>
+<span class="normal"><a href="#__codelineno-0-4509">4509</a></span>
+<span class="normal"><a href="#__codelineno-0-4510">4510</a></span>
+<span class="normal"><a href="#__codelineno-0-4511">4511</a></span>
+<span class="normal"><a href="#__codelineno-0-4512">4512</a></span>
+<span class="normal"><a href="#__codelineno-0-4513">4513</a></span>
+<span class="normal"><a href="#__codelineno-0-4514">4514</a></span>
+<span class="normal"><a href="#__codelineno-0-4515">4515</a></span>
+<span class="normal"><a href="#__codelineno-0-4516">4516</a></span>
+<span class="normal"><a href="#__codelineno-0-4517">4517</a></span>
+<span class="normal"><a href="#__codelineno-0-4518">4518</a></span>
+<span class="normal"><a href="#__codelineno-0-4519">4519</a></span>
+<span class="normal"><a href="#__codelineno-0-4520">4520</a></span>
+<span class="normal"><a href="#__codelineno-0-4521">4521</a></span>
+<span class="normal"><a href="#__codelineno-0-4522">4522</a></span>
+<span class="normal"><a href="#__codelineno-0-4523">4523</a></span>
+<span class="normal"><a href="#__codelineno-0-4524">4524</a></span>
+<span class="normal"><a href="#__codelineno-0-4525">4525</a></span>
+<span class="normal"><a href="#__codelineno-0-4526">4526</a></span>
+<span class="normal"><a href="#__codelineno-0-4527">4527</a></span>
+<span class="normal"><a href="#__codelineno-0-4528">4528</a></span>
+<span class="normal"><a href="#__codelineno-0-4529">4529</a></span>
+<span class="normal"><a href="#__codelineno-0-4530">4530</a></span>
+<span class="normal"><a href="#__codelineno-0-4531">4531</a></span>
+<span class="normal"><a href="#__codelineno-0-4532">4532</a></span>
+<span class="normal"><a href="#__codelineno-0-4533">4533</a></span>
+<span class="normal"><a href="#__codelineno-0-4534">4534</a></span>
+<span class="normal"><a href="#__codelineno-0-4535">4535</a></span>
+<span class="normal"><a href="#__codelineno-0-4536">4536</a></span>
+<span class="normal"><a href="#__codelineno-0-4537">4537</a></span>
+<span class="normal"><a href="#__codelineno-0-4538">4538</a></span>
+<span class="normal"><a href="#__codelineno-0-4539">4539</a></span>
+<span class="normal"><a href="#__codelineno-0-4540">4540</a></span>
+<span class="normal"><a href="#__codelineno-0-4541">4541</a></span>
+<span class="normal"><a href="#__codelineno-0-4542">4542</a></span>
+<span class="normal"><a href="#__codelineno-0-4543">4543</a></span>
+<span class="normal"><a href="#__codelineno-0-4544">4544</a></span>
+<span class="normal"><a href="#__codelineno-0-4545">4545</a></span>
+<span class="normal"><a href="#__codelineno-0-4546">4546</a></span>
+<span class="normal"><a href="#__codelineno-0-4547">4547</a></span>
+<span class="normal"><a href="#__codelineno-0-4548">4548</a></span>
+<span class="normal"><a href="#__codelineno-0-4549">4549</a></span>
+<span class="normal"><a href="#__codelineno-0-4550">4550</a></span>
+<span class="normal"><a href="#__codelineno-0-4551">4551</a></span>
+<span class="normal"><a href="#__codelineno-0-4552">4552</a></span>
+<span class="normal"><a href="#__codelineno-0-4553">4553</a></span>
+<span class="normal"><a href="#__codelineno-0-4554">4554</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4124"><a id="__codelineno-0-4124" name="__codelineno-0-4124"></a><span class="k">class</span><span class="w"> </span><span class="nc">examples</span><span class="p">:</span>
+</span><span id="__span-0-4125"><a id="__codelineno-0-4125" name="__codelineno-0-4125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4126"><a id="__codelineno-0-4126" name="__codelineno-0-4126"></a><span class="sd">    Retrieve a predefined example DAG or list available examples.</span>
+</span><span id="__span-0-4127"><a id="__codelineno-0-4127" name="__codelineno-0-4127"></a>
+</span><span id="__span-0-4128"><a id="__codelineno-0-4128" name="__codelineno-0-4128"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-4129"><a id="__codelineno-0-4129" name="__codelineno-0-4129"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-4130"><a id="__codelineno-0-4130" name="__codelineno-0-4130"></a><span class="sd">    which : str or None, optional</span>
+</span><span id="__span-0-4131"><a id="__codelineno-0-4131" name="__codelineno-0-4131"></a><span class="sd">        Name of the example to load. When ``None``, the function prints the</span>
+</span><span id="__span-0-4132"><a id="__codelineno-0-4132" name="__codelineno-0-4132"></a><span class="sd">        list of available examples (optionally with their DAG representations)</span>
+</span><span id="__span-0-4133"><a id="__codelineno-0-4133" name="__codelineno-0-4133"></a><span class="sd">        and returns ``None``.</span>
+</span><span id="__span-0-4134"><a id="__codelineno-0-4134" name="__codelineno-0-4134"></a><span class="sd">    print_DAG : bool, optional</span>
+</span><span id="__span-0-4135"><a id="__codelineno-0-4135" name="__codelineno-0-4135"></a><span class="sd">        If ``True`` and ``which`` is ``None``, print the textual</span>
+</span><span id="__span-0-4136"><a id="__codelineno-0-4136" name="__codelineno-0-4136"></a><span class="sd">        representation of each example DAG. Defaults to ``False``.</span>
+</span><span id="__span-0-4137"><a id="__codelineno-0-4137" name="__codelineno-0-4137"></a><span class="sd">    *args :</span>
+</span><span id="__span-0-4138"><a id="__codelineno-0-4138" name="__codelineno-0-4138"></a><span class="sd">        Additional positional arguments forwarded to the example factory.</span>
+</span><span id="__span-0-4139"><a id="__codelineno-0-4139" name="__codelineno-0-4139"></a><span class="sd">    **kws :</span>
+</span><span id="__span-0-4140"><a id="__codelineno-0-4140" name="__codelineno-0-4140"></a><span class="sd">        Additional keyword arguments forwarded to the example factory.</span>
+</span><span id="__span-0-4141"><a id="__codelineno-0-4141" name="__codelineno-0-4141"></a>
+</span><span id="__span-0-4142"><a id="__codelineno-0-4142" name="__codelineno-0-4142"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-4143"><a id="__codelineno-0-4143" name="__codelineno-0-4143"></a><span class="sd">    -------</span>
+</span><span id="__span-0-4144"><a id="__codelineno-0-4144" name="__codelineno-0-4144"></a><span class="sd">    DAG or None</span>
+</span><span id="__span-0-4145"><a id="__codelineno-0-4145" name="__codelineno-0-4145"></a><span class="sd">        Instantiated `DAG` object when ``which`` matches an example; otherwise</span>
+</span><span id="__span-0-4146"><a id="__codelineno-0-4146" name="__codelineno-0-4146"></a><span class="sd">        ``None``.</span>
+</span><span id="__span-0-4147"><a id="__codelineno-0-4147" name="__codelineno-0-4147"></a>
+</span><span id="__span-0-4148"><a id="__codelineno-0-4148" name="__codelineno-0-4148"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-4149"><a id="__codelineno-0-4149" name="__codelineno-0-4149"></a><span class="sd">    --------</span>
+</span><span id="__span-0-4150"><a id="__codelineno-0-4150" name="__codelineno-0-4150"></a><span class="sd">    &gt;&gt;&gt; examples() # print the list of predefined examples</span>
+</span><span id="__span-0-4151"><a id="__codelineno-0-4151" name="__codelineno-0-4151"></a><span class="sd">    &gt;&gt;&gt; G = examples(&#39;Frontdoor&#39;) # load DAG from predefined example</span>
+</span><span id="__span-0-4152"><a id="__codelineno-0-4152" name="__codelineno-0-4152"></a><span class="sd">    &gt;&gt;&gt; isinstance(G, DAG)</span>
+</span><span id="__span-0-4153"><a id="__codelineno-0-4153" name="__codelineno-0-4153"></a><span class="sd">    True</span>
+</span><span id="__span-0-4154"><a id="__codelineno-0-4154" name="__codelineno-0-4154"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-4155"><a id="__codelineno-0-4155" name="__codelineno-0-4155"></a>
+</span><span id="__span-0-4156"><a id="__codelineno-0-4156" name="__codelineno-0-4156"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">print_DAG</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+</span><span id="__span-0-4157"><a id="__codelineno-0-4157" name="__codelineno-0-4157"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">which</span><span class="p">:</span>
+</span><span id="__span-0-4158"><a id="__codelineno-0-4158" name="__codelineno-0-4158"></a>            <span class="n">examples</span><span class="o">.</span><span class="n">_print_examples</span><span class="p">(</span><span class="n">print_DAG</span><span class="o">=</span><span class="n">print_DAG</span><span class="p">)</span>
+</span><span id="__span-0-4159"><a id="__codelineno-0-4159" name="__codelineno-0-4159"></a>            <span class="n">dag</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4160"><a id="__codelineno-0-4160" name="__codelineno-0-4160"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-4161"><a id="__codelineno-0-4161" name="__codelineno-0-4161"></a>            <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-4162"><a id="__codelineno-0-4162" name="__codelineno-0-4162"></a>                <span class="n">dag</span> <span class="o">=</span> <span class="n">examples</span><span class="o">.</span><span class="n">_get_examples</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span>
+</span><span id="__span-0-4163"><a id="__codelineno-0-4163" name="__codelineno-0-4163"></a>            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+</span><span id="__span-0-4164"><a id="__codelineno-0-4164" name="__codelineno-0-4164"></a>                <span class="c1"># friendly suggestion for typos</span>
+</span><span id="__span-0-4165"><a id="__codelineno-0-4165" name="__codelineno-0-4165"></a>                <span class="n">suggestion</span> <span class="o">=</span> <span class="n">difflib</span><span class="o">.</span><span class="n">get_close_matches</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">examples</span><span class="o">.</span><span class="n">_get_examples</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cutoff</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+</span><span id="__span-0-4166"><a id="__codelineno-0-4166" name="__codelineno-0-4166"></a>                <span class="n">hint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; Did you mean: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">suggestion</span><span class="p">)</span><span class="si">}</span><span class="s2">?&quot;</span> <span class="k">if</span> <span class="n">suggestion</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+</span><span id="__span-0-4167"><a id="__codelineno-0-4167" name="__codelineno-0-4167"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown example &#39;</span><span class="si">{</span><span class="n">which</span><span class="si">}</span><span class="s2">&#39;.</span><span class="si">{</span><span class="n">hint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4168"><a id="__codelineno-0-4168" name="__codelineno-0-4168"></a>        <span class="k">return</span> <span class="n">DAG</span><span class="p">(</span><span class="o">**</span><span class="n">dag</span><span class="p">)</span> <span class="k">if</span> <span class="n">dag</span> <span class="k">else</span> <span class="kc">None</span>
+</span><span id="__span-0-4169"><a id="__codelineno-0-4169" name="__codelineno-0-4169"></a>
+</span><span id="__span-0-4170"><a id="__codelineno-0-4170" name="__codelineno-0-4170"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_examples</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4171"><a id="__codelineno-0-4171" name="__codelineno-0-4171"></a>        <span class="n">all_examples</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="__span-0-4172"><a id="__codelineno-0-4172" name="__codelineno-0-4172"></a>            <span class="s2">&quot;Not identifiable&quot;</span> <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_not_identifiable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4173"><a id="__codelineno-0-4173" name="__codelineno-0-4173"></a>            <span class="s2">&quot;One confounder&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_one_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4174"><a id="__codelineno-0-4174" name="__codelineno-0-4174"></a>            <span class="s2">&quot;Two confounders&quot;</span> <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_two_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4175"><a id="__codelineno-0-4175" name="__codelineno-0-4175"></a>            <span class="s2">&quot;Front-door&quot;</span>       <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_front_door</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4176"><a id="__codelineno-0-4176" name="__codelineno-0-4176"></a>            <span class="s2">&quot;IV with 1 instrument&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_iv_1_instrument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4177"><a id="__codelineno-0-4177" name="__codelineno-0-4177"></a>            <span class="s2">&quot;IV with 3 instruments&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_iv_3_instruments</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4178"><a id="__codelineno-0-4178" name="__codelineno-0-4178"></a>            <span class="s2">&quot;SoO, IV, and do identified with 1 confounder&quot;</span><span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_soo_iv_do_one_counfounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
+</span><span id="__span-0-4179"><a id="__codelineno-0-4179" name="__codelineno-0-4179"></a>                                                                                                        <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4180"><a id="__codelineno-0-4180" name="__codelineno-0-4180"></a>            <span class="s2">&quot;Mediation: 2 sequential 1 confounder&quot;</span> <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_mediation_2_sequential_1_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
+</span><span id="__span-0-4181"><a id="__codelineno-0-4181" name="__codelineno-0-4181"></a>                                                                                                           <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4182"><a id="__codelineno-0-4182" name="__codelineno-0-4182"></a>            <span class="c1"># &quot;Back-door&quot;: self._back_door(),</span>
+</span><span id="__span-0-4183"><a id="__codelineno-0-4183" name="__codelineno-0-4183"></a>            <span class="c1"># Pearl&#39;s book</span>
+</span><span id="__span-0-4184"><a id="__codelineno-0-4184" name="__codelineno-0-4184"></a>            <span class="s2">&quot;Pearl Example 1.1 (a)&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_1_1_a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4185"><a id="__codelineno-0-4185" name="__codelineno-0-4185"></a>            <span class="s2">&quot;Pearl Example 1.1 (b)&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_1_1_b</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4186"><a id="__codelineno-0-4186" name="__codelineno-0-4186"></a>            <span class="s2">&quot;Pearl Example 1.2&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_1_2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4187"><a id="__codelineno-0-4187" name="__codelineno-0-4187"></a>            <span class="s2">&quot;Pearl Example 1.3 (a)&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_1_3_a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4188"><a id="__codelineno-0-4188" name="__codelineno-0-4188"></a>            <span class="s2">&quot;Pearl Example 1.3 (b)&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_1_3_b</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4189"><a id="__codelineno-0-4189" name="__codelineno-0-4189"></a>            <span class="s2">&quot;Pearl Example 3.1&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_3_1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4190"><a id="__codelineno-0-4190" name="__codelineno-0-4190"></a>            <span class="s2">&quot;Pearl Example 3.4&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_3_4</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4191"><a id="__codelineno-0-4191" name="__codelineno-0-4191"></a>            <span class="s2">&quot;Pearl Example 3.5&quot;</span>  <span class="p">:</span> <span class="n">examples</span><span class="o">.</span><span class="n">_example_pearl_fig_3_5</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">),</span>
+</span><span id="__span-0-4192"><a id="__codelineno-0-4192" name="__codelineno-0-4192"></a>        <span class="p">}</span>
+</span><span id="__span-0-4193"><a id="__codelineno-0-4193" name="__codelineno-0-4193"></a>        <span class="n">res</span> <span class="o">=</span> <span class="n">all_examples</span><span class="p">[</span><span class="n">which</span><span class="p">]</span> <span class="k">if</span> <span class="n">which</span> <span class="k">else</span> <span class="n">all_examples</span>
+</span><span id="__span-0-4194"><a id="__codelineno-0-4194" name="__codelineno-0-4194"></a>        <span class="k">return</span> <span class="n">res</span>
+</span><span id="__span-0-4195"><a id="__codelineno-0-4195" name="__codelineno-0-4195"></a>
+</span><span id="__span-0-4196"><a id="__codelineno-0-4196" name="__codelineno-0-4196"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_print_examples</span><span class="p">(</span><span class="n">print_DAG</span><span class="p">):</span>
+</span><span id="__span-0-4197"><a id="__codelineno-0-4197" name="__codelineno-0-4197"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">dedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4198"><a id="__codelineno-0-4198" name="__codelineno-0-4198"></a><span class="s2">        List of available examples:</span>
+</span><span id="__span-0-4199"><a id="__codelineno-0-4199" name="__codelineno-0-4199"></a><span class="s2">        --------------------------</span><span class="se">\</span>
+</span><span id="__span-0-4200"><a id="__codelineno-0-4200" name="__codelineno-0-4200"></a><span class="s2">        &quot;&quot;&quot;</span><span class="p">))</span>
+</span><span id="__span-0-4201"><a id="__codelineno-0-4201" name="__codelineno-0-4201"></a>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">examples</span><span class="o">.</span><span class="n">_get_examples</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+</span><span id="__span-0-4202"><a id="__codelineno-0-4202" name="__codelineno-0-4202"></a>            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4203"><a id="__codelineno-0-4203" name="__codelineno-0-4203"></a>            <span class="k">if</span> <span class="n">print_DAG</span><span class="p">:</span>
+</span><span id="__span-0-4204"><a id="__codelineno-0-4204" name="__codelineno-0-4204"></a>                <span class="nb">print</span><span class="p">(</span><span class="n">DAG</span><span class="p">(</span><span class="o">**</span><span class="n">example</span><span class="p">))</span>
+</span><span id="__span-0-4205"><a id="__codelineno-0-4205" name="__codelineno-0-4205"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Usage: examples(which=&#39;&lt;example name&gt;&#39;)&quot;</span><span class="o">+</span>
+</span><span id="__span-0-4206"><a id="__codelineno-0-4206" name="__codelineno-0-4206"></a>              <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Example: G = examples(which=&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4207"><a id="__codelineno-0-4207" name="__codelineno-0-4207"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">print_DAG</span><span class="p">:</span>
+</span><span id="__span-0-4208"><a id="__codelineno-0-4208" name="__codelineno-0-4208"></a>            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Note: To print the associated DAG of each example, use examples(print_DAG=True)&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4209"><a id="__codelineno-0-4209" name="__codelineno-0-4209"></a>        <span class="k">return</span> <span class="kc">None</span>
+</span><span id="__span-0-4210"><a id="__codelineno-0-4210" name="__codelineno-0-4210"></a>
+</span><span id="__span-0-4211"><a id="__codelineno-0-4211" name="__codelineno-0-4211"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_not_identifiable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4212"><a id="__codelineno-0-4212" name="__codelineno-0-4212"></a>        <span class="n">dag</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4213"><a id="__codelineno-0-4213" name="__codelineno-0-4213"></a><span class="s2">        D  -&gt; Y</span>
+</span><span id="__span-0-4214"><a id="__codelineno-0-4214" name="__codelineno-0-4214"></a><span class="s2">        D &lt;-&gt; Y</span>
+</span><span id="__span-0-4215"><a id="__codelineno-0-4215" name="__codelineno-0-4215"></a><span class="s2">        Z -&gt; {D, Y}</span>
+</span><span id="__span-0-4216"><a id="__codelineno-0-4216" name="__codelineno-0-4216"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4217"><a id="__codelineno-0-4217" name="__codelineno-0-4217"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+</span><span id="__span-0-4218"><a id="__codelineno-0-4218" name="__codelineno-0-4218"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Exposure&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;Outcome&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4219"><a id="__codelineno-0-4219" name="__codelineno-0-4219"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4220"><a id="__codelineno-0-4220" name="__codelineno-0-4220"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span><span id="__span-0-4221"><a id="__codelineno-0-4221" name="__codelineno-0-4221"></a>
+</span><span id="__span-0-4222"><a id="__codelineno-0-4222" name="__codelineno-0-4222"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_one_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4223"><a id="__codelineno-0-4223" name="__codelineno-0-4223"></a>        <span class="n">dag</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4224"><a id="__codelineno-0-4224" name="__codelineno-0-4224"></a><span class="s2">        D  -&gt; Y</span>
+</span><span id="__span-0-4225"><a id="__codelineno-0-4225" name="__codelineno-0-4225"></a><span class="s2">        Z1 -&gt; {D, Y}</span>
+</span><span id="__span-0-4226"><a id="__codelineno-0-4226" name="__codelineno-0-4226"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4227"><a id="__codelineno-0-4227" name="__codelineno-0-4227"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)}</span>
+</span><span id="__span-0-4228"><a id="__codelineno-0-4228" name="__codelineno-0-4228"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Exposure&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;Outcome&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4229"><a id="__codelineno-0-4229" name="__codelineno-0-4229"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z1&#39;</span><span class="p">:</span><span class="s2">&quot;$Z_1$&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4230"><a id="__codelineno-0-4230" name="__codelineno-0-4230"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span><span id="__span-0-4231"><a id="__codelineno-0-4231" name="__codelineno-0-4231"></a>
+</span><span id="__span-0-4232"><a id="__codelineno-0-4232" name="__codelineno-0-4232"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_two_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4233"><a id="__codelineno-0-4233" name="__codelineno-0-4233"></a>        <span class="n">dag</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4234"><a id="__codelineno-0-4234" name="__codelineno-0-4234"></a><span class="s2">        D  -&gt; Y</span>
+</span><span id="__span-0-4235"><a id="__codelineno-0-4235" name="__codelineno-0-4235"></a><span class="s2">        Z1 -&gt; {D, Y}</span>
+</span><span id="__span-0-4236"><a id="__codelineno-0-4236" name="__codelineno-0-4236"></a><span class="s2">        Z2 -&gt; {D, Y}</span>
+</span><span id="__span-0-4237"><a id="__codelineno-0-4237" name="__codelineno-0-4237"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4238"><a id="__codelineno-0-4238" name="__codelineno-0-4238"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)}</span>
+</span><span id="__span-0-4239"><a id="__codelineno-0-4239" name="__codelineno-0-4239"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Exposure&quot;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;Outcome&quot;</span><span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4240"><a id="__codelineno-0-4240" name="__codelineno-0-4240"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z2&#39;</span><span class="p">:</span><span class="s2">&quot;$Z_2$&quot;</span><span class="p">,</span> <span class="s1">&#39;Z1&#39;</span><span class="p">:</span><span class="s2">&quot;$Z_1$&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4241"><a id="__codelineno-0-4241" name="__codelineno-0-4241"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span><span id="__span-0-4242"><a id="__codelineno-0-4242" name="__codelineno-0-4242"></a>
+</span><span id="__span-0-4243"><a id="__codelineno-0-4243" name="__codelineno-0-4243"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_front_door</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4244"><a id="__codelineno-0-4244" name="__codelineno-0-4244"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4245"><a id="__codelineno-0-4245" name="__codelineno-0-4245"></a><span class="s2">        U -&gt; {D, Y}</span>
+</span><span id="__span-0-4246"><a id="__codelineno-0-4246" name="__codelineno-0-4246"></a><span class="s2">        D  -&gt; Z -&gt; Y</span>
+</span><span id="__span-0-4247"><a id="__codelineno-0-4247" name="__codelineno-0-4247"></a><span class="s2">        Z2 -&gt; {D, Y}</span>
+</span><span id="__span-0-4248"><a id="__codelineno-0-4248" name="__codelineno-0-4248"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4249"><a id="__codelineno-0-4249" name="__codelineno-0-4249"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4250"><a id="__codelineno-0-4250" name="__codelineno-0-4250"></a>               <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4251"><a id="__codelineno-0-4251" name="__codelineno-0-4251"></a>               <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4252"><a id="__codelineno-0-4252" name="__codelineno-0-4252"></a>               <span class="s1">&#39;U&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4253"><a id="__codelineno-0-4253" name="__codelineno-0-4253"></a>               <span class="s1">&#39;Z2&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4254"><a id="__codelineno-0-4254" name="__codelineno-0-4254"></a>               <span class="p">}</span>
+</span><span id="__span-0-4255"><a id="__codelineno-0-4255" name="__codelineno-0-4255"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4256"><a id="__codelineno-0-4256" name="__codelineno-0-4256"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4257"><a id="__codelineno-0-4257" name="__codelineno-0-4257"></a>                 <span class="s2">&quot;Latent&quot;</span>  <span class="p">:</span> <span class="s2">&quot;U&quot;</span>
+</span><span id="__span-0-4258"><a id="__codelineno-0-4258" name="__codelineno-0-4258"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4259"><a id="__codelineno-0-4259" name="__codelineno-0-4259"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z2&#39;</span><span class="p">:</span><span class="s2">&quot;$Z_2$&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4260"><a id="__codelineno-0-4260" name="__codelineno-0-4260"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span><span id="__span-0-4261"><a id="__codelineno-0-4261" name="__codelineno-0-4261"></a>
+</span><span id="__span-0-4262"><a id="__codelineno-0-4262" name="__codelineno-0-4262"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_iv_1_instrument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4263"><a id="__codelineno-0-4263" name="__codelineno-0-4263"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4264"><a id="__codelineno-0-4264" name="__codelineno-0-4264"></a><span class="s2">        X &lt;-&gt; Y</span>
+</span><span id="__span-0-4265"><a id="__codelineno-0-4265" name="__codelineno-0-4265"></a><span class="s2">        Z -&gt; X -&gt; Y</span>
+</span><span id="__span-0-4266"><a id="__codelineno-0-4266" name="__codelineno-0-4266"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4267"><a id="__codelineno-0-4267" name="__codelineno-0-4267"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4268"><a id="__codelineno-0-4268" name="__codelineno-0-4268"></a>               <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mf">.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4269"><a id="__codelineno-0-4269" name="__codelineno-0-4269"></a>               <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">)}</span>
+</span><span id="__span-0-4270"><a id="__codelineno-0-4270" name="__codelineno-0-4270"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4271"><a id="__codelineno-0-4271" name="__codelineno-0-4271"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4272"><a id="__codelineno-0-4272" name="__codelineno-0-4272"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="p">{(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">beta$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4273"><a id="__codelineno-0-4273" name="__codelineno-0-4273"></a>                       <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">):</span> <span class="s2">&quot;$</span><span class="se">\\</span><span class="s2">alpha$&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4274"><a id="__codelineno-0-4274" name="__codelineno-0-4274"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4275"><a id="__codelineno-0-4275" name="__codelineno-0-4275"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4276"><a id="__codelineno-0-4276" name="__codelineno-0-4276"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4277"><a id="__codelineno-0-4277" name="__codelineno-0-4277"></a>
+</span><span id="__span-0-4278"><a id="__codelineno-0-4278" name="__codelineno-0-4278"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_iv_3_instruments</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4279"><a id="__codelineno-0-4279" name="__codelineno-0-4279"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4280"><a id="__codelineno-0-4280" name="__codelineno-0-4280"></a><span class="s2">        D &lt;-&gt; Y</span>
+</span><span id="__span-0-4281"><a id="__codelineno-0-4281" name="__codelineno-0-4281"></a><span class="s2">        Z1 -&gt; D -&gt; Y</span>
+</span><span id="__span-0-4282"><a id="__codelineno-0-4282" name="__codelineno-0-4282"></a><span class="s2">        D &lt;- X1 -&gt; Y</span>
+</span><span id="__span-0-4283"><a id="__codelineno-0-4283" name="__codelineno-0-4283"></a><span class="s2">        Z1&lt;- Z2 -&gt; Y</span>
+</span><span id="__span-0-4284"><a id="__codelineno-0-4284" name="__codelineno-0-4284"></a><span class="s2">        Z1&lt;- Z3 -&gt; D</span>
+</span><span id="__span-0-4285"><a id="__codelineno-0-4285" name="__codelineno-0-4285"></a><span class="s2">        Z1-&gt; Z4 &lt;- X2 -&gt; Y</span>
+</span><span id="__span-0-4286"><a id="__codelineno-0-4286" name="__codelineno-0-4286"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4287"><a id="__codelineno-0-4287" name="__codelineno-0-4287"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;D&#39;</span><span class="p">:</span>  <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4288"><a id="__codelineno-0-4288" name="__codelineno-0-4288"></a>               <span class="s2">&quot;Y&quot;</span><span class="p">:</span>  <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4289"><a id="__codelineno-0-4289" name="__codelineno-0-4289"></a>               <span class="s1">&#39;Z1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4290"><a id="__codelineno-0-4290" name="__codelineno-0-4290"></a>               <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mf">.5</span><span class="p">),</span>
+</span><span id="__span-0-4291"><a id="__codelineno-0-4291" name="__codelineno-0-4291"></a>               <span class="s2">&quot;Z3&quot;</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4292"><a id="__codelineno-0-4292" name="__codelineno-0-4292"></a>               <span class="s2">&quot;Z4&quot;</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4293"><a id="__codelineno-0-4293" name="__codelineno-0-4293"></a>               <span class="s2">&quot;X2&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4294"><a id="__codelineno-0-4294" name="__codelineno-0-4294"></a>               <span class="s2">&quot;X1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4295"><a id="__codelineno-0-4295" name="__codelineno-0-4295"></a>               <span class="p">}</span>
+</span><span id="__span-0-4296"><a id="__codelineno-0-4296" name="__codelineno-0-4296"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4297"><a id="__codelineno-0-4297" name="__codelineno-0-4297"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4298"><a id="__codelineno-0-4298" name="__codelineno-0-4298"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4299"><a id="__codelineno-0-4299" name="__codelineno-0-4299"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X1&#39;</span><span class="p">:</span> <span class="s1">&#39;$X_1$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4300"><a id="__codelineno-0-4300" name="__codelineno-0-4300"></a>                  <span class="s1">&#39;X2&#39;</span><span class="p">:</span> <span class="s1">&#39;$X_2$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4301"><a id="__codelineno-0-4301" name="__codelineno-0-4301"></a>                  <span class="s1">&#39;Z1&#39;</span><span class="p">:</span> <span class="s1">&#39;$Z_1$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4302"><a id="__codelineno-0-4302" name="__codelineno-0-4302"></a>                  <span class="s1">&#39;Z2&#39;</span><span class="p">:</span> <span class="s1">&#39;$Z_2$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4303"><a id="__codelineno-0-4303" name="__codelineno-0-4303"></a>                  <span class="s1">&#39;Z3&#39;</span><span class="p">:</span> <span class="s1">&#39;$Z_3$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4304"><a id="__codelineno-0-4304" name="__codelineno-0-4304"></a>                  <span class="s1">&#39;Z4&#39;</span><span class="p">:</span> <span class="s1">&#39;$Z_4$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4305"><a id="__codelineno-0-4305" name="__codelineno-0-4305"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4306"><a id="__codelineno-0-4306" name="__codelineno-0-4306"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4307"><a id="__codelineno-0-4307" name="__codelineno-0-4307"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4308"><a id="__codelineno-0-4308" name="__codelineno-0-4308"></a>
+</span><span id="__span-0-4309"><a id="__codelineno-0-4309" name="__codelineno-0-4309"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_soo_iv_do_one_counfounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4310"><a id="__codelineno-0-4310" name="__codelineno-0-4310"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4311"><a id="__codelineno-0-4311" name="__codelineno-0-4311"></a><span class="s2">        Z  -&gt; D -&gt; Y</span>
+</span><span id="__span-0-4312"><a id="__codelineno-0-4312" name="__codelineno-0-4312"></a><span class="s2">        D &lt;- X1 -&gt; Y</span>
+</span><span id="__span-0-4313"><a id="__codelineno-0-4313" name="__codelineno-0-4313"></a><span class="s2">        Z &lt;- X2 -&gt; Y</span>
+</span><span id="__span-0-4314"><a id="__codelineno-0-4314" name="__codelineno-0-4314"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4315"><a id="__codelineno-0-4315" name="__codelineno-0-4315"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;D&#39;</span><span class="p">:</span>  <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4316"><a id="__codelineno-0-4316" name="__codelineno-0-4316"></a>               <span class="s2">&quot;Y&quot;</span><span class="p">:</span>  <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4317"><a id="__codelineno-0-4317" name="__codelineno-0-4317"></a>               <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4318"><a id="__codelineno-0-4318" name="__codelineno-0-4318"></a>               <span class="s2">&quot;X2&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4319"><a id="__codelineno-0-4319" name="__codelineno-0-4319"></a>               <span class="s2">&quot;X1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4320"><a id="__codelineno-0-4320" name="__codelineno-0-4320"></a>               <span class="p">}</span>
+</span><span id="__span-0-4321"><a id="__codelineno-0-4321" name="__codelineno-0-4321"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4322"><a id="__codelineno-0-4322" name="__codelineno-0-4322"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">}</span>
+</span><span id="__span-0-4323"><a id="__codelineno-0-4323" name="__codelineno-0-4323"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4324"><a id="__codelineno-0-4324" name="__codelineno-0-4324"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X1&#39;</span><span class="p">:</span> <span class="s1">&#39;$X_1$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4325"><a id="__codelineno-0-4325" name="__codelineno-0-4325"></a>                  <span class="s1">&#39;X2&#39;</span><span class="p">:</span> <span class="s1">&#39;$X_2$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4326"><a id="__codelineno-0-4326" name="__codelineno-0-4326"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4327"><a id="__codelineno-0-4327" name="__codelineno-0-4327"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4328"><a id="__codelineno-0-4328" name="__codelineno-0-4328"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4329"><a id="__codelineno-0-4329" name="__codelineno-0-4329"></a>
+</span><span id="__span-0-4330"><a id="__codelineno-0-4330" name="__codelineno-0-4330"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_mediation_2_sequential_1_confounder</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4331"><a id="__codelineno-0-4331" name="__codelineno-0-4331"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4332"><a id="__codelineno-0-4332" name="__codelineno-0-4332"></a><span class="s2">        D -&gt; M1 -&gt; M2 -&gt; Y</span>
+</span><span id="__span-0-4333"><a id="__codelineno-0-4333" name="__codelineno-0-4333"></a><span class="s2">        D -&gt; Y</span>
+</span><span id="__span-0-4334"><a id="__codelineno-0-4334" name="__codelineno-0-4334"></a><span class="s2">        D  &lt;- Z -&gt; Y</span>
+</span><span id="__span-0-4335"><a id="__codelineno-0-4335" name="__codelineno-0-4335"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4336"><a id="__codelineno-0-4336" name="__codelineno-0-4336"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;D&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4337"><a id="__codelineno-0-4337" name="__codelineno-0-4337"></a>               <span class="s1">&#39;M1&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4338"><a id="__codelineno-0-4338" name="__codelineno-0-4338"></a>               <span class="s1">&#39;M2&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4339"><a id="__codelineno-0-4339" name="__codelineno-0-4339"></a>               <span class="s1">&#39;Y&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mf">1.5</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4340"><a id="__codelineno-0-4340" name="__codelineno-0-4340"></a>               <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.75</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4341"><a id="__codelineno-0-4341" name="__codelineno-0-4341"></a>               <span class="p">}</span>
+</span><span id="__span-0-4342"><a id="__codelineno-0-4342" name="__codelineno-0-4342"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4343"><a id="__codelineno-0-4343" name="__codelineno-0-4343"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4344"><a id="__codelineno-0-4344" name="__codelineno-0-4344"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4345"><a id="__codelineno-0-4345" name="__codelineno-0-4345"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span><span class="s1">&#39;$M_1$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4346"><a id="__codelineno-0-4346" name="__codelineno-0-4346"></a>                  <span class="s2">&quot;M2&quot;</span><span class="p">:</span><span class="s1">&#39;$M_2$&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4347"><a id="__codelineno-0-4347" name="__codelineno-0-4347"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4348"><a id="__codelineno-0-4348" name="__codelineno-0-4348"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span><span id="__span-0-4349"><a id="__codelineno-0-4349" name="__codelineno-0-4349"></a>
+</span><span id="__span-0-4350"><a id="__codelineno-0-4350" name="__codelineno-0-4350"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_1_1_a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4351"><a id="__codelineno-0-4351" name="__codelineno-0-4351"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4352"><a id="__codelineno-0-4352" name="__codelineno-0-4352"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4353"><a id="__codelineno-0-4353" name="__codelineno-0-4353"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4354"><a id="__codelineno-0-4354" name="__codelineno-0-4354"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4355"><a id="__codelineno-0-4355" name="__codelineno-0-4355"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4356"><a id="__codelineno-0-4356" name="__codelineno-0-4356"></a><span class="s2">        W -&gt; Z -&gt; Y</span>
+</span><span id="__span-0-4357"><a id="__codelineno-0-4357" name="__codelineno-0-4357"></a><span class="s2">        Z &lt;-&gt; X -&gt; Y</span>
+</span><span id="__span-0-4358"><a id="__codelineno-0-4358" name="__codelineno-0-4358"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4359"><a id="__codelineno-0-4359" name="__codelineno-0-4359"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4360"><a id="__codelineno-0-4360" name="__codelineno-0-4360"></a>               <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4361"><a id="__codelineno-0-4361" name="__codelineno-0-4361"></a>               <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4362"><a id="__codelineno-0-4362" name="__codelineno-0-4362"></a>               <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4363"><a id="__codelineno-0-4363" name="__codelineno-0-4363"></a>               <span class="p">}</span>
+</span><span id="__span-0-4364"><a id="__codelineno-0-4364" name="__codelineno-0-4364"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4365"><a id="__codelineno-0-4365" name="__codelineno-0-4365"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span>
+</span><span id="__span-0-4366"><a id="__codelineno-0-4366" name="__codelineno-0-4366"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4367"><a id="__codelineno-0-4367" name="__codelineno-0-4367"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4368"><a id="__codelineno-0-4368" name="__codelineno-0-4368"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4369"><a id="__codelineno-0-4369" name="__codelineno-0-4369"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4370"><a id="__codelineno-0-4370" name="__codelineno-0-4370"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4371"><a id="__codelineno-0-4371" name="__codelineno-0-4371"></a>
+</span><span id="__span-0-4372"><a id="__codelineno-0-4372" name="__codelineno-0-4372"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_1_1_b</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4373"><a id="__codelineno-0-4373" name="__codelineno-0-4373"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4374"><a id="__codelineno-0-4374" name="__codelineno-0-4374"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4375"><a id="__codelineno-0-4375" name="__codelineno-0-4375"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4376"><a id="__codelineno-0-4376" name="__codelineno-0-4376"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4377"><a id="__codelineno-0-4377" name="__codelineno-0-4377"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4378"><a id="__codelineno-0-4378" name="__codelineno-0-4378"></a><span class="s2">        Z -&gt; {W, Z, Y}</span>
+</span><span id="__span-0-4379"><a id="__codelineno-0-4379" name="__codelineno-0-4379"></a><span class="s2">        Y -&gt; X</span>
+</span><span id="__span-0-4380"><a id="__codelineno-0-4380" name="__codelineno-0-4380"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4381"><a id="__codelineno-0-4381" name="__codelineno-0-4381"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4382"><a id="__codelineno-0-4382" name="__codelineno-0-4382"></a>               <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4383"><a id="__codelineno-0-4383" name="__codelineno-0-4383"></a>               <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mf">.5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4384"><a id="__codelineno-0-4384" name="__codelineno-0-4384"></a>               <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4385"><a id="__codelineno-0-4385" name="__codelineno-0-4385"></a>               <span class="p">}</span>
+</span><span id="__span-0-4386"><a id="__codelineno-0-4386" name="__codelineno-0-4386"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4387"><a id="__codelineno-0-4387" name="__codelineno-0-4387"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span>
+</span><span id="__span-0-4388"><a id="__codelineno-0-4388" name="__codelineno-0-4388"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4389"><a id="__codelineno-0-4389" name="__codelineno-0-4389"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4390"><a id="__codelineno-0-4390" name="__codelineno-0-4390"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4391"><a id="__codelineno-0-4391" name="__codelineno-0-4391"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4392"><a id="__codelineno-0-4392" name="__codelineno-0-4392"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4393"><a id="__codelineno-0-4393" name="__codelineno-0-4393"></a>
+</span><span id="__span-0-4394"><a id="__codelineno-0-4394" name="__codelineno-0-4394"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_1_2</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4395"><a id="__codelineno-0-4395" name="__codelineno-0-4395"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4396"><a id="__codelineno-0-4396" name="__codelineno-0-4396"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4397"><a id="__codelineno-0-4397" name="__codelineno-0-4397"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4398"><a id="__codelineno-0-4398" name="__codelineno-0-4398"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4399"><a id="__codelineno-0-4399" name="__codelineno-0-4399"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4400"><a id="__codelineno-0-4400" name="__codelineno-0-4400"></a><span class="s2">        X1 -&gt; {X2, X3} -&gt; X4 -&gt; X5</span>
+</span><span id="__span-0-4401"><a id="__codelineno-0-4401" name="__codelineno-0-4401"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4402"><a id="__codelineno-0-4402" name="__codelineno-0-4402"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X1&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4403"><a id="__codelineno-0-4403" name="__codelineno-0-4403"></a>               <span class="s2">&quot;X2&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4404"><a id="__codelineno-0-4404" name="__codelineno-0-4404"></a>               <span class="s2">&quot;X3&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4405"><a id="__codelineno-0-4405" name="__codelineno-0-4405"></a>               <span class="s2">&quot;X4&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-0-4406"><a id="__codelineno-0-4406" name="__codelineno-0-4406"></a>               <span class="s2">&quot;X5&quot;</span><span class="p">:</span> <span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span>
+</span><span id="__span-0-4407"><a id="__codelineno-0-4407" name="__codelineno-0-4407"></a>               <span class="p">}</span>
+</span><span id="__span-0-4408"><a id="__codelineno-0-4408" name="__codelineno-0-4408"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X1&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4409"><a id="__codelineno-0-4409" name="__codelineno-0-4409"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;X5&quot;</span>
+</span><span id="__span-0-4410"><a id="__codelineno-0-4410" name="__codelineno-0-4410"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4411"><a id="__codelineno-0-4411" name="__codelineno-0-4411"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4412"><a id="__codelineno-0-4412" name="__codelineno-0-4412"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X1&quot;</span> <span class="p">:</span> <span class="s1">&#39;X1 (Season)&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4413"><a id="__codelineno-0-4413" name="__codelineno-0-4413"></a>                  <span class="s2">&quot;X2&quot;</span> <span class="p">:</span> <span class="s2">&quot;X2 (Rain)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4414"><a id="__codelineno-0-4414" name="__codelineno-0-4414"></a>                  <span class="s2">&quot;X3&quot;</span> <span class="p">:</span> <span class="s2">&quot;X3 (Sprinkler)&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4415"><a id="__codelineno-0-4415" name="__codelineno-0-4415"></a>                  <span class="s2">&quot;X4&quot;</span> <span class="p">:</span> <span class="s1">&#39;X4 (Wet)&#39;</span><span class="p">,</span>
+</span><span id="__span-0-4416"><a id="__codelineno-0-4416" name="__codelineno-0-4416"></a>                  <span class="s2">&quot;X5&quot;</span> <span class="p">:</span> <span class="s1">&#39;X5 (Slippery)&#39;</span>
+</span><span id="__span-0-4417"><a id="__codelineno-0-4417" name="__codelineno-0-4417"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4418"><a id="__codelineno-0-4418" name="__codelineno-0-4418"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4419"><a id="__codelineno-0-4419" name="__codelineno-0-4419"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4420"><a id="__codelineno-0-4420" name="__codelineno-0-4420"></a>
+</span><span id="__span-0-4421"><a id="__codelineno-0-4421" name="__codelineno-0-4421"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_1_3_a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4422"><a id="__codelineno-0-4422" name="__codelineno-0-4422"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4423"><a id="__codelineno-0-4423" name="__codelineno-0-4423"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4424"><a id="__codelineno-0-4424" name="__codelineno-0-4424"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4425"><a id="__codelineno-0-4425" name="__codelineno-0-4425"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4426"><a id="__codelineno-0-4426" name="__codelineno-0-4426"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4427"><a id="__codelineno-0-4427" name="__codelineno-0-4427"></a><span class="s2">        X -&gt; Z1 &lt;- Z2 &lt;- Z3 &lt;- Y</span>
+</span><span id="__span-0-4428"><a id="__codelineno-0-4428" name="__codelineno-0-4428"></a><span class="s2">        Z1 &lt;-&gt; Z3</span>
+</span><span id="__span-0-4429"><a id="__codelineno-0-4429" name="__codelineno-0-4429"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4430"><a id="__codelineno-0-4430" name="__codelineno-0-4430"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4431"><a id="__codelineno-0-4431" name="__codelineno-0-4431"></a>               <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4432"><a id="__codelineno-0-4432" name="__codelineno-0-4432"></a>               <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4433"><a id="__codelineno-0-4433" name="__codelineno-0-4433"></a>               <span class="s2">&quot;Z3&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4434"><a id="__codelineno-0-4434" name="__codelineno-0-4434"></a>               <span class="s2">&quot;Y&quot;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">4</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4435"><a id="__codelineno-0-4435" name="__codelineno-0-4435"></a>               <span class="p">}</span>
+</span><span id="__span-0-4436"><a id="__codelineno-0-4436" name="__codelineno-0-4436"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4437"><a id="__codelineno-0-4437" name="__codelineno-0-4437"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span>
+</span><span id="__span-0-4438"><a id="__codelineno-0-4438" name="__codelineno-0-4438"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4439"><a id="__codelineno-0-4439" name="__codelineno-0-4439"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4440"><a id="__codelineno-0-4440" name="__codelineno-0-4440"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4441"><a id="__codelineno-0-4441" name="__codelineno-0-4441"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4442"><a id="__codelineno-0-4442" name="__codelineno-0-4442"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4443"><a id="__codelineno-0-4443" name="__codelineno-0-4443"></a>
+</span><span id="__span-0-4444"><a id="__codelineno-0-4444" name="__codelineno-0-4444"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_1_3_b</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4445"><a id="__codelineno-0-4445" name="__codelineno-0-4445"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4446"><a id="__codelineno-0-4446" name="__codelineno-0-4446"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4447"><a id="__codelineno-0-4447" name="__codelineno-0-4447"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4448"><a id="__codelineno-0-4448" name="__codelineno-0-4448"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4449"><a id="__codelineno-0-4449" name="__codelineno-0-4449"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4450"><a id="__codelineno-0-4450" name="__codelineno-0-4450"></a><span class="s2">        X -&gt; Z2 -&gt; Z1 -&gt; X</span>
+</span><span id="__span-0-4451"><a id="__codelineno-0-4451" name="__codelineno-0-4451"></a><span class="s2">        Y -&gt; Z2</span>
+</span><span id="__span-0-4452"><a id="__codelineno-0-4452" name="__codelineno-0-4452"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4453"><a id="__codelineno-0-4453" name="__codelineno-0-4453"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4454"><a id="__codelineno-0-4454" name="__codelineno-0-4454"></a>               <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4455"><a id="__codelineno-0-4455" name="__codelineno-0-4455"></a>               <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4456"><a id="__codelineno-0-4456" name="__codelineno-0-4456"></a>               <span class="s2">&quot;Y&quot;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4457"><a id="__codelineno-0-4457" name="__codelineno-0-4457"></a>               <span class="p">}</span>
+</span><span id="__span-0-4458"><a id="__codelineno-0-4458" name="__codelineno-0-4458"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4459"><a id="__codelineno-0-4459" name="__codelineno-0-4459"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span>
+</span><span id="__span-0-4460"><a id="__codelineno-0-4460" name="__codelineno-0-4460"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4461"><a id="__codelineno-0-4461" name="__codelineno-0-4461"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4462"><a id="__codelineno-0-4462" name="__codelineno-0-4462"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4463"><a id="__codelineno-0-4463" name="__codelineno-0-4463"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4464"><a id="__codelineno-0-4464" name="__codelineno-0-4464"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4465"><a id="__codelineno-0-4465" name="__codelineno-0-4465"></a>
+</span><span id="__span-0-4466"><a id="__codelineno-0-4466" name="__codelineno-0-4466"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_3_1</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4467"><a id="__codelineno-0-4467" name="__codelineno-0-4467"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4468"><a id="__codelineno-0-4468" name="__codelineno-0-4468"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4469"><a id="__codelineno-0-4469" name="__codelineno-0-4469"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4470"><a id="__codelineno-0-4470" name="__codelineno-0-4470"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4471"><a id="__codelineno-0-4471" name="__codelineno-0-4471"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4472"><a id="__codelineno-0-4472" name="__codelineno-0-4472"></a><span class="s2">        X -&gt; {Z2, Y}</span>
+</span><span id="__span-0-4473"><a id="__codelineno-0-4473" name="__codelineno-0-4473"></a><span class="s2">        Z2 -&gt; {Z3, Y}</span>
+</span><span id="__span-0-4474"><a id="__codelineno-0-4474" name="__codelineno-0-4474"></a><span class="s2">        Z3 -&gt; Y</span>
+</span><span id="__span-0-4475"><a id="__codelineno-0-4475" name="__codelineno-0-4475"></a><span class="s2">        Z1 -&gt; Z2</span>
+</span><span id="__span-0-4476"><a id="__codelineno-0-4476" name="__codelineno-0-4476"></a><span class="s2">        B -&gt; Z3</span>
+</span><span id="__span-0-4477"><a id="__codelineno-0-4477" name="__codelineno-0-4477"></a><span class="s2">        Z0 -&gt; {X, Z1, B}</span>
+</span><span id="__span-0-4478"><a id="__codelineno-0-4478" name="__codelineno-0-4478"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4479"><a id="__codelineno-0-4479" name="__codelineno-0-4479"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;X&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4480"><a id="__codelineno-0-4480" name="__codelineno-0-4480"></a>               <span class="s2">&quot;Z0&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4481"><a id="__codelineno-0-4481" name="__codelineno-0-4481"></a>               <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mf">.5</span><span class="p">),</span>
+</span><span id="__span-0-4482"><a id="__codelineno-0-4482" name="__codelineno-0-4482"></a>               <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4483"><a id="__codelineno-0-4483" name="__codelineno-0-4483"></a>               <span class="s2">&quot;Z3&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span> <span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4484"><a id="__codelineno-0-4484" name="__codelineno-0-4484"></a>               <span class="s2">&quot;B&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mf">1.5</span> <span class="p">,</span><span class="mf">.5</span><span class="p">),</span>
+</span><span id="__span-0-4485"><a id="__codelineno-0-4485" name="__codelineno-0-4485"></a>               <span class="s2">&quot;Y&quot;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span><span class="o">-</span><span class="mf">.5</span><span class="p">),</span>
+</span><span id="__span-0-4486"><a id="__codelineno-0-4486" name="__codelineno-0-4486"></a>               <span class="p">}</span>
+</span><span id="__span-0-4487"><a id="__codelineno-0-4487" name="__codelineno-0-4487"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4488"><a id="__codelineno-0-4488" name="__codelineno-0-4488"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4489"><a id="__codelineno-0-4489" name="__codelineno-0-4489"></a>                 <span class="s1">&#39;Latent&#39;</span>  <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Z0&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]</span>
+</span><span id="__span-0-4490"><a id="__codelineno-0-4490" name="__codelineno-0-4490"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4491"><a id="__codelineno-0-4491" name="__codelineno-0-4491"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4492"><a id="__codelineno-0-4492" name="__codelineno-0-4492"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Z0&quot;</span><span class="p">:</span> <span class="s2">&quot;$Z_0$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4493"><a id="__codelineno-0-4493" name="__codelineno-0-4493"></a>                  <span class="s2">&quot;Z1&quot;</span><span class="p">:</span> <span class="s2">&quot;$Z_1$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4494"><a id="__codelineno-0-4494" name="__codelineno-0-4494"></a>                  <span class="s2">&quot;Z2&quot;</span><span class="p">:</span> <span class="s2">&quot;$Z_2$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4495"><a id="__codelineno-0-4495" name="__codelineno-0-4495"></a>                  <span class="s2">&quot;Z3&quot;</span><span class="p">:</span> <span class="s2">&quot;$Z_3$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4496"><a id="__codelineno-0-4496" name="__codelineno-0-4496"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4497"><a id="__codelineno-0-4497" name="__codelineno-0-4497"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4498"><a id="__codelineno-0-4498" name="__codelineno-0-4498"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4499"><a id="__codelineno-0-4499" name="__codelineno-0-4499"></a>
+</span><span id="__span-0-4500"><a id="__codelineno-0-4500" name="__codelineno-0-4500"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_3_4</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4501"><a id="__codelineno-0-4501" name="__codelineno-0-4501"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4502"><a id="__codelineno-0-4502" name="__codelineno-0-4502"></a>        <span class="c1"># Source:</span>
+</span><span id="__span-0-4503"><a id="__codelineno-0-4503" name="__codelineno-0-4503"></a>        <span class="c1"># - Pearl, J. (2009). Causality: Models, Reasoning and Inference. : Cambridge University Press.</span>
+</span><span id="__span-0-4504"><a id="__codelineno-0-4504" name="__codelineno-0-4504"></a>        <span class="c1"># &quot;&quot;&quot;</span>
+</span><span id="__span-0-4505"><a id="__codelineno-0-4505" name="__codelineno-0-4505"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4506"><a id="__codelineno-0-4506" name="__codelineno-0-4506"></a><span class="s2">        X1 -&gt; {X3, X4}</span>
+</span><span id="__span-0-4507"><a id="__codelineno-0-4507" name="__codelineno-0-4507"></a><span class="s2">        X2 -&gt; {X4, X5}</span>
+</span><span id="__span-0-4508"><a id="__codelineno-0-4508" name="__codelineno-0-4508"></a><span class="s2">        X3 -&gt; Xi</span>
+</span><span id="__span-0-4509"><a id="__codelineno-0-4509" name="__codelineno-0-4509"></a><span class="s2">        X4 -&gt; {Xi, Xj}</span>
+</span><span id="__span-0-4510"><a id="__codelineno-0-4510" name="__codelineno-0-4510"></a><span class="s2">        X5 -&gt; Xj</span>
+</span><span id="__span-0-4511"><a id="__codelineno-0-4511" name="__codelineno-0-4511"></a><span class="s2">        X6 -&gt; Xj</span>
+</span><span id="__span-0-4512"><a id="__codelineno-0-4512" name="__codelineno-0-4512"></a><span class="s2">        Xi -&gt; X6</span>
+</span><span id="__span-0-4513"><a id="__codelineno-0-4513" name="__codelineno-0-4513"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4514"><a id="__codelineno-0-4514" name="__codelineno-0-4514"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Xi&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4515"><a id="__codelineno-0-4515" name="__codelineno-0-4515"></a>               <span class="s1">&#39;Xj&#39;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4516"><a id="__codelineno-0-4516" name="__codelineno-0-4516"></a>               <span class="s2">&quot;X1&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-0-4517"><a id="__codelineno-0-4517" name="__codelineno-0-4517"></a>               <span class="s2">&quot;X2&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+</span><span id="__span-0-4518"><a id="__codelineno-0-4518" name="__codelineno-0-4518"></a>               <span class="s2">&quot;X3&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4519"><a id="__codelineno-0-4519" name="__codelineno-0-4519"></a>               <span class="s2">&quot;X4&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4520"><a id="__codelineno-0-4520" name="__codelineno-0-4520"></a>               <span class="s2">&quot;X5&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4521"><a id="__codelineno-0-4521" name="__codelineno-0-4521"></a>               <span class="s2">&quot;X6&quot;</span><span class="p">:</span>  <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4522"><a id="__codelineno-0-4522" name="__codelineno-0-4522"></a>               <span class="p">}</span>
+</span><span id="__span-0-4523"><a id="__codelineno-0-4523" name="__codelineno-0-4523"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;Xi&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4524"><a id="__codelineno-0-4524" name="__codelineno-0-4524"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Xj&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4525"><a id="__codelineno-0-4525" name="__codelineno-0-4525"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4526"><a id="__codelineno-0-4526" name="__codelineno-0-4526"></a>        <span class="n">edge_labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4527"><a id="__codelineno-0-4527" name="__codelineno-0-4527"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Xi&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_i$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4528"><a id="__codelineno-0-4528" name="__codelineno-0-4528"></a>                  <span class="s2">&quot;Xj&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_j$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4529"><a id="__codelineno-0-4529" name="__codelineno-0-4529"></a>                  <span class="s2">&quot;X1&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_1$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4530"><a id="__codelineno-0-4530" name="__codelineno-0-4530"></a>                  <span class="s2">&quot;X2&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_2$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4531"><a id="__codelineno-0-4531" name="__codelineno-0-4531"></a>                  <span class="s2">&quot;X3&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_3$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4532"><a id="__codelineno-0-4532" name="__codelineno-0-4532"></a>                  <span class="s2">&quot;X4&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_4$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4533"><a id="__codelineno-0-4533" name="__codelineno-0-4533"></a>                  <span class="s2">&quot;X5&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_5$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4534"><a id="__codelineno-0-4534" name="__codelineno-0-4534"></a>                  <span class="s2">&quot;X6&quot;</span><span class="p">:</span> <span class="s2">&quot;$X_6$&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4535"><a id="__codelineno-0-4535" name="__codelineno-0-4535"></a>                  <span class="p">}</span>
+</span><span id="__span-0-4536"><a id="__codelineno-0-4536" name="__codelineno-0-4536"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+</span><span id="__span-0-4537"><a id="__codelineno-0-4537" name="__codelineno-0-4537"></a>                    <span class="n">edge_label</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+</span><span id="__span-0-4538"><a id="__codelineno-0-4538" name="__codelineno-0-4538"></a>
+</span><span id="__span-0-4539"><a id="__codelineno-0-4539" name="__codelineno-0-4539"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_example_pearl_fig_3_5</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-4540"><a id="__codelineno-0-4540" name="__codelineno-0-4540"></a>        <span class="n">dag</span>  <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4541"><a id="__codelineno-0-4541" name="__codelineno-0-4541"></a><span class="s2">        U -&gt; {X, Y}</span>
+</span><span id="__span-0-4542"><a id="__codelineno-0-4542" name="__codelineno-0-4542"></a><span class="s2">        X  -&gt; Z -&gt; Y</span>
+</span><span id="__span-0-4543"><a id="__codelineno-0-4543" name="__codelineno-0-4543"></a><span class="s2">        &quot;&quot;&quot;</span>
+</span><span id="__span-0-4544"><a id="__codelineno-0-4544" name="__codelineno-0-4544"></a>        <span class="n">pos</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4545"><a id="__codelineno-0-4545" name="__codelineno-0-4545"></a>               <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4546"><a id="__codelineno-0-4546" name="__codelineno-0-4546"></a>               <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span> <span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+</span><span id="__span-0-4547"><a id="__codelineno-0-4547" name="__codelineno-0-4547"></a>               <span class="s1">&#39;U&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mf">.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+</span><span id="__span-0-4548"><a id="__codelineno-0-4548" name="__codelineno-0-4548"></a>               <span class="p">}</span>
+</span><span id="__span-0-4549"><a id="__codelineno-0-4549" name="__codelineno-0-4549"></a>        <span class="n">roles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Exposure&#39;</span><span class="p">:</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4550"><a id="__codelineno-0-4550" name="__codelineno-0-4550"></a>                 <span class="s1">&#39;Outcome&#39;</span> <span class="p">:</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4551"><a id="__codelineno-0-4551" name="__codelineno-0-4551"></a>                 <span class="s2">&quot;Latent&quot;</span>  <span class="p">:</span> <span class="s2">&quot;U&quot;</span>
+</span><span id="__span-0-4552"><a id="__codelineno-0-4552" name="__codelineno-0-4552"></a>                 <span class="p">}</span>
+</span><span id="__span-0-4553"><a id="__codelineno-0-4553" name="__codelineno-0-4553"></a>        <span class="n">labels</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-4554"><a id="__codelineno-0-4554" name="__codelineno-0-4554"></a>        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="n">nodes_role</span><span class="o">=</span><span class="n">roles</span><span class="p">,</span> <span class="n">nodes_position</span><span class="o">=</span><span class="n">pos</span><span class="p">,</span> <span class="n">nodes_label</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "content.tabs.link", "content.code.copy", "content.code.select", "content.code.copy", "content.code.annotate", "navigation.tabs", "navigation.tabs.sticky", "navigation.path", "navigation.prune", "navigation.tracking", "navigation.instant", "navigation.indexes"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../js/mkdocs-charts-plugin.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      
+        <script src="../../../src/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

@@ -2,7 +2,7 @@
 
 hide:
 
--   toc
+- toc
 
 ---
 
@@ -16,9 +16,9 @@ are:
 | Estimate causal model             | `<submodule>.estimate()`             |
 | Run sensitivity analysis          | `<submodule>.sensitivity_analysis()` |
 | Summarize the results             | `<submodule>.summary()`              |
-| Examples(1)                       | `<submodule>examples()`              |
+| Examples\*                        | `<submodule>examples()`              |
 
-*(1) Each submodule contains some pre-defined examples to illustrate
+*\* Each submodule contains some pre-defined examples to illustrate
 `causalinf` application. See [Examples.](../examples/)*
 
 There are many other method-specific functions. See
