@@ -371,8 +371,6 @@
           
             
               
-                
-              
               <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -750,6 +748,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    <font color="#a41034">Simulate Data</font>
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -766,6 +782,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simulated-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulated data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#true-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        True parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-ordinal-and-categorical-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary, ordinal, and categorical variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-simulated-data-for-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use simulated data for estimation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1019,9 +1131,7 @@
             
             
               
-                
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" hidden>
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -1033,6 +1143,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simulated-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simulated data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#true-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        True parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#noise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Noise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binary-ordinal-and-categorical-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binary, ordinal, and categorical variables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-simulated-data-for-estimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use simulated data for estimation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1043,8 +1238,6 @@
             <div class="md-content" data-md-component="content">
               
                 
-
-  
 
 
 
@@ -1095,8 +1288,6 @@
               <article class="md-content__inner md-typeset">
                 
                   
-  
-
 
 
   
@@ -1104,12 +1295,21 @@
 
 
 <h1 id="simulate-data">Simulate Data</h1>
-<p>The submodule <code>simulate</code> contains many classes that allow simulating
-data from specific models. For details, see
-<a href="../../api/#synthetic-data">Documentation</a>.</p>
-<p>The object with the simulated data contains additional information, such
-as the parameter values used in the simulation. Below is an example of
-simulated data from a Graphical Model. Here is the graph:</p>
+<p>The submodule <code>simulate</code> creates synthetic data from causal models. This
+is useful for examples, tutorials, simulation studies, checking
+estimators, and building reproducible workflows before using real data.</p>
+<p>The basic structure to simulate data is <code>simulate.&lt;model name&gt;</code>. For
+instance, <code>simulate.lsem()</code> simulates data from a <strong>Linear Structural
+Equation Model</strong> (LSEM) implied by a Graphical Causal Model (GCM). In
+this case, the simulator uses the graph to determine the order of the
+variables and which variables are parents of each node. For each
+endogenous variable, it generates a linear equation using randomly drawn
+coefficients and Gaussian noise.</p>
+<p>The object returned by <code>simulate.&lt;model&gt;</code> stores both the simulated data
+and the true parameters used to generate them. This is useful because
+the true data-generating process is known.</p>
+<h2 id="basic-example">Basic example</h2>
+<p>Start with a GCM. Here, we use one of the built-in examples:</p>
 <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
 <span class="normal"><a href="#__codelineno-0-2">2</a></span>
 <span class="normal"><a href="#__codelineno-0-3">3</a></span>
@@ -1117,109 +1317,319 @@ simulated data from a Graphical Model. Here is the graph:</p>
 <span class="normal"><a href="#__codelineno-0-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">causalinf</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulate</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">causalinf</span><span class="w"> </span><span class="kn">import</span> <span class="n">gcm</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="n">G</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;Pearl Example 1.1 (a)&#39;</span><span class="p">)</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="n">G</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;Two confounders&#39;</span><span class="p">)</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="n">G</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </span></code></pre></div></td></tr></table></div>
-<p><img alt="" src="../tables-and-figures/example-simulated-data.png.png" /></p>
-<p>To simulate data from a linear structure model based on that graph, use:</p>
-<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="n">sim</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<p><img alt="" src="./tables-and-figures/example-simulated-data.png" /></p>
+<p>To simulate data from a linear structural equation model based on that
+graph, use:</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="n">sim</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
-<p>Here are the data and some relevant pieces of information stored in the
-<code>sim</code> object:</p>
-<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
-<span class="normal"><a href="#__codelineno-2-2">2</a></span>
-<span class="normal"><a href="#__codelineno-2-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">parameters_tidy</span><span class="p">)</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Linear</span> <span class="n">Structural</span> <span class="n">Equation</span> <span class="n">Model</span> <span class="p">(</span><span class="n">LSEM</span><span class="p">):</span> 
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">D</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.4071</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.7584</span><span class="p">)</span><span class="o">*</span><span class="n">Z2</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.6624</span><span class="p">)</span><span class="o">*</span><span class="n">Z1</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2731</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.3515</span><span class="p">)</span><span class="o">*</span><span class="n">Z1</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.2122</span><span class="p">)</span><span class="o">*</span><span class="n">Z2</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.8772</span><span class="p">)</span><span class="o">*</span><span class="n">D</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1_000</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="err">┌───────────┬───────────┬───────────┬───────────┐</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>         <span class="err">│</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═══════════╡</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.495579</span> <span class="err">┆</span> <span class="mf">0.528705</span>  <span class="err">│</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.621482</span> <span class="err">┆</span> <span class="mf">2.393703</span>  <span class="err">│</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">2.445209</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.126385</span> <span class="err">│</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.193344</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.736317</span> <span class="err">│</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.235186</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.484971</span> <span class="err">│</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="err">│</span> <span class="err">…</span>         <span class="err">┆</span> <span class="err">…</span>         <span class="err">┆</span> <span class="err">…</span>         <span class="err">┆</span> <span class="err">…</span>         <span class="err">│</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.116444</span> <span class="err">┆</span> <span class="mf">0.188583</span>  <span class="err">┆</span> <span class="mf">0.911065</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.6025</span>   <span class="err">│</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="err">│</span> <span class="o">-</span><span class="mf">2.277298</span> <span class="err">┆</span> <span class="mf">0.560918</span>  <span class="err">┆</span> <span class="mf">3.063715</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.866042</span> <span class="err">│</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.069625</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.921659</span> <span class="err">┆</span> <span class="mf">0.040004</span>  <span class="err">┆</span> <span class="mf">2.018582</span>  <span class="err">│</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="err">│</span> <span class="mf">0.35387</span>   <span class="err">┆</span> <span class="mf">0.647375</span>  <span class="err">┆</span> <span class="mf">0.288054</span>  <span class="err">┆</span> <span class="mf">0.076519</span>  <span class="err">│</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.186955</span> <span class="err">┆</span> <span class="mf">1.386826</span>  <span class="err">┆</span> <span class="mf">2.995921</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">3.579248</span> <span class="err">│</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="err">└───────────┴───────────┴───────────┴───────────┘</span>
+</span></code></pre></div>
+<p>The argument <code>seed</code> makes the simulation reproducible. If <code>seed</code> is
+omitted, a new random simulation is drawn each time.</p>
+<h2 id="simulated-data">Simulated data</h2>
+<p>The simulated data are stored in <code>sim.data</code>. The object is a dataframe
+from <code>tidypolars4sci</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </span></code></pre></div></td></tr></table></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="err">┌─────┬─────┬─────┬─────┬─────┬─────┐</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="err">│</span> <span class="n">X</span>   <span class="err">┆</span> <span class="n">W</span>   <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;Z ┆ Z   ┆ (&#39;</span><span class="n">X</span> <span class="err">┆</span> <span class="n">Y</span>   <span class="err">│</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="err">│</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="s1">&#39;,  ┆ --- ┆ &#39;</span><span class="p">,</span>  <span class="err">┆</span> <span class="o">---</span> <span class="err">│</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="err">│</span> <span class="n">f64</span> <span class="err">┆</span> <span class="n">f64</span> <span class="err">┆</span> <span class="s1">&#39;X&#39;</span> <span class="err">┆</span> <span class="n">f64</span> <span class="err">┆</span> <span class="s1">&#39;Z&#39;</span> <span class="err">┆</span> <span class="n">f64</span> <span class="err">│</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span>   <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span>   <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span>     <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="n">f64</span> <span class="err">┆</span>     <span class="err">┆</span> <span class="n">f64</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="err">╞═════╪═════╪═════╪═════╪═════╪═════╡</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.</span> <span class="err">┆</span> <span class="mf">1.1</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.</span> <span class="err">│</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="err">│</span> <span class="mi">152</span> <span class="err">┆</span> <span class="mi">037</span> <span class="err">┆</span> <span class="mi">396</span> <span class="err">┆</span> <span class="mi">824</span> <span class="err">┆</span> <span class="mi">686</span> <span class="err">┆</span> <span class="mi">670</span> <span class="err">│</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="err">│</span> <span class="mi">676</span> <span class="err">┆</span> <span class="mi">366</span> <span class="err">┆</span> <span class="mi">107</span> <span class="err">┆</span> <span class="mi">11</span>  <span class="err">┆</span> <span class="mi">375</span> <span class="err">┆</span> <span class="mi">969</span> <span class="err">│</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.</span> <span class="err">┆</span> <span class="mf">0.3</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="mf">0.2</span> <span class="err">┆</span> <span class="mf">0.7</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">│</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="err">│</span> <span class="mi">812</span> <span class="err">┆</span> <span class="mi">930</span> <span class="err">┆</span> <span class="mi">375</span> <span class="err">┆</span> <span class="mi">853</span> <span class="err">┆</span> <span class="mi">808</span> <span class="err">┆</span> <span class="mi">640</span> <span class="err">│</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="err">│</span> <span class="mi">581</span> <span class="err">┆</span> <span class="mi">66</span>  <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="mi">27</span>  <span class="err">┆</span> <span class="mi">26</span>  <span class="err">┆</span> <span class="mi">568</span> <span class="err">│</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="mf">0.1</span> <span class="err">┆</span> <span class="mf">1.5</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="mf">0.7</span> <span class="err">┆</span> <span class="mf">0.5</span> <span class="err">│</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="err">│</span> <span class="mi">526</span> <span class="err">┆</span> <span class="mi">609</span> <span class="err">┆</span> <span class="mi">953</span> <span class="err">┆</span> <span class="mi">335</span> <span class="err">┆</span> <span class="mi">323</span> <span class="err">┆</span> <span class="mi">109</span> <span class="err">│</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="err">│</span> <span class="mi">968</span> <span class="err">┆</span> <span class="mi">69</span>  <span class="err">┆</span> <span class="mi">47</span>  <span class="err">┆</span> <span class="mi">971</span> <span class="err">┆</span> <span class="mi">74</span>  <span class="err">┆</span> <span class="mi">91</span>  <span class="err">│</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="err">│</span> <span class="mf">0.5</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="mf">0.5</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.</span> <span class="err">│</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="err">│</span> <span class="mi">201</span> <span class="err">┆</span> <span class="mi">620</span> <span class="err">┆</span> <span class="mi">813</span> <span class="err">┆</span> <span class="mi">255</span> <span class="err">┆</span> <span class="mi">617</span> <span class="err">┆</span> <span class="mi">079</span> <span class="err">│</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="err">│</span> <span class="mi">7</span>   <span class="err">┆</span> <span class="mi">632</span> <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">662</span> <span class="err">┆</span> <span class="mi">521</span> <span class="err">┆</span> <span class="mi">646</span> <span class="err">│</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">┆</span> <span class="mf">0.4</span> <span class="err">┆</span> <span class="mf">1.2</span> <span class="err">┆</span> <span class="mf">2.5</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">│</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="err">│</span> <span class="mi">538</span> <span class="err">┆</span> <span class="mi">094</span> <span class="err">┆</span> <span class="mi">020</span> <span class="err">┆</span> <span class="mi">620</span> <span class="err">┆</span> <span class="mi">424</span> <span class="err">┆</span> <span class="mi">287</span> <span class="err">│</span>
-</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="err">│</span> <span class="mi">738</span> <span class="err">┆</span> <span class="mi">038</span> <span class="err">┆</span> <span class="mi">97</span>  <span class="err">┆</span> <span class="mi">29</span>  <span class="err">┆</span> <span class="mi">33</span>  <span class="err">┆</span> <span class="mi">027</span> <span class="err">│</span>
-</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="err">└─────┴─────┴─────┴─────┴─────┴─────┘</span>
-</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="err">┌─────┬─────┬─────┬─────┬─────┐</span>
-</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="err">│</span> <span class="n">lhs</span> <span class="err">┆</span> <span class="n">op</span>  <span class="err">┆</span> <span class="n">rhs</span> <span class="err">┆</span> <span class="n">ter</span> <span class="err">┆</span> <span class="n">tru</span> <span class="err">│</span>
-</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="err">│</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="n">m</span>   <span class="err">┆</span> <span class="n">e</span>   <span class="err">│</span>
-</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="err">│</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">│</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="n">f64</span> <span class="err">│</span>
-</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="err">╞═════╪═════╪═════╪═════╪═════╡</span>
-</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="err">│</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">Z</span> <span class="o">~</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">│</span>
-</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="mi">165</span> <span class="err">│</span>
-</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">468</span> <span class="err">│</span>
-</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="err">│</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">W</span>   <span class="err">┆</span> <span class="n">Z</span> <span class="o">~</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">│</span>
-</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="n">W</span>   <span class="err">┆</span> <span class="mi">502</span> <span class="err">│</span>
-</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">682</span> <span class="err">│</span>
-</span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="err">│</span> <span class="n">X</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;X ┆ 0.5 │</span>
-</span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆ 040 │</span>
-</span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;Z&#39;</span> <span class="err">┆</span> <span class="mi">96</span>  <span class="err">│</span>
-</span><span id="__span-3-42"><a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span> <span class="o">~</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-43"><a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-44"><a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="err">│</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;X ┆ 0.5 │</span>
-</span><span id="__span-3-45"><a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆ 040 │</span>
-</span><span id="__span-3-46"><a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;Z&#39;</span> <span class="err">┆</span> <span class="mi">96</span>  <span class="err">│</span>
-</span><span id="__span-3-47"><a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span> <span class="o">~</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-48"><a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-49"><a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="err">│</span> <span class="n">X</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;X ┆ 0.6 │</span>
-</span><span id="__span-3-50"><a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆ 655 │</span>
-</span><span id="__span-3-51"><a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;Z&#39;</span> <span class="err">┆</span> <span class="mi">59</span>  <span class="err">│</span>
-</span><span id="__span-3-52"><a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span> <span class="o">~</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-53"><a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;Z ┆     │</span>
-</span><span id="__span-3-54"><a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆     │</span>
-</span><span id="__span-3-55"><a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;X&#39;</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-56"><a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span>   <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-57"><a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a><span class="err">│</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">X</span>   <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;X ┆ 0.6 │</span>
-</span><span id="__span-3-58"><a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆ 655 │</span>
-</span><span id="__span-3-59"><a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;Z&#39;</span> <span class="err">┆</span> <span class="mi">59</span>  <span class="err">│</span>
-</span><span id="__span-3-60"><a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span> <span class="o">~</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-61"><a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">(</span><span class="s1">&#39;Z ┆     │</span>
-</span><span id="__span-3-62"><a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;,  ┆     │</span>
-</span><span id="__span-3-63"><a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="s1">&#39;X&#39;</span> <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-64"><a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="p">)</span>   <span class="err">┆</span>     <span class="err">│</span>
-</span><span id="__span-3-65"><a id="__codelineno-3-65" name="__codelineno-3-65" href="#__codelineno-3-65"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="err">┆</span> <span class="mf">0.2</span> <span class="err">│</span>
-</span><span id="__span-3-66"><a id="__codelineno-3-66" name="__codelineno-3-66" href="#__codelineno-3-66"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="mi">967</span> <span class="err">│</span>
-</span><span id="__span-3-67"><a id="__codelineno-3-67" name="__codelineno-3-67" href="#__codelineno-3-67"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">71</span>  <span class="err">│</span>
-</span><span id="__span-3-68"><a id="__codelineno-3-68" name="__codelineno-3-68" href="#__codelineno-3-68"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">X</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="err">┆</span> <span class="mf">0.1</span> <span class="err">│</span>
-</span><span id="__span-3-69"><a id="__codelineno-3-69" name="__codelineno-3-69" href="#__codelineno-3-69"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="n">X</span>   <span class="err">┆</span> <span class="mi">608</span> <span class="err">│</span>
-</span><span id="__span-3-70"><a id="__codelineno-3-70" name="__codelineno-3-70" href="#__codelineno-3-70"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">65</span>  <span class="err">│</span>
-</span><span id="__span-3-71"><a id="__codelineno-3-71" name="__codelineno-3-71" href="#__codelineno-3-71"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.</span> <span class="err">│</span>
-</span><span id="__span-3-72"><a id="__codelineno-3-72" name="__codelineno-3-72" href="#__codelineno-3-72"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="n">Z</span>   <span class="err">┆</span> <span class="mi">601</span> <span class="err">│</span>
-</span><span id="__span-3-73"><a id="__codelineno-3-73" name="__codelineno-3-73" href="#__codelineno-3-73"></a><span class="err">│</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mi">773</span> <span class="err">│</span>
-</span><span id="__span-3-74"><a id="__codelineno-3-74" name="__codelineno-3-74" href="#__codelineno-3-74"></a><span class="err">└─────┴─────┴─────┴─────┴─────┘</span>
-</span><span id="__span-3-75"><a id="__codelineno-3-75" name="__codelineno-3-75" href="#__codelineno-3-75"></a><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="p">{},</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="o">-</span><span class="mf">0.16546840218751058</span><span class="p">),</span> <span class="s1">&#39;W&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5026822920154137</span><span class="p">},</span> <span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">):</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.504096131827507</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">):</span> <span class="mf">0.6655587449937226</span><span class="p">},</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.296771416338508</span><span class="p">),</span> <span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">0.1608651106173018</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.6017725406975072</span><span class="p">}}</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="err">┌───────────┬───────────┬───────────┬───────────┐</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>         <span class="err">│</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═══════════╡</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.495579</span> <span class="err">┆</span> <span class="mf">0.528705</span>  <span class="err">│</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.621482</span> <span class="err">┆</span> <span class="mf">2.393703</span>  <span class="err">│</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">2.445209</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.126385</span> <span class="err">│</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.193344</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.736317</span> <span class="err">│</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.235186</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.484971</span> <span class="err">│</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="err">└───────────┴───────────┴───────────┴───────────┘</span>
 </span></code></pre></div>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="err">$$</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>\<span class="n">begin</span><span class="p">{</span><span class="n">array</span><span class="p">}{</span><span class="n">lccr</span><span class="p">}</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>\<span class="n">toprule</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>\<span class="n">text</span><span class="p">{</span><span class="n">Method</span><span class="p">}</span> <span class="o">&amp;</span> \<span class="n">text</span><span class="p">{</span><span class="n">Accuracy</span><span class="p">}</span> <span class="o">&amp;</span> \<span class="n">text</span><span class="p">{</span><span class="n">F1</span><span class="o">-</span><span class="n">Score</span><span class="p">}</span> <span class="o">&amp;</span> \<span class="k">lambda</span> \<span class="n">text</span><span class="p">{</span> <span class="n">value</span><span class="p">}</span> \\
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>\<span class="n">midrule</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>\<span class="n">text</span><span class="p">{</span><span class="n">SoO</span><span class="p">}</span><span class="o">^</span><span class="p">{</span>\<span class="n">ast</span><span class="p">}</span> <span class="o">&amp;</span> <span class="mf">0.95</span> <span class="o">&amp;</span> <span class="mf">0.92</span> <span class="o">&amp;</span> <span class="mi">10</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">3</span><span class="p">}</span> \\
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>\<span class="n">text</span><span class="p">{</span><span class="n">IV</span><span class="p">}</span> <span class="o">&amp;</span> <span class="mf">0.89</span> <span class="o">&amp;</span> <span class="mf">0.85</span> <span class="o">&amp;</span> <span class="mi">5</span> \<span class="n">times</span> <span class="mi">10</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">4</span><span class="p">}</span> \\
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>\<span class="n">text</span><span class="p">{</span><span class="n">DiD</span><span class="p">}</span> <span class="o">&amp;</span> <span class="mf">0.91</span> <span class="o">&amp;</span> <span class="mf">0.88</span> <span class="o">&amp;</span> <span class="mi">10</span><span class="o">^</span><span class="p">{</span><span class="o">-</span><span class="mi">2</span><span class="p">}</span> \\
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>\<span class="n">bottomrule</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>\<span class="n">end</span><span class="p">{</span><span class="n">array</span><span class="p">}</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="err">$$</span>
+<p>The number of observations is controlled by the argument <code>n</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="n">sim_small</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_small</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="err">┌───────────┬───────────┬───────────┬───────────┐</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>         <span class="err">│</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═══════════╡</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">2.301539</span> <span class="err">┆</span> <span class="mf">1.453514</span>  <span class="err">┆</span> <span class="mf">1.564702</span>  <span class="err">│</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="mf">1.744812</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.841985</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.359266</span> <span class="err">│</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.761207</span> <span class="err">┆</span> <span class="mf">0.938394</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.402515</span> <span class="err">│</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="mf">0.319039</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.399277</span> <span class="err">┆</span> <span class="mf">1.431886</span>  <span class="err">│</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.24937</span>  <span class="err">┆</span> <span class="mf">1.095344</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.449383</span> <span class="err">│</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="err">└───────────┴───────────┴───────────┴───────────┘</span>
 </span></code></pre></div>
+<h2 id="true-parameters">True parameters</h2>
+<p>The simulator stores the true coefficients in two formats:</p>
+<ol>
+<li><code>sim.parameters</code>, a nested dictionary keyed by endogenous variable
+    and parent variable.</li>
+<li><code>sim.parameters_tidy</code>, a tidy dataframe with one row per parameter.</li>
+</ol>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span><span class="s1">&#39;Z1&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;Z2&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="mf">0.40709546440285704</span><span class="p">),</span> <span class="s1">&#39;Z2&#39;</span><span class="p">:</span> <span class="mf">0.758397121073191</span><span class="p">,</span> <span class="s1">&#39;Z1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.6623996198448128</span><span class="p">},</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2731382139476062</span><span class="p">),</span> <span class="s1">&#39;Z1&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3514895517458223</span><span class="p">,</span> <span class="s1">&#39;Z2&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.21224372445969886</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.8771756918836713</span><span class="p">}}</span>
+</span></code></pre></div>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">parameters_tidy</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="err">┌─────┬─────┬─────┬────────┬───────────┐</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="err">│</span> <span class="n">lhs</span> <span class="err">┆</span> <span class="n">op</span>  <span class="err">┆</span> <span class="n">rhs</span> <span class="err">┆</span> <span class="n">term</span>   <span class="err">┆</span> <span class="n">true</span>      <span class="err">│</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="err">│</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span>    <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="err">│</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span>    <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="err">╞═════╪═════╪═════╪════════╪═══════════╡</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="mi">1</span>  <span class="err">┆</span> <span class="mf">0.407095</span>  <span class="err">│</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z2</span>  <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z2</span> <span class="err">┆</span> <span class="mf">0.758397</span>  <span class="err">│</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z1</span>  <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z1</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.6624</span>   <span class="err">│</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="mi">1</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.273138</span> <span class="err">│</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z1</span>  <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z1</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.35149</span>  <span class="err">│</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z2</span>  <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z2</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.212244</span> <span class="err">│</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">D</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">D</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.877176</span> <span class="err">│</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="err">└─────┴─────┴─────┴────────┴───────────┘</span>
+</span></code></pre></div>
+<p>The true parameters can be compared with estimates from the
+corresponding causal model. See <a href="./estimation">Estimation</a> and <a href="./summary-and-reporting">Summary
+and Reporting</a> for examples of estimation and
+reporting workflows.</p>
+<h2 id="noise">Noise</h2>
+<p>The argument <code>noise</code> controls the standard deviation of the Gaussian
+disturbance terms. A single number sets the same noise level for all
+variables.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1"></a><span class="n">sim_low_noise</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_low_noise</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="err">┌───────────┬───────────┬───────────┬───────────┐</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>         <span class="err">│</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═══════════╡</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="err">│</span> <span class="mf">0.406086</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.038309</span> <span class="err">┆</span> <span class="mf">0.181427</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.340498</span> <span class="err">│</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.152939</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.608127</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.350049</span> <span class="err">┆</span> <span class="mf">0.125751</span>  <span class="err">│</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.132043</span> <span class="err">┆</span> <span class="mf">0.126996</span>  <span class="err">┆</span> <span class="mf">0.916624</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.754271</span> <span class="err">│</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.268242</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.081008</span> <span class="err">┆</span> <span class="mf">0.256985</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.656754</span> <span class="err">│</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="err">│</span> <span class="mf">0.216352</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.377769</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.003475</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.593917</span> <span class="err">│</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="err">└───────────┴───────────┴───────────┴───────────┘</span>
+</span></code></pre></div>
+<p>Use a dictionary to set variable-specific noise levels. Variables not
+included in the dictionary use the default value <code>1.0</code>.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span>
+<span class="normal"><a href="#__codelineno-13-5">5</a></span>
+<span class="normal"><a href="#__codelineno-13-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1"></a><span class="n">sim_custom_noise</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2"></a>    <span class="n">G</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3"></a>    <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4"></a>    <span class="n">noise</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;D&quot;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5"></a><span class="p">)</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_custom_noise</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="err">┌───────────┬───────────┬───────────┬───────────┐</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>         <span class="err">│</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═══════════╡</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.712708</span> <span class="err">┆</span> <span class="mf">1.624715</span>  <span class="err">│</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.429734</span> <span class="err">┆</span> <span class="mf">0.984361</span>  <span class="err">│</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">1.46796</span>   <span class="err">┆</span> <span class="mf">0.944635</span>  <span class="err">│</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="mf">0.605727</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">2.51593</span>  <span class="err">│</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.292906</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.746182</span> <span class="err">│</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="err">└───────────┴───────────┴───────────┴───────────┘</span>
+</span></code></pre></div>
+<h2 id="binary-ordinal-and-categorical-variables">Binary, ordinal, and categorical variables</h2>
+<p>By default, all variables are simulated as continuous. The arguments
+<code>binary</code>, <code>ordinal</code>, and <code>categorical</code> can be used to discretize
+selected variables.</p>
+<p>Use <code>binary</code> for Bernoulli variables. The argument can be a string or a
+list of variable names.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span>
+<span class="normal"><a href="#__codelineno-15-3">3</a></span>
+<span class="normal"><a href="#__codelineno-15-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1"></a><span class="n">sim_binary</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">)</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_binary</span><span class="o">.</span><span class="n">binary</span><span class="p">)</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_binary</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">,)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="err">┌───────────┬───────────┬───────────┬─────┐</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>   <span class="err">│</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span> <span class="err">│</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">i64</span> <span class="err">│</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═════╡</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.495579</span> <span class="err">┆</span> <span class="mi">1</span>   <span class="err">│</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.621482</span> <span class="err">┆</span> <span class="mi">1</span>   <span class="err">│</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">2.445209</span>  <span class="err">┆</span> <span class="mi">0</span>   <span class="err">│</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.193344</span> <span class="err">┆</span> <span class="mi">0</span>   <span class="err">│</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.235186</span> <span class="err">┆</span> <span class="mi">0</span>   <span class="err">│</span>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="err">└───────────┴───────────┴───────────┴─────┘</span>
+</span></code></pre></div>
+<p>Use <code>ordinal</code> to create ordered integer variables. The dictionary values
+set the lower and upper bounds.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span>
+<span class="normal"><a href="#__codelineno-17-2">2</a></span>
+<span class="normal"><a href="#__codelineno-17-3">3</a></span>
+<span class="normal"><a href="#__codelineno-17-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1"></a><span class="n">sim_ordinal</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ordinal</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]})</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_ordinal</span><span class="o">.</span><span class="n">ordinal</span><span class="p">)</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_ordinal</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span><span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)}</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="err">┌───────────┬───────────┬───────────┬─────┐</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>   <span class="err">│</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span> <span class="err">│</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">i64</span> <span class="err">│</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="err">╞═══════════╪═══════════╪═══════════╪═════╡</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.495579</span> <span class="err">┆</span> <span class="mi">4</span>   <span class="err">│</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.621482</span> <span class="err">┆</span> <span class="mi">5</span>   <span class="err">│</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">2.445209</span>  <span class="err">┆</span> <span class="mi">2</span>   <span class="err">│</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.193344</span> <span class="err">┆</span> <span class="mi">2</span>   <span class="err">│</span>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.235186</span> <span class="err">┆</span> <span class="mi">2</span>   <span class="err">│</span>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="err">└───────────┴───────────┴───────────┴─────┘</span>
+</span></code></pre></div>
+<p>Use <code>categorical</code> to create variables with named categories.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
+<span class="normal"><a href="#__codelineno-19-2">2</a></span>
+<span class="normal"><a href="#__codelineno-19-3">3</a></span>
+<span class="normal"><a href="#__codelineno-19-4">4</a></span>
+<span class="normal"><a href="#__codelineno-19-5">5</a></span>
+<span class="normal"><a href="#__codelineno-19-6">6</a></span>
+<span class="normal"><a href="#__codelineno-19-7">7</a></span>
+<span class="normal"><a href="#__codelineno-19-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="n">sim_categorical</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2"></a>    <span class="n">G</span><span class="p">,</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3"></a>    <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4"></a>    <span class="n">categorical</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">]},</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5"></a><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_categorical</span><span class="o">.</span><span class="n">categorical</span><span class="p">)</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_categorical</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span><span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">)}</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="err">┌───────────┬───────────┬───────────┬────────┐</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="err">│</span> <span class="n">Z1</span>        <span class="err">┆</span> <span class="n">Z2</span>        <span class="err">┆</span> <span class="n">D</span>         <span class="err">┆</span> <span class="n">Y</span>      <span class="err">│</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="err">│</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>    <span class="err">│</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="err">│</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="nb">str</span>    <span class="err">│</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="err">╞═══════════╪═══════════╪═══════════╪════════╡</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="err">│</span> <span class="mf">1.624345</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.153236</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.495579</span> <span class="err">┆</span> <span class="n">medium</span> <span class="err">│</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.611756</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.432509</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">2.621482</span> <span class="err">┆</span> <span class="n">high</span>   <span class="err">│</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="err">│</span> <span class="o">-</span><span class="mf">0.528172</span> <span class="err">┆</span> <span class="mf">0.507984</span>  <span class="err">┆</span> <span class="mf">2.445209</span>  <span class="err">┆</span> <span class="n">low</span>    <span class="err">│</span>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="err">│</span> <span class="o">-</span><span class="mf">1.072969</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.324032</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.193344</span> <span class="err">┆</span> <span class="n">low</span>    <span class="err">│</span>
+</span><span id="__span-20-12"><a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="err">│</span> <span class="mf">0.865408</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">1.511077</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">1.235186</span> <span class="err">┆</span> <span class="n">medium</span> <span class="err">│</span>
+</span><span id="__span-20-13"><a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="err">└───────────┴───────────┴───────────┴────────┘</span>
+</span></code></pre></div>
+<p>A variable can only use one of these types. For example, the same
+variable cannot be both binary and ordinal in the same simulation.</p>
+<h2 id="use-simulated-data-for-estimation">Use simulated data for estimation</h2>
+<p>Simulated data can be passed directly to an estimator. For example, the
+data generated from a GCM can be used to estimate a Structural Causal
+Model (SCM):</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
+<span class="normal"><a href="#__codelineno-21-2">2</a></span>
+<span class="normal"><a href="#__codelineno-21-3">3</a></span>
+<span class="normal"><a href="#__codelineno-21-4">4</a></span>
+<span class="normal"><a href="#__codelineno-21-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">causalinf</span><span class="w"> </span><span class="kn">import</span> <span class="n">scm</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3"></a><span class="n">G_scm</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">examples</span><span class="p">(</span><span class="s2">&quot;Two confounders&quot;</span><span class="p">)</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4"></a><span class="n">sim_scm</span> <span class="o">=</span> <span class="n">simulate</span><span class="o">.</span><span class="n">lsem</span><span class="p">(</span><span class="n">G_scm</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5"></a><span class="n">mod</span> <span class="o">=</span> <span class="n">scm</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">G_scm</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">sim_scm</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">Estimating</span> <span class="n">LSEM</span><span class="o">...</span><span class="n">done</span><span class="err">!</span>
+</span></code></pre></div>
+<p>The estimated parameters can then be compared with the true simulation
+parameters.</p>
+<div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-23-1">1</a></span>
+<span class="normal"><a href="#__codelineno-23-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1"></a><span class="nb">print</span><span class="p">(</span><span class="n">sim_scm</span><span class="o">.</span><span class="n">parameters_tidy</span><span class="p">)</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2"></a><span class="n">mod</span><span class="o">.</span><span class="n">est</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</span></code></pre></div></td></tr></table></div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="err">┌─────┬─────┬─────┬────────┬───────────┐</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="err">│</span> <span class="n">lhs</span> <span class="err">┆</span> <span class="n">op</span>  <span class="err">┆</span> <span class="n">rhs</span> <span class="err">┆</span> <span class="n">term</span>   <span class="err">┆</span> <span class="n">true</span>      <span class="err">│</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="err">│</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span>    <span class="err">┆</span> <span class="o">---</span>       <span class="err">│</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="err">│</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="nb">str</span>    <span class="err">┆</span> <span class="n">f64</span>       <span class="err">│</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="err">╞═════╪═════╪═════╪════════╪═══════════╡</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="mi">1</span>  <span class="err">┆</span> <span class="mf">0.407095</span>  <span class="err">│</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z2</span>  <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z2</span> <span class="err">┆</span> <span class="mf">0.758397</span>  <span class="err">│</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="err">│</span> <span class="n">D</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z1</span>  <span class="err">┆</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z1</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.6624</span>   <span class="err">│</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="mi">1</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="mi">1</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.273138</span> <span class="err">│</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z1</span>  <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z1</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.35149</span>  <span class="err">│</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">Z2</span>  <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z2</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.212244</span> <span class="err">│</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="err">│</span> <span class="n">Y</span>   <span class="err">┆</span> <span class="o">~</span>   <span class="err">┆</span> <span class="n">D</span>   <span class="err">┆</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">D</span>  <span class="err">┆</span> <span class="o">-</span><span class="mf">0.877176</span> <span class="err">│</span>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="err">└─────┴─────┴─────┴────────┴───────────┘</span>
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="err">┌──────────────┬─────────────┬──────────┬─────┬──────┬───────┬───────┬───────────┬────────┐</span>
+</span><span id="__span-24-17"><a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a><span class="err">│</span> <span class="n">term</span>         <span class="err">┆</span> <span class="n">label</span>       <span class="err">┆</span> <span class="n">estimate</span> <span class="err">┆</span> <span class="n">sig</span> <span class="err">┆</span> <span class="n">se</span>   <span class="err">┆</span> <span class="n">lo</span>    <span class="err">┆</span> <span class="n">hi</span>    <span class="err">┆</span> <span class="n">statistic</span> <span class="err">┆</span> <span class="n">pvalue</span> <span class="err">│</span>
+</span><span id="__span-24-18"><a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a><span class="err">│</span> <span class="o">---</span>          <span class="err">┆</span> <span class="o">---</span>         <span class="err">┆</span> <span class="o">---</span>      <span class="err">┆</span> <span class="o">---</span> <span class="err">┆</span> <span class="o">---</span>  <span class="err">┆</span> <span class="o">---</span>   <span class="err">┆</span> <span class="o">---</span>   <span class="err">┆</span> <span class="o">---</span>       <span class="err">┆</span> <span class="o">---</span>    <span class="err">│</span>
+</span><span id="__span-24-19"><a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a><span class="err">│</span> <span class="nb">str</span>          <span class="err">┆</span> <span class="nb">str</span>         <span class="err">┆</span> <span class="n">f64</span>      <span class="err">┆</span> <span class="nb">str</span> <span class="err">┆</span> <span class="n">f64</span>  <span class="err">┆</span> <span class="n">f64</span>   <span class="err">┆</span> <span class="n">f64</span>   <span class="err">┆</span> <span class="n">f64</span>       <span class="err">┆</span> <span class="n">f64</span>    <span class="err">│</span>
+</span><span id="__span-24-20"><a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a><span class="err">╞══════════════╪═════════════╪══════════╪═════╪══════╪═══════╪═══════╪═══════════╪════════╡</span>
+</span><span id="__span-24-21"><a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a><span class="err">│</span> <span class="n">Y</span> <span class="o">~</span> <span class="mi">1</span>        <span class="err">┆</span> <span class="n">beta_0Y</span>     <span class="err">┆</span> <span class="o">-</span><span class="mf">0.27</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.34</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.20</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">7.84</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-22"><a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a><span class="err">│</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z1</span>       <span class="err">┆</span> <span class="n">beta_Z1</span><span class="o">.</span><span class="n">Y</span>   <span class="err">┆</span> <span class="o">-</span><span class="mf">0.38</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.04</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.46</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.30</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">9.69</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-23"><a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a><span class="err">│</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">D</span>        <span class="err">┆</span> <span class="n">beta_D</span><span class="o">.</span><span class="n">Y</span>    <span class="err">┆</span> <span class="o">-</span><span class="mf">0.89</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.95</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.83</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">27.75</span>    <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-24"><a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a><span class="err">│</span> <span class="n">Y</span> <span class="o">~</span> <span class="n">Z2</span>       <span class="err">┆</span> <span class="n">beta_Z2</span><span class="o">.</span><span class="n">Y</span>   <span class="err">┆</span> <span class="o">-</span><span class="mf">0.20</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.04</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.28</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.13</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">5.22</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-25"><a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a><span class="err">│</span> <span class="n">D</span> <span class="o">~</span> <span class="mi">1</span>        <span class="err">┆</span> <span class="n">beta_0D</span>     <span class="err">┆</span> <span class="mf">0.42</span>     <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="mf">0.35</span>  <span class="err">┆</span> <span class="mf">0.48</span>  <span class="err">┆</span> <span class="mf">13.27</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-26"><a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a><span class="err">│</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z1</span>       <span class="err">┆</span> <span class="n">beta_Z1</span><span class="o">.</span><span class="n">D</span>   <span class="err">┆</span> <span class="o">-</span><span class="mf">0.70</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.76</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.63</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">21.84</span>    <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-27"><a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a><span class="err">│</span> <span class="n">D</span> <span class="o">~</span> <span class="n">Z2</span>       <span class="err">┆</span> <span class="n">beta_Z2</span><span class="o">.</span><span class="n">D</span>   <span class="err">┆</span> <span class="mf">0.74</span>     <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="mf">0.68</span>  <span class="err">┆</span> <span class="mf">0.80</span>  <span class="err">┆</span> <span class="mf">24.32</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-28"><a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a><span class="err">│</span> <span class="n">Y</span> <span class="o">~~</span> <span class="n">Y</span>       <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">1.00</span>     <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.04</span> <span class="err">┆</span> <span class="mf">0.91</span>  <span class="err">┆</span> <span class="mf">1.09</span>  <span class="err">┆</span> <span class="mf">22.36</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-29"><a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a><span class="err">│</span> <span class="n">D</span> <span class="o">~~</span> <span class="n">D</span>       <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">0.98</span>     <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.04</span> <span class="err">┆</span> <span class="mf">0.89</span>  <span class="err">┆</span> <span class="mf">1.06</span>  <span class="err">┆</span> <span class="mf">22.36</span>     <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-30"><a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a><span class="err">│</span> <span class="n">Z1</span> <span class="o">~~</span> <span class="n">Z1</span>     <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">0.96</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mf">0.00</span> <span class="err">┆</span> <span class="mf">0.96</span>  <span class="err">┆</span> <span class="mf">0.96</span>  <span class="err">┆</span> <span class="n">null</span>      <span class="err">┆</span> <span class="n">null</span>   <span class="err">│</span>
+</span><span id="__span-24-31"><a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a><span class="err">│</span> <span class="n">Z1</span> <span class="o">~~</span> <span class="n">Z2</span>     <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">0.02</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mf">0.00</span> <span class="err">┆</span> <span class="mf">0.02</span>  <span class="err">┆</span> <span class="mf">0.02</span>  <span class="err">┆</span> <span class="n">null</span>      <span class="err">┆</span> <span class="n">null</span>   <span class="err">│</span>
+</span><span id="__span-24-32"><a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a><span class="err">│</span> <span class="n">Z2</span> <span class="o">~~</span> <span class="n">Z2</span>     <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">1.06</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mf">0.00</span> <span class="err">┆</span> <span class="mf">1.06</span>  <span class="err">┆</span> <span class="mf">1.06</span>  <span class="err">┆</span> <span class="n">null</span>      <span class="err">┆</span> <span class="n">null</span>   <span class="err">│</span>
+</span><span id="__span-24-33"><a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a><span class="err">│</span> <span class="n">Z1</span> <span class="o">~</span> <span class="mi">1</span>       <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">0.04</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mf">0.00</span> <span class="err">┆</span> <span class="mf">0.04</span>  <span class="err">┆</span> <span class="mf">0.04</span>  <span class="err">┆</span> <span class="n">null</span>      <span class="err">┆</span> <span class="n">null</span>   <span class="err">│</span>
+</span><span id="__span-24-34"><a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a><span class="err">│</span> <span class="n">Z2</span> <span class="o">~</span> <span class="mi">1</span>       <span class="err">┆</span>             <span class="err">┆</span> <span class="mf">0.03</span>     <span class="err">┆</span>     <span class="err">┆</span> <span class="mf">0.00</span> <span class="err">┆</span> <span class="mf">0.03</span>  <span class="err">┆</span> <span class="mf">0.03</span>  <span class="err">┆</span> <span class="n">null</span>      <span class="err">┆</span> <span class="n">null</span>   <span class="err">│</span>
+</span><span id="__span-24-35"><a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a><span class="err">│</span> <span class="n">Direct_effec</span> <span class="err">┆</span> <span class="n">Direct_effe</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.89</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.95</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.83</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">27.75</span>    <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-36"><a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a><span class="err">│</span> <span class="n">t</span> <span class="o">:=</span>         <span class="err">┆</span> <span class="n">ct</span>          <span class="err">┆</span>          <span class="err">┆</span>     <span class="err">┆</span>      <span class="err">┆</span>       <span class="err">┆</span>       <span class="err">┆</span>           <span class="err">┆</span>        <span class="err">│</span>
+</span><span id="__span-24-37"><a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a><span class="err">│</span> <span class="p">(</span><span class="n">beta_D</span><span class="o">.</span><span class="n">Y</span><span class="p">)</span>   <span class="err">┆</span>             <span class="err">┆</span>          <span class="err">┆</span>     <span class="err">┆</span>      <span class="err">┆</span>       <span class="err">┆</span>       <span class="err">┆</span>           <span class="err">┆</span>        <span class="err">│</span>
+</span><span id="__span-24-38"><a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a><span class="err">│</span> <span class="n">Total_effect</span> <span class="err">┆</span> <span class="n">Total_effec</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.89</span>    <span class="err">┆</span> <span class="o">***</span> <span class="err">┆</span> <span class="mf">0.03</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.95</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">0.83</span> <span class="err">┆</span> <span class="o">-</span><span class="mf">27.75</span>    <span class="err">┆</span> <span class="mf">0.00</span>   <span class="err">│</span>
+</span><span id="__span-24-39"><a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a><span class="err">│</span> <span class="o">:=</span> <span class="n">Direct_ef</span> <span class="err">┆</span> <span class="n">t</span>           <span class="err">┆</span>          <span class="err">┆</span>     <span class="err">┆</span>      <span class="err">┆</span>       <span class="err">┆</span>       <span class="err">┆</span>           <span class="err">┆</span>        <span class="err">│</span>
+</span><span id="__span-24-40"><a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a><span class="err">│</span> <span class="n">fect</span>         <span class="err">┆</span>             <span class="err">┆</span>          <span class="err">┆</span>     <span class="err">┆</span>      <span class="err">┆</span>       <span class="err">┆</span>       <span class="err">┆</span>           <span class="err">┆</span>        <span class="err">│</span>
+</span><span id="__span-24-41"><a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a><span class="err">└──────────────┴─────────────┴──────────┴─────┴──────┴───────┴───────┴───────────┴────────┘</span>
+</span></code></pre></div>
+<h2 id="practical-checklist">Practical checklist</h2>
+<p>When using simulated data, record:</p>
+<ol>
+<li>The graph used to define the data-generating process.</li>
+<li>The number of observations <code>n</code>.</li>
+<li>The random seed.</li>
+<li>The noise level.</li>
+<li>Which variables, if any, were simulated as binary, ordinal, or
+    categorical.</li>
+<li>The true parameters stored in <code>sim.parameters</code> or
+    <code>sim.parameters_tidy</code>.</li>
+</ol>
+<p>These details make the simulation reproducible and make it easier to
+compare estimators against the known data-generating process.</p>
 
 
 
@@ -1227,13 +1637,8 @@ simulated data from a Graphical Model. Here is the graph:</p>
 
 
 
-  
-  
 
 
-
-
-  
 
 
 
