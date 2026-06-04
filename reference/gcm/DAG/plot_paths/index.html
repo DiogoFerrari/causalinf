@@ -1912,6 +1912,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1941,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1999,7 +2069,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -2055,7 +2125,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -2067,70 +2137,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -2594,12 +2600,7 @@ when the grid contains a single axis.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1775">1775</a></span>
-<span class="normal"><a href="#__codelineno-0-1776">1776</a></span>
-<span class="normal"><a href="#__codelineno-0-1777">1777</a></span>
-<span class="normal"><a href="#__codelineno-0-1778">1778</a></span>
-<span class="normal"><a href="#__codelineno-0-1779">1779</a></span>
-<span class="normal"><a href="#__codelineno-0-1780">1780</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1780">1780</a></span>
 <span class="normal"><a href="#__codelineno-0-1781">1781</a></span>
 <span class="normal"><a href="#__codelineno-0-1782">1782</a></span>
 <span class="normal"><a href="#__codelineno-0-1783">1783</a></span>
@@ -2698,111 +2699,116 @@ when the grid contains a single axis.</p>
 <span class="normal"><a href="#__codelineno-0-1876">1876</a></span>
 <span class="normal"><a href="#__codelineno-0-1877">1877</a></span>
 <span class="normal"><a href="#__codelineno-0-1878">1878</a></span>
-<span class="normal"><a href="#__codelineno-0-1879">1879</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1775"><a id="__codelineno-0-1775" name="__codelineno-0-1775"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span id="__span-0-1776"><a id="__codelineno-0-1776" name="__codelineno-0-1776"></a>               <span class="n">show_full_dag</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-1777"><a id="__codelineno-0-1777" name="__codelineno-0-1777"></a>               <span class="n">use_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span id="__span-0-1778"><a id="__codelineno-0-1778" name="__codelineno-0-1778"></a>               <span class="n">title_fontsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-</span><span id="__span-0-1779"><a id="__codelineno-0-1779" name="__codelineno-0-1779"></a>               <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
-</span><span id="__span-0-1780"><a id="__codelineno-0-1780" name="__codelineno-0-1780"></a>               <span class="n">path_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
-</span><span id="__span-0-1781"><a id="__codelineno-0-1781" name="__codelineno-0-1781"></a>               <span class="o">**</span><span class="n">plot_kws</span>
-</span><span id="__span-0-1782"><a id="__codelineno-0-1782" name="__codelineno-0-1782"></a>               <span class="p">):</span>
-</span><span id="__span-0-1783"><a id="__codelineno-0-1783" name="__codelineno-0-1783"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-1784"><a id="__codelineno-0-1784" name="__codelineno-0-1784"></a><span class="sd">    Plot individual paths between exposure and outcome nodes.</span>
-</span><span id="__span-0-1785"><a id="__codelineno-0-1785" name="__codelineno-0-1785"></a>
-</span><span id="__span-0-1786"><a id="__codelineno-0-1786" name="__codelineno-0-1786"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-1787"><a id="__codelineno-0-1787" name="__codelineno-0-1787"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-1788"><a id="__codelineno-0-1788" name="__codelineno-0-1788"></a><span class="sd">    exposure : str or list[str] or None, optional</span>
-</span><span id="__span-0-1789"><a id="__codelineno-0-1789" name="__codelineno-0-1789"></a><span class="sd">        Exposure node(s) to anchor the paths. Defaults to the DAG exposure</span>
-</span><span id="__span-0-1790"><a id="__codelineno-0-1790" name="__codelineno-0-1790"></a><span class="sd">        role when omitted.</span>
-</span><span id="__span-0-1791"><a id="__codelineno-0-1791" name="__codelineno-0-1791"></a><span class="sd">    outcome : str or list[str] or None, optional</span>
-</span><span id="__span-0-1792"><a id="__codelineno-0-1792" name="__codelineno-0-1792"></a><span class="sd">        Outcome node(s) serving as path targets. Defaults to the DAG outcome</span>
-</span><span id="__span-0-1793"><a id="__codelineno-0-1793" name="__codelineno-0-1793"></a><span class="sd">        role when omitted.</span>
-</span><span id="__span-0-1794"><a id="__codelineno-0-1794" name="__codelineno-0-1794"></a><span class="sd">    adj_set : str or Sequence[str] or None, optional</span>
-</span><span id="__span-0-1795"><a id="__codelineno-0-1795" name="__codelineno-0-1795"></a><span class="sd">        Adjustment set used to assess path openness. Strings are promoted to</span>
-</span><span id="__span-0-1796"><a id="__codelineno-0-1796" name="__codelineno-0-1796"></a><span class="sd">        single-element lists.</span>
-</span><span id="__span-0-1797"><a id="__codelineno-0-1797" name="__codelineno-0-1797"></a><span class="sd">    directed : bool, optional</span>
-</span><span id="__span-0-1798"><a id="__codelineno-0-1798" name="__codelineno-0-1798"></a><span class="sd">        If ``True``, restrict to directed paths from exposure to outcome.</span>
-</span><span id="__span-0-1799"><a id="__codelineno-0-1799" name="__codelineno-0-1799"></a><span class="sd">        Defaults to ``False``.</span>
-</span><span id="__span-0-1800"><a id="__codelineno-0-1800" name="__codelineno-0-1800"></a><span class="sd">    show_full_dag : bool, optional</span>
-</span><span id="__span-0-1801"><a id="__codelineno-0-1801" name="__codelineno-0-1801"></a><span class="sd">        Draw the entire DAG in the background with muted styling before</span>
-</span><span id="__span-0-1802"><a id="__codelineno-0-1802" name="__codelineno-0-1802"></a><span class="sd">        highlighting each path. Defaults to ``True``.</span>
-</span><span id="__span-0-1803"><a id="__codelineno-0-1803" name="__codelineno-0-1803"></a><span class="sd">    use_labels : bool, optional</span>
-</span><span id="__span-0-1804"><a id="__codelineno-0-1804" name="__codelineno-0-1804"></a><span class="sd">        When ``True`` (default), prefer custom node labels over names.</span>
-</span><span id="__span-0-1805"><a id="__codelineno-0-1805" name="__codelineno-0-1805"></a><span class="sd">    title_fontsize : int, optional</span>
-</span><span id="__span-0-1806"><a id="__codelineno-0-1806" name="__codelineno-0-1806"></a><span class="sd">        Font size for subplot titles. Defaults to ``10``.</span>
-</span><span id="__span-0-1807"><a id="__codelineno-0-1807" name="__codelineno-0-1807"></a><span class="sd">    figsize : tuple[float, float], optional</span>
-</span><span id="__span-0-1808"><a id="__codelineno-0-1808" name="__codelineno-0-1808"></a><span class="sd">        Size of the grid of path plots in inches. Defaults to ``(16, 9)``.</span>
-</span><span id="__span-0-1809"><a id="__codelineno-0-1809" name="__codelineno-0-1809"></a><span class="sd">    path_color : str, optional</span>
-</span><span id="__span-0-1810"><a id="__codelineno-0-1810" name="__codelineno-0-1810"></a><span class="sd">        Color applied to highlighted path edges. Defaults to ``&#39;black&#39;``.</span>
-</span><span id="__span-0-1811"><a id="__codelineno-0-1811" name="__codelineno-0-1811"></a><span class="sd">    **plot_kws :</span>
-</span><span id="__span-0-1812"><a id="__codelineno-0-1812" name="__codelineno-0-1812"></a><span class="sd">        Additional keyword arguments forwarded to ``DAG.plot`` for both the</span>
-</span><span id="__span-0-1813"><a id="__codelineno-0-1813" name="__codelineno-0-1813"></a><span class="sd">        background DAG (when ``show_full_dag`` is ``True``) and each path.</span>
-</span><span id="__span-0-1814"><a id="__codelineno-0-1814" name="__codelineno-0-1814"></a>
-</span><span id="__span-0-1815"><a id="__codelineno-0-1815" name="__codelineno-0-1815"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-1816"><a id="__codelineno-0-1816" name="__codelineno-0-1816"></a><span class="sd">    -------</span>
-</span><span id="__span-0-1817"><a id="__codelineno-0-1817" name="__codelineno-0-1817"></a><span class="sd">    list[matplotlib.axes.Axes]</span>
-</span><span id="__span-0-1818"><a id="__codelineno-0-1818" name="__codelineno-0-1818"></a><span class="sd">        Axes objects for the generated subplots. The list is flattened even</span>
-</span><span id="__span-0-1819"><a id="__codelineno-0-1819" name="__codelineno-0-1819"></a><span class="sd">        when the grid contains a single axis.</span>
-</span><span id="__span-0-1820"><a id="__codelineno-0-1820" name="__codelineno-0-1820"></a>
-</span><span id="__span-0-1821"><a id="__codelineno-0-1821" name="__codelineno-0-1821"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-1822"><a id="__codelineno-0-1822" name="__codelineno-0-1822"></a><span class="sd">    --------</span>
-</span><span id="__span-0-1823"><a id="__codelineno-0-1823" name="__codelineno-0-1823"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
-</span><span id="__span-0-1824"><a id="__codelineno-0-1824" name="__codelineno-0-1824"></a><span class="sd">    &gt;&gt;&gt; axes = G.plot_paths(exposure=&quot;X&quot;, outcome=&quot;Y&quot;, directed=True, show_full_dag=False)</span>
-</span><span id="__span-0-1825"><a id="__codelineno-0-1825" name="__codelineno-0-1825"></a><span class="sd">    &gt;&gt;&gt; len(axes)</span>
-</span><span id="__span-0-1826"><a id="__codelineno-0-1826" name="__codelineno-0-1826"></a><span class="sd">    1</span>
-</span><span id="__span-0-1827"><a id="__codelineno-0-1827" name="__codelineno-0-1827"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-1828"><a id="__codelineno-0-1828" name="__codelineno-0-1828"></a>    <span class="k">if</span> <span class="n">show_full_dag</span><span class="p">:</span>
-</span><span id="__span-0-1829"><a id="__codelineno-0-1829" name="__codelineno-0-1829"></a>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_position</span><span class="p">,</span> <span class="s2">&quot;Nodes position must be set when show_full_dag=True&quot;</span>
-</span><span id="__span-0-1830"><a id="__codelineno-0-1830" name="__codelineno-0-1830"></a>
-</span><span id="__span-0-1831"><a id="__codelineno-0-1831" name="__codelineno-0-1831"></a>
-</span><span id="__span-0-1832"><a id="__codelineno-0-1832" name="__codelineno-0-1832"></a>    <span class="n">default_usetex</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> 
-</span><span id="__span-0-1833"><a id="__codelineno-0-1833" name="__codelineno-0-1833"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-0-1834"><a id="__codelineno-0-1834" name="__codelineno-0-1834"></a>    <span class="n">packages</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;amsmath&quot;</span><span class="p">,</span> <span class="s2">&quot;amssymb&quot;</span><span class="p">,</span> <span class="s2">&quot;siunitx&quot;</span><span class="p">,</span> <span class="s2">&quot;bm&quot;</span><span class="p">,</span> <span class="s2">&quot;wasysym&quot;</span><span class="p">,</span> <span class="s2">&quot;marvosym&quot;</span><span class="p">]</span>
-</span><span id="__span-0-1835"><a id="__codelineno-0-1835" name="__codelineno-0-1835"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.latex.preamble&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;\usepackage</span><span class="se">{{</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">packages</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+<span class="normal"><a href="#__codelineno-0-1879">1879</a></span>
+<span class="normal"><a href="#__codelineno-0-1880">1880</a></span>
+<span class="normal"><a href="#__codelineno-0-1881">1881</a></span>
+<span class="normal"><a href="#__codelineno-0-1882">1882</a></span>
+<span class="normal"><a href="#__codelineno-0-1883">1883</a></span>
+<span class="normal"><a href="#__codelineno-0-1884">1884</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1780"><a id="__codelineno-0-1780" name="__codelineno-0-1780"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span><span id="__span-0-1781"><a id="__codelineno-0-1781" name="__codelineno-0-1781"></a>               <span class="n">show_full_dag</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-1782"><a id="__codelineno-0-1782" name="__codelineno-0-1782"></a>               <span class="n">use_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="__span-0-1783"><a id="__codelineno-0-1783" name="__codelineno-0-1783"></a>               <span class="n">title_fontsize</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+</span><span id="__span-0-1784"><a id="__codelineno-0-1784" name="__codelineno-0-1784"></a>               <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+</span><span id="__span-0-1785"><a id="__codelineno-0-1785" name="__codelineno-0-1785"></a>               <span class="n">path_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+</span><span id="__span-0-1786"><a id="__codelineno-0-1786" name="__codelineno-0-1786"></a>               <span class="o">**</span><span class="n">plot_kws</span>
+</span><span id="__span-0-1787"><a id="__codelineno-0-1787" name="__codelineno-0-1787"></a>               <span class="p">):</span>
+</span><span id="__span-0-1788"><a id="__codelineno-0-1788" name="__codelineno-0-1788"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-1789"><a id="__codelineno-0-1789" name="__codelineno-0-1789"></a><span class="sd">    Plot individual paths between exposure and outcome nodes.</span>
+</span><span id="__span-0-1790"><a id="__codelineno-0-1790" name="__codelineno-0-1790"></a>
+</span><span id="__span-0-1791"><a id="__codelineno-0-1791" name="__codelineno-0-1791"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-1792"><a id="__codelineno-0-1792" name="__codelineno-0-1792"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-1793"><a id="__codelineno-0-1793" name="__codelineno-0-1793"></a><span class="sd">    exposure : str or list[str] or None, optional</span>
+</span><span id="__span-0-1794"><a id="__codelineno-0-1794" name="__codelineno-0-1794"></a><span class="sd">        Exposure node(s) to anchor the paths. Defaults to the DAG exposure</span>
+</span><span id="__span-0-1795"><a id="__codelineno-0-1795" name="__codelineno-0-1795"></a><span class="sd">        role when omitted.</span>
+</span><span id="__span-0-1796"><a id="__codelineno-0-1796" name="__codelineno-0-1796"></a><span class="sd">    outcome : str or list[str] or None, optional</span>
+</span><span id="__span-0-1797"><a id="__codelineno-0-1797" name="__codelineno-0-1797"></a><span class="sd">        Outcome node(s) serving as path targets. Defaults to the DAG outcome</span>
+</span><span id="__span-0-1798"><a id="__codelineno-0-1798" name="__codelineno-0-1798"></a><span class="sd">        role when omitted.</span>
+</span><span id="__span-0-1799"><a id="__codelineno-0-1799" name="__codelineno-0-1799"></a><span class="sd">    adj_set : str or Sequence[str] or None, optional</span>
+</span><span id="__span-0-1800"><a id="__codelineno-0-1800" name="__codelineno-0-1800"></a><span class="sd">        Adjustment set used to assess path openness. Strings are promoted to</span>
+</span><span id="__span-0-1801"><a id="__codelineno-0-1801" name="__codelineno-0-1801"></a><span class="sd">        single-element lists.</span>
+</span><span id="__span-0-1802"><a id="__codelineno-0-1802" name="__codelineno-0-1802"></a><span class="sd">    directed : bool, optional</span>
+</span><span id="__span-0-1803"><a id="__codelineno-0-1803" name="__codelineno-0-1803"></a><span class="sd">        If ``True``, restrict to directed paths from exposure to outcome.</span>
+</span><span id="__span-0-1804"><a id="__codelineno-0-1804" name="__codelineno-0-1804"></a><span class="sd">        Defaults to ``False``.</span>
+</span><span id="__span-0-1805"><a id="__codelineno-0-1805" name="__codelineno-0-1805"></a><span class="sd">    show_full_dag : bool, optional</span>
+</span><span id="__span-0-1806"><a id="__codelineno-0-1806" name="__codelineno-0-1806"></a><span class="sd">        Draw the entire DAG in the background with muted styling before</span>
+</span><span id="__span-0-1807"><a id="__codelineno-0-1807" name="__codelineno-0-1807"></a><span class="sd">        highlighting each path. Defaults to ``True``.</span>
+</span><span id="__span-0-1808"><a id="__codelineno-0-1808" name="__codelineno-0-1808"></a><span class="sd">    use_labels : bool, optional</span>
+</span><span id="__span-0-1809"><a id="__codelineno-0-1809" name="__codelineno-0-1809"></a><span class="sd">        When ``True`` (default), prefer custom node labels over names.</span>
+</span><span id="__span-0-1810"><a id="__codelineno-0-1810" name="__codelineno-0-1810"></a><span class="sd">    title_fontsize : int, optional</span>
+</span><span id="__span-0-1811"><a id="__codelineno-0-1811" name="__codelineno-0-1811"></a><span class="sd">        Font size for subplot titles. Defaults to ``10``.</span>
+</span><span id="__span-0-1812"><a id="__codelineno-0-1812" name="__codelineno-0-1812"></a><span class="sd">    figsize : tuple[float, float], optional</span>
+</span><span id="__span-0-1813"><a id="__codelineno-0-1813" name="__codelineno-0-1813"></a><span class="sd">        Size of the grid of path plots in inches. Defaults to ``(16, 9)``.</span>
+</span><span id="__span-0-1814"><a id="__codelineno-0-1814" name="__codelineno-0-1814"></a><span class="sd">    path_color : str, optional</span>
+</span><span id="__span-0-1815"><a id="__codelineno-0-1815" name="__codelineno-0-1815"></a><span class="sd">        Color applied to highlighted path edges. Defaults to ``&#39;black&#39;``.</span>
+</span><span id="__span-0-1816"><a id="__codelineno-0-1816" name="__codelineno-0-1816"></a><span class="sd">    **plot_kws :</span>
+</span><span id="__span-0-1817"><a id="__codelineno-0-1817" name="__codelineno-0-1817"></a><span class="sd">        Additional keyword arguments forwarded to ``DAG.plot`` for both the</span>
+</span><span id="__span-0-1818"><a id="__codelineno-0-1818" name="__codelineno-0-1818"></a><span class="sd">        background DAG (when ``show_full_dag`` is ``True``) and each path.</span>
+</span><span id="__span-0-1819"><a id="__codelineno-0-1819" name="__codelineno-0-1819"></a>
+</span><span id="__span-0-1820"><a id="__codelineno-0-1820" name="__codelineno-0-1820"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-1821"><a id="__codelineno-0-1821" name="__codelineno-0-1821"></a><span class="sd">    -------</span>
+</span><span id="__span-0-1822"><a id="__codelineno-0-1822" name="__codelineno-0-1822"></a><span class="sd">    list[matplotlib.axes.Axes]</span>
+</span><span id="__span-0-1823"><a id="__codelineno-0-1823" name="__codelineno-0-1823"></a><span class="sd">        Axes objects for the generated subplots. The list is flattened even</span>
+</span><span id="__span-0-1824"><a id="__codelineno-0-1824" name="__codelineno-0-1824"></a><span class="sd">        when the grid contains a single axis.</span>
+</span><span id="__span-0-1825"><a id="__codelineno-0-1825" name="__codelineno-0-1825"></a>
+</span><span id="__span-0-1826"><a id="__codelineno-0-1826" name="__codelineno-0-1826"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-1827"><a id="__codelineno-0-1827" name="__codelineno-0-1827"></a><span class="sd">    --------</span>
+</span><span id="__span-0-1828"><a id="__codelineno-0-1828" name="__codelineno-0-1828"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
+</span><span id="__span-0-1829"><a id="__codelineno-0-1829" name="__codelineno-0-1829"></a><span class="sd">    &gt;&gt;&gt; axes = G.plot_paths(exposure=&quot;X&quot;, outcome=&quot;Y&quot;, directed=True, show_full_dag=False)</span>
+</span><span id="__span-0-1830"><a id="__codelineno-0-1830" name="__codelineno-0-1830"></a><span class="sd">    &gt;&gt;&gt; len(axes)</span>
+</span><span id="__span-0-1831"><a id="__codelineno-0-1831" name="__codelineno-0-1831"></a><span class="sd">    1</span>
+</span><span id="__span-0-1832"><a id="__codelineno-0-1832" name="__codelineno-0-1832"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-1833"><a id="__codelineno-0-1833" name="__codelineno-0-1833"></a>    <span class="k">if</span> <span class="n">show_full_dag</span><span class="p">:</span>
+</span><span id="__span-0-1834"><a id="__codelineno-0-1834" name="__codelineno-0-1834"></a>        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_position</span><span class="p">,</span> <span class="s2">&quot;Nodes position must be set when show_full_dag=True&quot;</span>
+</span><span id="__span-0-1835"><a id="__codelineno-0-1835" name="__codelineno-0-1835"></a>
 </span><span id="__span-0-1836"><a id="__codelineno-0-1836" name="__codelineno-0-1836"></a>
-</span><span id="__span-0-1837"><a id="__codelineno-0-1837" name="__codelineno-0-1837"></a>    <span class="n">adj_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">adj_set</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adj_set</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">adj_set</span>
-</span><span id="__span-0-1838"><a id="__codelineno-0-1838" name="__codelineno-0-1838"></a>
-</span><span id="__span-0-1839"><a id="__codelineno-0-1839" name="__codelineno-0-1839"></a>    <span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">(</span><span class="n">exposure</span><span class="o">=</span><span class="n">exposure</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="n">adj_set</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">)</span>
-</span><span id="__span-0-1840"><a id="__codelineno-0-1840" name="__codelineno-0-1840"></a>    <span class="n">npaths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
-</span><span id="__span-0-1841"><a id="__codelineno-0-1841" name="__codelineno-0-1841"></a>    <span class="n">ncols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">npaths</span><span class="p">)))</span>
-</span><span id="__span-0-1842"><a id="__codelineno-0-1842" name="__codelineno-0-1842"></a>    <span class="n">nrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">npaths</span> <span class="o">/</span> <span class="n">ncols</span><span class="p">))</span>
-</span><span id="__span-0-1843"><a id="__codelineno-0-1843" name="__codelineno-0-1843"></a>    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-1844"><a id="__codelineno-0-1844" name="__codelineno-0-1844"></a>    <span class="k">if</span> <span class="n">ncols</span> <span class="o">&gt;</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">nrows</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-</span><span id="__span-0-1845"><a id="__codelineno-0-1845" name="__codelineno-0-1845"></a>        <span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-</span><span id="__span-0-1846"><a id="__codelineno-0-1846" name="__codelineno-0-1846"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-1847"><a id="__codelineno-0-1847" name="__codelineno-0-1847"></a>        <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">axs</span><span class="p">]</span>
-</span><span id="__span-0-1848"><a id="__codelineno-0-1848" name="__codelineno-0-1848"></a>    <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">]</span>
-</span><span id="__span-0-1849"><a id="__codelineno-0-1849" name="__codelineno-0-1849"></a>    <span class="c1"># </span>
-</span><span id="__span-0-1850"><a id="__codelineno-0-1850" name="__codelineno-0-1850"></a>
-</span><span id="__span-0-1851"><a id="__codelineno-0-1851" name="__codelineno-0-1851"></a>    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_position</span>
-</span><span id="__span-0-1852"><a id="__codelineno-0-1852" name="__codelineno-0-1852"></a>    <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_role</span>
-</span><span id="__span-0-1853"><a id="__codelineno-0-1853" name="__codelineno-0-1853"></a>    <span class="n">nodes_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_label</span>
-</span><span id="__span-0-1854"><a id="__codelineno-0-1854" name="__codelineno-0-1854"></a>    <span class="n">edge_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_label</span>
-</span><span id="__span-0-1855"><a id="__codelineno-0-1855" name="__codelineno-0-1855"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-</span><span id="__span-0-1856"><a id="__codelineno-0-1856" name="__codelineno-0-1856"></a>        <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-</span><span id="__span-0-1857"><a id="__codelineno-0-1857" name="__codelineno-0-1857"></a>
-</span><span id="__span-0-1858"><a id="__codelineno-0-1858" name="__codelineno-0-1858"></a>        <span class="n">show_labels</span><span class="o">=</span><span class="kc">True</span>
-</span><span id="__span-0-1859"><a id="__codelineno-0-1859" name="__codelineno-0-1859"></a>        <span class="k">if</span> <span class="n">show_full_dag</span><span class="p">:</span>
-</span><span id="__span-0-1860"><a id="__codelineno-0-1860" name="__codelineno-0-1860"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">edge_color</span> <span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kws</span><span class="p">)</span>
-</span><span id="__span-0-1861"><a id="__codelineno-0-1861" name="__codelineno-0-1861"></a>            <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span>
+</span><span id="__span-0-1837"><a id="__codelineno-0-1837" name="__codelineno-0-1837"></a>    <span class="n">default_usetex</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> 
+</span><span id="__span-0-1838"><a id="__codelineno-0-1838" name="__codelineno-0-1838"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-0-1839"><a id="__codelineno-0-1839" name="__codelineno-0-1839"></a>    <span class="n">packages</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;amsmath&quot;</span><span class="p">,</span> <span class="s2">&quot;amssymb&quot;</span><span class="p">,</span> <span class="s2">&quot;siunitx&quot;</span><span class="p">,</span> <span class="s2">&quot;bm&quot;</span><span class="p">,</span> <span class="s2">&quot;wasysym&quot;</span><span class="p">,</span> <span class="s2">&quot;marvosym&quot;</span><span class="p">]</span>
+</span><span id="__span-0-1840"><a id="__codelineno-0-1840" name="__codelineno-0-1840"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;text.latex.preamble&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;\usepackage</span><span class="se">{{</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">packages</span><span class="p">)</span><span class="si">}</span><span class="se">}}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-1841"><a id="__codelineno-0-1841" name="__codelineno-0-1841"></a>
+</span><span id="__span-0-1842"><a id="__codelineno-0-1842" name="__codelineno-0-1842"></a>    <span class="n">adj_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">adj_set</span><span class="p">]</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adj_set</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">adj_set</span>
+</span><span id="__span-0-1843"><a id="__codelineno-0-1843" name="__codelineno-0-1843"></a>
+</span><span id="__span-0-1844"><a id="__codelineno-0-1844" name="__codelineno-0-1844"></a>    <span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">(</span><span class="n">exposure</span><span class="o">=</span><span class="n">exposure</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="n">adj_set</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">)</span>
+</span><span id="__span-0-1845"><a id="__codelineno-0-1845" name="__codelineno-0-1845"></a>    <span class="n">npaths</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span>
+</span><span id="__span-0-1846"><a id="__codelineno-0-1846" name="__codelineno-0-1846"></a>    <span class="n">ncols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">npaths</span><span class="p">)))</span>
+</span><span id="__span-0-1847"><a id="__codelineno-0-1847" name="__codelineno-0-1847"></a>    <span class="n">nrows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">npaths</span> <span class="o">/</span> <span class="n">ncols</span><span class="p">))</span>
+</span><span id="__span-0-1848"><a id="__codelineno-0-1848" name="__codelineno-0-1848"></a>    <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-1849"><a id="__codelineno-0-1849" name="__codelineno-0-1849"></a>    <span class="k">if</span> <span class="n">ncols</span> <span class="o">&gt;</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">nrows</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+</span><span id="__span-0-1850"><a id="__codelineno-0-1850" name="__codelineno-0-1850"></a>        <span class="n">axs</span><span class="o">=</span><span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</span><span id="__span-0-1851"><a id="__codelineno-0-1851" name="__codelineno-0-1851"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-1852"><a id="__codelineno-0-1852" name="__codelineno-0-1852"></a>        <span class="n">axs</span> <span class="o">=</span> <span class="p">[</span><span class="n">axs</span><span class="p">]</span>
+</span><span id="__span-0-1853"><a id="__codelineno-0-1853" name="__codelineno-0-1853"></a>    <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="p">]</span>
+</span><span id="__span-0-1854"><a id="__codelineno-0-1854" name="__codelineno-0-1854"></a>    <span class="c1"># </span>
+</span><span id="__span-0-1855"><a id="__codelineno-0-1855" name="__codelineno-0-1855"></a>
+</span><span id="__span-0-1856"><a id="__codelineno-0-1856" name="__codelineno-0-1856"></a>    <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_position</span>
+</span><span id="__span-0-1857"><a id="__codelineno-0-1857" name="__codelineno-0-1857"></a>    <span class="n">roles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_role</span>
+</span><span id="__span-0-1858"><a id="__codelineno-0-1858" name="__codelineno-0-1858"></a>    <span class="n">nodes_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_label</span>
+</span><span id="__span-0-1859"><a id="__codelineno-0-1859" name="__codelineno-0-1859"></a>    <span class="n">edge_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_label</span>
+</span><span id="__span-0-1860"><a id="__codelineno-0-1860" name="__codelineno-0-1860"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">info</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">paths</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+</span><span id="__span-0-1861"><a id="__codelineno-0-1861" name="__codelineno-0-1861"></a>        <span class="n">ax</span> <span class="o">=</span> <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
 </span><span id="__span-0-1862"><a id="__codelineno-0-1862" name="__codelineno-0-1862"></a>
-</span><span id="__span-0-1863"><a id="__codelineno-0-1863" name="__codelineno-0-1863"></a>        <span class="c1"># G2 = DAG(path, nodes_role=roles, nodes_position=pos, nodes_label=nodes_label)</span>
-</span><span id="__span-0-1864"><a id="__codelineno-0-1864" name="__codelineno-0-1864"></a>        <span class="n">G2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rebuild_graph__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="__span-0-1865"><a id="__codelineno-0-1865" name="__codelineno-0-1865"></a>        <span class="n">G2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">show_labels</span><span class="o">=</span><span class="n">show_labels</span><span class="p">,</span>
-</span><span id="__span-0-1866"><a id="__codelineno-0-1866" name="__codelineno-0-1866"></a>                <span class="n">edge_color</span><span class="o">=</span><span class="n">path_color</span><span class="p">,</span> <span class="n">use_labels</span><span class="o">=</span><span class="n">use_labels</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kws</span><span class="p">)</span>
-</span><span id="__span-0-1867"><a id="__codelineno-0-1867" name="__codelineno-0-1867"></a>        <span class="n">adj</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;adj_set&#39;</span><span class="p">]</span>
-</span><span id="__span-0-1868"><a id="__codelineno-0-1868" name="__codelineno-0-1868"></a>        <span class="k">if</span> <span class="n">adj</span><span class="p">:</span>
-</span><span id="__span-0-1869"><a id="__codelineno-0-1869" name="__codelineno-0-1869"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_label</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">adj</span><span class="p">]</span> <span class="k">if</span> <span class="n">use_labels</span> <span class="k">else</span> <span class="n">adj</span>
-</span><span id="__span-0-1870"><a id="__codelineno-0-1870" name="__codelineno-0-1870"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
-</span><span id="__span-0-1871"><a id="__codelineno-0-1871" name="__codelineno-0-1871"></a>        <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-1872"><a id="__codelineno-0-1872" name="__codelineno-0-1872"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span id="__span-0-1873"><a id="__codelineno-0-1873" name="__codelineno-0-1873"></a>        <span class="n">title</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;Path is \textbf</span><span class="se">{{</span><span class="si">{</span><span class="s1">&#39;open&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;closed&#39;</span><span class="si">}</span><span class="se">}}</span><span class="s2">; Adjustment set: &quot;</span><span class="o">+</span><span class="s2">&quot;\{&quot;</span><span class="o">+</span><span class="n">adj</span><span class="o">+</span><span class="s2">&quot;\}&quot;</span>
-</span><span id="__span-0-1874"><a id="__codelineno-0-1874" name="__codelineno-0-1874"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">title_fontsize</span><span class="p">)</span>
-</span><span id="__span-0-1875"><a id="__codelineno-0-1875" name="__codelineno-0-1875"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;on&#39;</span><span class="p">)</span>
-</span><span id="__span-0-1876"><a id="__codelineno-0-1876" name="__codelineno-0-1876"></a>        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-</span><span id="__span-0-1877"><a id="__codelineno-0-1877" name="__codelineno-0-1877"></a>
-</span><span id="__span-0-1878"><a id="__codelineno-0-1878" name="__codelineno-0-1878"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_usetex</span>
-</span><span id="__span-0-1879"><a id="__codelineno-0-1879" name="__codelineno-0-1879"></a>    <span class="k">return</span> <span class="n">axs</span>
+</span><span id="__span-0-1863"><a id="__codelineno-0-1863" name="__codelineno-0-1863"></a>        <span class="n">show_labels</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="__span-0-1864"><a id="__codelineno-0-1864" name="__codelineno-0-1864"></a>        <span class="k">if</span> <span class="n">show_full_dag</span><span class="p">:</span>
+</span><span id="__span-0-1865"><a id="__codelineno-0-1865" name="__codelineno-0-1865"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">edge_color</span> <span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kws</span><span class="p">)</span>
+</span><span id="__span-0-1866"><a id="__codelineno-0-1866" name="__codelineno-0-1866"></a>            <span class="n">show_labels</span><span class="o">=</span><span class="kc">False</span>
+</span><span id="__span-0-1867"><a id="__codelineno-0-1867" name="__codelineno-0-1867"></a>
+</span><span id="__span-0-1868"><a id="__codelineno-0-1868" name="__codelineno-0-1868"></a>        <span class="c1"># G2 = DAG(path, nodes_role=roles, nodes_position=pos, nodes_label=nodes_label)</span>
+</span><span id="__span-0-1869"><a id="__codelineno-0-1869" name="__codelineno-0-1869"></a>        <span class="n">G2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rebuild_graph__</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="__span-0-1870"><a id="__codelineno-0-1870" name="__codelineno-0-1870"></a>        <span class="n">G2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">edge_linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">show_labels</span><span class="o">=</span><span class="n">show_labels</span><span class="p">,</span>
+</span><span id="__span-0-1871"><a id="__codelineno-0-1871" name="__codelineno-0-1871"></a>                <span class="n">edge_color</span><span class="o">=</span><span class="n">path_color</span><span class="p">,</span> <span class="n">use_labels</span><span class="o">=</span><span class="n">use_labels</span><span class="p">,</span> <span class="o">**</span><span class="n">plot_kws</span><span class="p">)</span>
+</span><span id="__span-0-1872"><a id="__codelineno-0-1872" name="__codelineno-0-1872"></a>        <span class="n">adj</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;adj_set&#39;</span><span class="p">]</span>
+</span><span id="__span-0-1873"><a id="__codelineno-0-1873" name="__codelineno-0-1873"></a>        <span class="k">if</span> <span class="n">adj</span><span class="p">:</span>
+</span><span id="__span-0-1874"><a id="__codelineno-0-1874" name="__codelineno-0-1874"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes_label</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">adj</span><span class="p">]</span> <span class="k">if</span> <span class="n">use_labels</span> <span class="k">else</span> <span class="n">adj</span>
+</span><span id="__span-0-1875"><a id="__codelineno-0-1875" name="__codelineno-0-1875"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+</span><span id="__span-0-1876"><a id="__codelineno-0-1876" name="__codelineno-0-1876"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-1877"><a id="__codelineno-0-1877" name="__codelineno-0-1877"></a>            <span class="n">adj</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</span><span id="__span-0-1878"><a id="__codelineno-0-1878" name="__codelineno-0-1878"></a>        <span class="n">title</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;Path is \textbf</span><span class="se">{{</span><span class="si">{</span><span class="s1">&#39;open&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;closed&#39;</span><span class="si">}</span><span class="se">}}</span><span class="s2">; Adjustment set: &quot;</span><span class="o">+</span><span class="s2">&quot;\{&quot;</span><span class="o">+</span><span class="n">adj</span><span class="o">+</span><span class="s2">&quot;\}&quot;</span>
+</span><span id="__span-0-1879"><a id="__codelineno-0-1879" name="__codelineno-0-1879"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="n">title_fontsize</span><span class="p">)</span>
+</span><span id="__span-0-1880"><a id="__codelineno-0-1880" name="__codelineno-0-1880"></a>        <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;on&#39;</span><span class="p">)</span>
+</span><span id="__span-0-1881"><a id="__codelineno-0-1881" name="__codelineno-0-1881"></a>        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span><span id="__span-0-1882"><a id="__codelineno-0-1882" name="__codelineno-0-1882"></a>
+</span><span id="__span-0-1883"><a id="__codelineno-0-1883" name="__codelineno-0-1883"></a>    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;text.usetex&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_usetex</span>
+</span><span id="__span-0-1884"><a id="__codelineno-0-1884" name="__codelineno-0-1884"></a>    <span class="k">return</span> <span class="n">axs</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

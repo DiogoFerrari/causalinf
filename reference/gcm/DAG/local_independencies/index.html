@@ -1912,6 +1912,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1941,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1999,7 +2069,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -2055,7 +2125,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -2067,70 +2137,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -2485,8 +2491,7 @@ always includes columns <code>term</code> (formatted as <code>"Y _||_ X | Z"</co
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-606">606</a></span>
-<span class="normal"><a href="#__codelineno-0-607">607</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-607">607</a></span>
 <span class="normal"><a href="#__codelineno-0-608">608</a></span>
 <span class="normal"><a href="#__codelineno-0-609">609</a></span>
 <span class="normal"><a href="#__codelineno-0-610">610</a></span>
@@ -2558,80 +2563,81 @@ always includes columns <code>term</code> (formatted as <code>"Y _||_ X | Z"</co
 <span class="normal"><a href="#__codelineno-0-676">676</a></span>
 <span class="normal"><a href="#__codelineno-0-677">677</a></span>
 <span class="normal"><a href="#__codelineno-0-678">678</a></span>
-<span class="normal"><a href="#__codelineno-0-679">679</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-606"><a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="k">def</span><span class="w"> </span><span class="nf">local_independencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">include_sep_cols</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-</span><span id="__span-0-607"><a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-608"><a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="sd">    List conditional independencies implied by the DAG, and test them if data is provided.</span>
-</span><span id="__span-0-609"><a id="__codelineno-0-609" name="__codelineno-0-609"></a>
-</span><span id="__span-0-610"><a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-611"><a id="__codelineno-0-611" name="__codelineno-0-611"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-612"><a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    data : tidypolars4sci.DataFrame or None, optional</span>
-</span><span id="__span-0-613"><a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">        Observational data used to perform local conditional independence</span>
-</span><span id="__span-0-614"><a id="__codelineno-0-614" name="__codelineno-0-614"></a><span class="sd">        tests through ``dagitty::localTests``. When ``None`` (default), the</span>
-</span><span id="__span-0-615"><a id="__codelineno-0-615" name="__codelineno-0-615"></a><span class="sd">        method enumerates implied independencies analytically.</span>
-</span><span id="__span-0-616"><a id="__codelineno-0-616" name="__codelineno-0-616"></a><span class="sd">    alpha : float, optional</span>
-</span><span id="__span-0-617"><a id="__codelineno-0-617" name="__codelineno-0-617"></a><span class="sd">        Significance level for converting quantile-based confidence bounds</span>
-</span><span id="__span-0-618"><a id="__codelineno-0-618" name="__codelineno-0-618"></a><span class="sd">        into standard errors. Only used when ``data`` is provided. Defaults</span>
-</span><span id="__span-0-619"><a id="__codelineno-0-619" name="__codelineno-0-619"></a><span class="sd">        to 0.05.</span>
-</span><span id="__span-0-620"><a id="__codelineno-0-620" name="__codelineno-0-620"></a><span class="sd">    include_sep_cols : bool, optional</span>
-</span><span id="__span-0-621"><a id="__codelineno-0-621" name="__codelineno-0-621"></a><span class="sd">        When ``True``, return additional columns detailing the separated</span>
-</span><span id="__span-0-622"><a id="__codelineno-0-622" name="__codelineno-0-622"></a><span class="sd">        variables and conditioning sets. Defaults to ``False``.</span>
-</span><span id="__span-0-623"><a id="__codelineno-0-623" name="__codelineno-0-623"></a>
-</span><span id="__span-0-624"><a id="__codelineno-0-624" name="__codelineno-0-624"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-625"><a id="__codelineno-0-625" name="__codelineno-0-625"></a><span class="sd">    -------</span>
-</span><span id="__span-0-626"><a id="__codelineno-0-626" name="__codelineno-0-626"></a><span class="sd">    tidypolars4sci.DataFrame</span>
-</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="sd">        Tidy representation of the implied independencies. The result</span>
-</span><span id="__span-0-628"><a id="__codelineno-0-628" name="__codelineno-0-628"></a><span class="sd">        always includes columns ``term`` (formatted as ``&quot;Y _||_ X | Z&quot;``),</span>
-</span><span id="__span-0-629"><a id="__codelineno-0-629" name="__codelineno-0-629"></a><span class="sd">        ``estimate``, ``se``, ``lo``, ``hi``, and ``pvalue``. When</span>
-</span><span id="__span-0-630"><a id="__codelineno-0-630" name="__codelineno-0-630"></a><span class="sd">        ``include_sep_cols`` is ``True``, columns ``var1``, ``var2``, and</span>
-</span><span id="__span-0-631"><a id="__codelineno-0-631" name="__codelineno-0-631"></a><span class="sd">        ``cond`` are also present.</span>
-</span><span id="__span-0-632"><a id="__codelineno-0-632" name="__codelineno-0-632"></a>
-</span><span id="__span-0-633"><a id="__codelineno-0-633" name="__codelineno-0-633"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-634"><a id="__codelineno-0-634" name="__codelineno-0-634"></a><span class="sd">    --------</span>
-</span><span id="__span-0-635"><a id="__codelineno-0-635" name="__codelineno-0-635"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
-</span><span id="__span-0-636"><a id="__codelineno-0-636" name="__codelineno-0-636"></a><span class="sd">    &gt;&gt;&gt; independencies = G.local_independencies(include_sep_cols=True)</span>
-</span><span id="__span-0-637"><a id="__codelineno-0-637" name="__codelineno-0-637"></a><span class="sd">    &gt;&gt;&gt; independencies.pull(&quot;term&quot;).to_list()</span>
-</span><span id="__span-0-638"><a id="__codelineno-0-638" name="__codelineno-0-638"></a><span class="sd">    [&#39;Y _||_ X | Z&#39;]</span>
-</span><span id="__span-0-639"><a id="__codelineno-0-639" name="__codelineno-0-639"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-640"><a id="__codelineno-0-640" name="__codelineno-0-640"></a>    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-641"><a id="__codelineno-0-641" name="__codelineno-0-641"></a>        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
-</span><span id="__span-0-642"><a id="__codelineno-0-642" name="__codelineno-0-642"></a>    <span class="c1"># compute</span>
-</span><span id="__span-0-643"><a id="__codelineno-0-643" name="__codelineno-0-643"></a>    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-644"><a id="__codelineno-0-644" name="__codelineno-0-644"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">impliedConditionalIndependencies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">)</span>
-</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a>        <span class="n">res</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">tibble</span><span class="p">()</span>
-</span><span id="__span-0-646"><a id="__codelineno-0-646" name="__codelineno-0-646"></a>        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">inds</span><span class="p">:</span>
-</span><span id="__span-0-647"><a id="__codelineno-0-647" name="__codelineno-0-647"></a>            <span class="n">y</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-0-648"><a id="__codelineno-0-648" name="__codelineno-0-648"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-0-649"><a id="__codelineno-0-649" name="__codelineno-0-649"></a>            <span class="n">z</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-</span><span id="__span-0-650"><a id="__codelineno-0-650" name="__codelineno-0-650"></a>            <span class="n">term</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2"> _||_ </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span id="__span-0-651"><a id="__codelineno-0-651" name="__codelineno-0-651"></a>            <span class="n">term</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">term</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">z</span> <span class="k">else</span> <span class="n">term</span>
-</span><span id="__span-0-652"><a id="__codelineno-0-652" name="__codelineno-0-652"></a>            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">tibble</span><span class="p">({</span><span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">term</span><span class="p">],</span>
-</span><span id="__span-0-653"><a id="__codelineno-0-653" name="__codelineno-0-653"></a>                             <span class="s2">&quot;var1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span>
-</span><span id="__span-0-654"><a id="__codelineno-0-654" name="__codelineno-0-654"></a>                             <span class="s2">&quot;var2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span>
-</span><span id="__span-0-655"><a id="__codelineno-0-655" name="__codelineno-0-655"></a>                             <span class="s2">&quot;cond&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">z</span><span class="p">]})</span>
-</span><span id="__span-0-656"><a id="__codelineno-0-656" name="__codelineno-0-656"></a>            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bind_rows</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
-</span><span id="__span-0-657"><a id="__codelineno-0-657" name="__codelineno-0-657"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">res</span>
-</span><span id="__span-0-658"><a id="__codelineno-0-658" name="__codelineno-0-658"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-659"><a id="__codelineno-0-659" name="__codelineno-0-659"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">localTests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">convert</span><span class="p">()</span><span class="o">.</span><span class="n">tp2tibble</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">abbreviate_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-660"><a id="__codelineno-0-660" name="__codelineno-0-660"></a>        <span class="n">z</span> <span class="o">=</span> <span class="n">dnorm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-</span><span id="__span-0-661"><a id="__codelineno-0-661" name="__codelineno-0-661"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">convert</span><span class="p">()</span><span class="o">.</span><span class="n">rtibble2tp</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">rownames2col</span><span class="o">=</span><span class="s1">&#39;term&#39;</span><span class="p">)</span>\
-</span><span id="__span-0-662"><a id="__codelineno-0-662" name="__codelineno-0-662"></a>                     <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;p.value&#39;</span><span class="p">:</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
-</span><span id="__span-0-663"><a id="__codelineno-0-663" name="__codelineno-0-663"></a>                              <span class="s1">&#39;2.5%&#39;</span><span class="p">:</span><span class="s1">&#39;lo&#39;</span><span class="p">,</span>
-</span><span id="__span-0-664"><a id="__codelineno-0-664" name="__codelineno-0-664"></a>                              <span class="s1">&#39;97.5%&#39;</span><span class="p">:</span><span class="s1">&#39;hi&#39;</span><span class="p">,</span>
-</span><span id="__span-0-665"><a id="__codelineno-0-665" name="__codelineno-0-665"></a>                              <span class="p">})</span>\
-</span><span id="__span-0-666"><a id="__codelineno-0-666" name="__codelineno-0-666"></a>                     <span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">se</span> <span class="o">=</span> <span class="p">(</span> <span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span><span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;lo&#39;</span><span class="p">)</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="p">)</span> <span class="p">)</span>
-</span><span id="__span-0-667"><a id="__codelineno-0-667" name="__codelineno-0-667"></a>        <span class="k">if</span> <span class="n">inds</span><span class="o">.</span><span class="n">nrow</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-668"><a id="__codelineno-0-668" name="__codelineno-0-668"></a>            <span class="n">inds</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-669"><a id="__codelineno-0-669" name="__codelineno-0-669"></a>                <span class="n">inds</span>
-</span><span id="__span-0-670"><a id="__codelineno-0-670" name="__codelineno-0-670"></a>                <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2_cond&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_||_&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-671"><a id="__codelineno-0-671" name="__codelineno-0-671"></a>                <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;var2_cond&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;cond&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
-</span><span id="__span-0-672"><a id="__codelineno-0-672" name="__codelineno-0-672"></a>            <span class="p">)</span>
-</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a>
-</span><span id="__span-0-674"><a id="__codelineno-0-674" name="__codelineno-0-674"></a>    <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue&#39;</span><span class="p">]</span>
-</span><span id="__span-0-675"><a id="__codelineno-0-675" name="__codelineno-0-675"></a>    <span class="k">if</span> <span class="n">include_sep_cols</span><span class="p">:</span>
-</span><span id="__span-0-676"><a id="__codelineno-0-676" name="__codelineno-0-676"></a>        <span class="nb">vars</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;cond&#39;</span><span class="p">]</span>
-</span><span id="__span-0-677"><a id="__codelineno-0-677" name="__codelineno-0-677"></a>    <span class="n">inds</span> <span class="o">=</span> <span class="n">inds</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">vars</span><span class="p">)</span>
-</span><span id="__span-0-678"><a id="__codelineno-0-678" name="__codelineno-0-678"></a>
-</span><span id="__span-0-679"><a id="__codelineno-0-679" name="__codelineno-0-679"></a>    <span class="k">return</span> <span class="n">inds</span>
+<span class="normal"><a href="#__codelineno-0-679">679</a></span>
+<span class="normal"><a href="#__codelineno-0-680">680</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-607"><a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="k">def</span><span class="w"> </span><span class="nf">local_independencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">include_sep_cols</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="__span-0-608"><a id="__codelineno-0-608" name="__codelineno-0-608"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-609"><a id="__codelineno-0-609" name="__codelineno-0-609"></a><span class="sd">    List conditional independencies implied by the DAG, and test them if data is provided.</span>
+</span><span id="__span-0-610"><a id="__codelineno-0-610" name="__codelineno-0-610"></a>
+</span><span id="__span-0-611"><a id="__codelineno-0-611" name="__codelineno-0-611"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-612"><a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-613"><a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">    data : tidypolars4sci.DataFrame or None, optional</span>
+</span><span id="__span-0-614"><a id="__codelineno-0-614" name="__codelineno-0-614"></a><span class="sd">        Observational data used to perform local conditional independence</span>
+</span><span id="__span-0-615"><a id="__codelineno-0-615" name="__codelineno-0-615"></a><span class="sd">        tests through ``dagitty::localTests``. When ``None`` (default), the</span>
+</span><span id="__span-0-616"><a id="__codelineno-0-616" name="__codelineno-0-616"></a><span class="sd">        method enumerates implied independencies analytically.</span>
+</span><span id="__span-0-617"><a id="__codelineno-0-617" name="__codelineno-0-617"></a><span class="sd">    alpha : float, optional</span>
+</span><span id="__span-0-618"><a id="__codelineno-0-618" name="__codelineno-0-618"></a><span class="sd">        Significance level for converting quantile-based confidence bounds</span>
+</span><span id="__span-0-619"><a id="__codelineno-0-619" name="__codelineno-0-619"></a><span class="sd">        into standard errors. Only used when ``data`` is provided. Defaults</span>
+</span><span id="__span-0-620"><a id="__codelineno-0-620" name="__codelineno-0-620"></a><span class="sd">        to 0.05.</span>
+</span><span id="__span-0-621"><a id="__codelineno-0-621" name="__codelineno-0-621"></a><span class="sd">    include_sep_cols : bool, optional</span>
+</span><span id="__span-0-622"><a id="__codelineno-0-622" name="__codelineno-0-622"></a><span class="sd">        When ``True``, return additional columns detailing the separated</span>
+</span><span id="__span-0-623"><a id="__codelineno-0-623" name="__codelineno-0-623"></a><span class="sd">        variables and conditioning sets. Defaults to ``False``.</span>
+</span><span id="__span-0-624"><a id="__codelineno-0-624" name="__codelineno-0-624"></a>
+</span><span id="__span-0-625"><a id="__codelineno-0-625" name="__codelineno-0-625"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-626"><a id="__codelineno-0-626" name="__codelineno-0-626"></a><span class="sd">    -------</span>
+</span><span id="__span-0-627"><a id="__codelineno-0-627" name="__codelineno-0-627"></a><span class="sd">    tidypolars4sci.DataFrame</span>
+</span><span id="__span-0-628"><a id="__codelineno-0-628" name="__codelineno-0-628"></a><span class="sd">        Tidy representation of the implied independencies. The result</span>
+</span><span id="__span-0-629"><a id="__codelineno-0-629" name="__codelineno-0-629"></a><span class="sd">        always includes columns ``term`` (formatted as ``&quot;Y _||_ X | Z&quot;``),</span>
+</span><span id="__span-0-630"><a id="__codelineno-0-630" name="__codelineno-0-630"></a><span class="sd">        ``estimate``, ``se``, ``lo``, ``hi``, and ``pvalue``. When</span>
+</span><span id="__span-0-631"><a id="__codelineno-0-631" name="__codelineno-0-631"></a><span class="sd">        ``include_sep_cols`` is ``True``, columns ``var1``, ``var2``, and</span>
+</span><span id="__span-0-632"><a id="__codelineno-0-632" name="__codelineno-0-632"></a><span class="sd">        ``cond`` are also present.</span>
+</span><span id="__span-0-633"><a id="__codelineno-0-633" name="__codelineno-0-633"></a>
+</span><span id="__span-0-634"><a id="__codelineno-0-634" name="__codelineno-0-634"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-635"><a id="__codelineno-0-635" name="__codelineno-0-635"></a><span class="sd">    --------</span>
+</span><span id="__span-0-636"><a id="__codelineno-0-636" name="__codelineno-0-636"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
+</span><span id="__span-0-637"><a id="__codelineno-0-637" name="__codelineno-0-637"></a><span class="sd">    &gt;&gt;&gt; independencies = G.local_independencies(include_sep_cols=True)</span>
+</span><span id="__span-0-638"><a id="__codelineno-0-638" name="__codelineno-0-638"></a><span class="sd">    &gt;&gt;&gt; independencies.pull(&quot;term&quot;).to_list()</span>
+</span><span id="__span-0-639"><a id="__codelineno-0-639" name="__codelineno-0-639"></a><span class="sd">    [&#39;Y _||_ X | Z&#39;]</span>
+</span><span id="__span-0-640"><a id="__codelineno-0-640" name="__codelineno-0-640"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-641"><a id="__codelineno-0-641" name="__codelineno-0-641"></a>    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-642"><a id="__codelineno-0-642" name="__codelineno-0-642"></a>        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+</span><span id="__span-0-643"><a id="__codelineno-0-643" name="__codelineno-0-643"></a>    <span class="c1"># compute</span>
+</span><span id="__span-0-644"><a id="__codelineno-0-644" name="__codelineno-0-644"></a>    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-645"><a id="__codelineno-0-645" name="__codelineno-0-645"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">impliedConditionalIndependencies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">)</span>
+</span><span id="__span-0-646"><a id="__codelineno-0-646" name="__codelineno-0-646"></a>        <span class="n">res</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">tibble</span><span class="p">()</span>
+</span><span id="__span-0-647"><a id="__codelineno-0-647" name="__codelineno-0-647"></a>        <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">inds</span><span class="p">:</span>
+</span><span id="__span-0-648"><a id="__codelineno-0-648" name="__codelineno-0-648"></a>            <span class="n">y</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-0-649"><a id="__codelineno-0-649" name="__codelineno-0-649"></a>            <span class="n">x</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="__span-0-650"><a id="__codelineno-0-650" name="__codelineno-0-650"></a>            <span class="n">z</span> <span class="o">=</span> <span class="n">ind</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span><span id="__span-0-651"><a id="__codelineno-0-651" name="__codelineno-0-651"></a>            <span class="n">term</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2"> _||_ </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span id="__span-0-652"><a id="__codelineno-0-652" name="__codelineno-0-652"></a>            <span class="n">term</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">term</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">z</span> <span class="k">else</span> <span class="n">term</span>
+</span><span id="__span-0-653"><a id="__codelineno-0-653" name="__codelineno-0-653"></a>            <span class="n">tmp</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">tibble</span><span class="p">({</span><span class="s1">&#39;term&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">term</span><span class="p">],</span>
+</span><span id="__span-0-654"><a id="__codelineno-0-654" name="__codelineno-0-654"></a>                             <span class="s2">&quot;var1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">y</span><span class="p">],</span>
+</span><span id="__span-0-655"><a id="__codelineno-0-655" name="__codelineno-0-655"></a>                             <span class="s2">&quot;var2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span>
+</span><span id="__span-0-656"><a id="__codelineno-0-656" name="__codelineno-0-656"></a>                             <span class="s2">&quot;cond&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">z</span><span class="p">]})</span>
+</span><span id="__span-0-657"><a id="__codelineno-0-657" name="__codelineno-0-657"></a>            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bind_rows</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+</span><span id="__span-0-658"><a id="__codelineno-0-658" name="__codelineno-0-658"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">res</span>
+</span><span id="__span-0-659"><a id="__codelineno-0-659" name="__codelineno-0-659"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-660"><a id="__codelineno-0-660" name="__codelineno-0-660"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">localTests</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">convert</span><span class="p">()</span><span class="o">.</span><span class="n">tp2tibble</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">abbreviate_names</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-661"><a id="__codelineno-0-661" name="__codelineno-0-661"></a>        <span class="n">z</span> <span class="o">=</span> <span class="n">dnorm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">alpha</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+</span><span id="__span-0-662"><a id="__codelineno-0-662" name="__codelineno-0-662"></a>        <span class="n">inds</span> <span class="o">=</span> <span class="n">convert</span><span class="p">()</span><span class="o">.</span><span class="n">rtibble2tp</span><span class="p">(</span><span class="n">inds</span><span class="p">,</span> <span class="n">rownames2col</span><span class="o">=</span><span class="s1">&#39;term&#39;</span><span class="p">)</span>\
+</span><span id="__span-0-663"><a id="__codelineno-0-663" name="__codelineno-0-663"></a>                     <span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;p.value&#39;</span><span class="p">:</span><span class="s2">&quot;pvalue&quot;</span><span class="p">,</span>
+</span><span id="__span-0-664"><a id="__codelineno-0-664" name="__codelineno-0-664"></a>                              <span class="s1">&#39;2.5%&#39;</span><span class="p">:</span><span class="s1">&#39;lo&#39;</span><span class="p">,</span>
+</span><span id="__span-0-665"><a id="__codelineno-0-665" name="__codelineno-0-665"></a>                              <span class="s1">&#39;97.5%&#39;</span><span class="p">:</span><span class="s1">&#39;hi&#39;</span><span class="p">,</span>
+</span><span id="__span-0-666"><a id="__codelineno-0-666" name="__codelineno-0-666"></a>                              <span class="p">})</span>\
+</span><span id="__span-0-667"><a id="__codelineno-0-667" name="__codelineno-0-667"></a>                     <span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">se</span> <span class="o">=</span> <span class="p">(</span> <span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;hi&#39;</span><span class="p">)</span><span class="o">-</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;lo&#39;</span><span class="p">)</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="p">)</span> <span class="p">)</span>
+</span><span id="__span-0-668"><a id="__codelineno-0-668" name="__codelineno-0-668"></a>        <span class="k">if</span> <span class="n">inds</span><span class="o">.</span><span class="n">nrow</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-669"><a id="__codelineno-0-669" name="__codelineno-0-669"></a>            <span class="n">inds</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-670"><a id="__codelineno-0-670" name="__codelineno-0-670"></a>                <span class="n">inds</span>
+</span><span id="__span-0-671"><a id="__codelineno-0-671" name="__codelineno-0-671"></a>                <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2_cond&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_||_&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-672"><a id="__codelineno-0-672" name="__codelineno-0-672"></a>                <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;var2_cond&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;cond&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+</span><span id="__span-0-673"><a id="__codelineno-0-673" name="__codelineno-0-673"></a>            <span class="p">)</span>
+</span><span id="__span-0-674"><a id="__codelineno-0-674" name="__codelineno-0-674"></a>
+</span><span id="__span-0-675"><a id="__codelineno-0-675" name="__codelineno-0-675"></a>    <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="s1">&#39;estimate&#39;</span><span class="p">,</span> <span class="s1">&#39;se&#39;</span><span class="p">,</span> <span class="s1">&#39;lo&#39;</span><span class="p">,</span> <span class="s1">&#39;hi&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue&#39;</span><span class="p">]</span>
+</span><span id="__span-0-676"><a id="__codelineno-0-676" name="__codelineno-0-676"></a>    <span class="k">if</span> <span class="n">include_sep_cols</span><span class="p">:</span>
+</span><span id="__span-0-677"><a id="__codelineno-0-677" name="__codelineno-0-677"></a>        <span class="nb">vars</span> <span class="o">+=</span> <span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;cond&#39;</span><span class="p">]</span>
+</span><span id="__span-0-678"><a id="__codelineno-0-678" name="__codelineno-0-678"></a>    <span class="n">inds</span> <span class="o">=</span> <span class="n">inds</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="nb">vars</span><span class="p">)</span>
+</span><span id="__span-0-679"><a id="__codelineno-0-679" name="__codelineno-0-679"></a>
+</span><span id="__span-0-680"><a id="__codelineno-0-680" name="__codelineno-0-680"></a>    <span class="k">return</span> <span class="n">inds</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

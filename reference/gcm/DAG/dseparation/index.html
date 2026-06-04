@@ -1912,6 +1912,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1941,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1999,7 +2069,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -2055,7 +2125,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -2067,70 +2137,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -2461,8 +2467,7 @@ list contains the conditioning variables as strings. Returns
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-555">555</a></span>
-<span class="normal"><a href="#__codelineno-0-556">556</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-556">556</a></span>
 <span class="normal"><a href="#__codelineno-0-557">557</a></span>
 <span class="normal"><a href="#__codelineno-0-558">558</a></span>
 <span class="normal"><a href="#__codelineno-0-559">559</a></span>
@@ -2509,55 +2514,56 @@ list contains the conditioning variables as strings. Returns
 <span class="normal"><a href="#__codelineno-0-600">600</a></span>
 <span class="normal"><a href="#__codelineno-0-601">601</a></span>
 <span class="normal"><a href="#__codelineno-0-602">602</a></span>
-<span class="normal"><a href="#__codelineno-0-603">603</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-555"><a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="k">def</span><span class="w"> </span><span class="nf">dseparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">):</span>
-</span><span id="__span-0-556"><a id="__codelineno-0-556" name="__codelineno-0-556"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-557"><a id="__codelineno-0-557" name="__codelineno-0-557"></a><span class="sd">    Retrieve the list of d-separations involving two variables.</span>
-</span><span id="__span-0-558"><a id="__codelineno-0-558" name="__codelineno-0-558"></a>
-</span><span id="__span-0-559"><a id="__codelineno-0-559" name="__codelineno-0-559"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-560"><a id="__codelineno-0-560" name="__codelineno-0-560"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-561"><a id="__codelineno-0-561" name="__codelineno-0-561"></a><span class="sd">    var1 : str</span>
-</span><span id="__span-0-562"><a id="__codelineno-0-562" name="__codelineno-0-562"></a><span class="sd">        Name of the first variable.</span>
-</span><span id="__span-0-563"><a id="__codelineno-0-563" name="__codelineno-0-563"></a><span class="sd">    var2 : str</span>
-</span><span id="__span-0-564"><a id="__codelineno-0-564" name="__codelineno-0-564"></a><span class="sd">        Name of the second variable.</span>
-</span><span id="__span-0-565"><a id="__codelineno-0-565" name="__codelineno-0-565"></a>
-</span><span id="__span-0-566"><a id="__codelineno-0-566" name="__codelineno-0-566"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-567"><a id="__codelineno-0-567" name="__codelineno-0-567"></a><span class="sd">    -------</span>
-</span><span id="__span-0-568"><a id="__codelineno-0-568" name="__codelineno-0-568"></a><span class="sd">    list[list[str]] or None</span>
-</span><span id="__span-0-569"><a id="__codelineno-0-569" name="__codelineno-0-569"></a><span class="sd">        Conditioning sets that d-separate ``var1`` and ``var2``. Each inner</span>
-</span><span id="__span-0-570"><a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="sd">        list contains the conditioning variables as strings. Returns</span>
-</span><span id="__span-0-571"><a id="__codelineno-0-571" name="__codelineno-0-571"></a><span class="sd">        ``None`` when no separating set is found.</span>
-</span><span id="__span-0-572"><a id="__codelineno-0-572" name="__codelineno-0-572"></a>
-</span><span id="__span-0-573"><a id="__codelineno-0-573" name="__codelineno-0-573"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-574"><a id="__codelineno-0-574" name="__codelineno-0-574"></a><span class="sd">    --------</span>
-</span><span id="__span-0-575"><a id="__codelineno-0-575" name="__codelineno-0-575"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
-</span><span id="__span-0-576"><a id="__codelineno-0-576" name="__codelineno-0-576"></a><span class="sd">    &gt;&gt;&gt; G.dseparation(&quot;X&quot;, &quot;Y&quot;)</span>
-</span><span id="__span-0-577"><a id="__codelineno-0-577" name="__codelineno-0-577"></a><span class="sd">    [[&#39;Z&#39;]]</span>
-</span><span id="__span-0-578"><a id="__codelineno-0-578" name="__codelineno-0-578"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-579"><a id="__codelineno-0-579" name="__codelineno-0-579"></a>    <span class="k">assert</span> <span class="n">var1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;&#39;var1&#39; (a str) must be provided.&quot;</span>
-</span><span id="__span-0-580"><a id="__codelineno-0-580" name="__codelineno-0-580"></a>    <span class="k">assert</span> <span class="n">var2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;&#39;var2&#39; (a str) must be provided.&quot;</span>
-</span><span id="__span-0-581"><a id="__codelineno-0-581" name="__codelineno-0-581"></a>
-</span><span id="__span-0-582"><a id="__codelineno-0-582" name="__codelineno-0-582"></a>    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_independencies</span><span class="p">()</span>
-</span><span id="__span-0-583"><a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">nrow</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-</span><span id="__span-0-584"><a id="__codelineno-0-584" name="__codelineno-0-584"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-585"><a id="__codelineno-0-585" name="__codelineno-0-585"></a>            <span class="n">res</span>
-</span><span id="__span-0-586"><a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2|conditional&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_||_&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</span><span id="__span-0-587"><a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;var2|conditional&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;conditional&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># </span>
-</span><span id="__span-0-588"><a id="__codelineno-0-588" name="__codelineno-0-588"></a>            <span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">var1</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;var1&#39;</span><span class="p">),</span>
-</span><span id="__span-0-589"><a id="__codelineno-0-589" name="__codelineno-0-589"></a>                    <span class="n">var2</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;var2&#39;</span><span class="p">),</span>
-</span><span id="__span-0-590"><a id="__codelineno-0-590" name="__codelineno-0-590"></a>                    <span class="n">conditional</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;conditional&#39;</span><span class="p">),</span>
-</span><span id="__span-0-591"><a id="__codelineno-0-591" name="__codelineno-0-591"></a>                    <span class="p">)</span>
-</span><span id="__span-0-592"><a id="__codelineno-0-592" name="__codelineno-0-592"></a>            <span class="o">.</span><span class="n">replace_null</span><span class="p">({</span><span class="s1">&#39;conditional&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">})</span>
-</span><span id="__span-0-593"><a id="__codelineno-0-593" name="__codelineno-0-593"></a>            <span class="o">.</span><span class="n">filter</span><span class="p">(((</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var1&quot;</span><span class="p">)</span><span class="o">==</span><span class="n">var1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;var2&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">var2</span><span class="p">))</span> <span class="o">|</span>
-</span><span id="__span-0-594"><a id="__codelineno-0-594" name="__codelineno-0-594"></a>                    <span class="p">((</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var2&quot;</span><span class="p">)</span><span class="o">==</span><span class="n">var1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;var1&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">var2</span><span class="p">))</span>
-</span><span id="__span-0-595"><a id="__codelineno-0-595" name="__codelineno-0-595"></a>                    <span class="p">)</span>
-</span><span id="__span-0-596"><a id="__codelineno-0-596" name="__codelineno-0-596"></a>        <span class="p">)</span>
-</span><span id="__span-0-597"><a id="__codelineno-0-597" name="__codelineno-0-597"></a>        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="s1">&#39;conditional&#39;</span><span class="p">)</span>
-</span><span id="__span-0-598"><a id="__codelineno-0-598" name="__codelineno-0-598"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
-</span><span id="__span-0-599"><a id="__codelineno-0-599" name="__codelineno-0-599"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">[[</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">inner_list</span><span class="p">]</span> <span class="k">for</span> <span class="n">inner_list</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
-</span><span id="__span-0-600"><a id="__codelineno-0-600" name="__codelineno-0-600"></a>    <span class="k">else</span><span class="p">:</span>
-</span><span id="__span-0-601"><a id="__codelineno-0-601" name="__codelineno-0-601"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not possible to d-separate </span><span class="si">{</span><span class="n">var1</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">var2</span><span class="si">}</span><span class="s1"> in the graph.&#39;</span><span class="p">)</span>
-</span><span id="__span-0-602"><a id="__codelineno-0-602" name="__codelineno-0-602"></a>        <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="__span-0-603"><a id="__codelineno-0-603" name="__codelineno-0-603"></a>    <span class="k">return</span> <span class="n">res</span>
+<span class="normal"><a href="#__codelineno-0-603">603</a></span>
+<span class="normal"><a href="#__codelineno-0-604">604</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-556"><a id="__codelineno-0-556" name="__codelineno-0-556"></a><span class="k">def</span><span class="w"> </span><span class="nf">dseparation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">):</span>
+</span><span id="__span-0-557"><a id="__codelineno-0-557" name="__codelineno-0-557"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-558"><a id="__codelineno-0-558" name="__codelineno-0-558"></a><span class="sd">    Retrieve the list of d-separations involving two variables.</span>
+</span><span id="__span-0-559"><a id="__codelineno-0-559" name="__codelineno-0-559"></a>
+</span><span id="__span-0-560"><a id="__codelineno-0-560" name="__codelineno-0-560"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-561"><a id="__codelineno-0-561" name="__codelineno-0-561"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-562"><a id="__codelineno-0-562" name="__codelineno-0-562"></a><span class="sd">    var1 : str</span>
+</span><span id="__span-0-563"><a id="__codelineno-0-563" name="__codelineno-0-563"></a><span class="sd">        Name of the first variable.</span>
+</span><span id="__span-0-564"><a id="__codelineno-0-564" name="__codelineno-0-564"></a><span class="sd">    var2 : str</span>
+</span><span id="__span-0-565"><a id="__codelineno-0-565" name="__codelineno-0-565"></a><span class="sd">        Name of the second variable.</span>
+</span><span id="__span-0-566"><a id="__codelineno-0-566" name="__codelineno-0-566"></a>
+</span><span id="__span-0-567"><a id="__codelineno-0-567" name="__codelineno-0-567"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-568"><a id="__codelineno-0-568" name="__codelineno-0-568"></a><span class="sd">    -------</span>
+</span><span id="__span-0-569"><a id="__codelineno-0-569" name="__codelineno-0-569"></a><span class="sd">    list[list[str]] or None</span>
+</span><span id="__span-0-570"><a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="sd">        Conditioning sets that d-separate ``var1`` and ``var2``. Each inner</span>
+</span><span id="__span-0-571"><a id="__codelineno-0-571" name="__codelineno-0-571"></a><span class="sd">        list contains the conditioning variables as strings. Returns</span>
+</span><span id="__span-0-572"><a id="__codelineno-0-572" name="__codelineno-0-572"></a><span class="sd">        ``None`` when no separating set is found.</span>
+</span><span id="__span-0-573"><a id="__codelineno-0-573" name="__codelineno-0-573"></a>
+</span><span id="__span-0-574"><a id="__codelineno-0-574" name="__codelineno-0-574"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-575"><a id="__codelineno-0-575" name="__codelineno-0-575"></a><span class="sd">    --------</span>
+</span><span id="__span-0-576"><a id="__codelineno-0-576" name="__codelineno-0-576"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
+</span><span id="__span-0-577"><a id="__codelineno-0-577" name="__codelineno-0-577"></a><span class="sd">    &gt;&gt;&gt; G.dseparation(&quot;X&quot;, &quot;Y&quot;)</span>
+</span><span id="__span-0-578"><a id="__codelineno-0-578" name="__codelineno-0-578"></a><span class="sd">    [[&#39;Z&#39;]]</span>
+</span><span id="__span-0-579"><a id="__codelineno-0-579" name="__codelineno-0-579"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-580"><a id="__codelineno-0-580" name="__codelineno-0-580"></a>    <span class="k">assert</span> <span class="n">var1</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;&#39;var1&#39; (a str) must be provided.&quot;</span>
+</span><span id="__span-0-581"><a id="__codelineno-0-581" name="__codelineno-0-581"></a>    <span class="k">assert</span> <span class="n">var2</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="s2">&quot;&#39;var2&#39; (a str) must be provided.&quot;</span>
+</span><span id="__span-0-582"><a id="__codelineno-0-582" name="__codelineno-0-582"></a>
+</span><span id="__span-0-583"><a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_independencies</span><span class="p">()</span>
+</span><span id="__span-0-584"><a id="__codelineno-0-584" name="__codelineno-0-584"></a>    <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">nrow</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-585"><a id="__codelineno-0-585" name="__codelineno-0-585"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-586"><a id="__codelineno-0-586" name="__codelineno-0-586"></a>            <span class="n">res</span>
+</span><span id="__span-0-587"><a id="__codelineno-0-587" name="__codelineno-0-587"></a>            <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;term&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var1&#39;</span><span class="p">,</span> <span class="s1">&#39;var2|conditional&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_||_&#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span id="__span-0-588"><a id="__codelineno-0-588" name="__codelineno-0-588"></a>            <span class="o">.</span><span class="n">separate</span><span class="p">(</span><span class="s1">&#39;var2|conditional&#39;</span><span class="p">,</span> <span class="n">into</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;var2&#39;</span><span class="p">,</span> <span class="s1">&#39;conditional&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39; | &#39;</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># </span>
+</span><span id="__span-0-589"><a id="__codelineno-0-589" name="__codelineno-0-589"></a>            <span class="o">.</span><span class="n">mutate</span><span class="p">(</span><span class="n">var1</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;var1&#39;</span><span class="p">),</span>
+</span><span id="__span-0-590"><a id="__codelineno-0-590" name="__codelineno-0-590"></a>                    <span class="n">var2</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;var2&#39;</span><span class="p">),</span>
+</span><span id="__span-0-591"><a id="__codelineno-0-591" name="__codelineno-0-591"></a>                    <span class="n">conditional</span> <span class="o">=</span> <span class="n">tp</span><span class="o">.</span><span class="n">str_trim</span><span class="p">(</span><span class="s1">&#39;conditional&#39;</span><span class="p">),</span>
+</span><span id="__span-0-592"><a id="__codelineno-0-592" name="__codelineno-0-592"></a>                    <span class="p">)</span>
+</span><span id="__span-0-593"><a id="__codelineno-0-593" name="__codelineno-0-593"></a>            <span class="o">.</span><span class="n">replace_null</span><span class="p">({</span><span class="s1">&#39;conditional&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">})</span>
+</span><span id="__span-0-594"><a id="__codelineno-0-594" name="__codelineno-0-594"></a>            <span class="o">.</span><span class="n">filter</span><span class="p">(((</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var1&quot;</span><span class="p">)</span><span class="o">==</span><span class="n">var1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;var2&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">var2</span><span class="p">))</span> <span class="o">|</span>
+</span><span id="__span-0-595"><a id="__codelineno-0-595" name="__codelineno-0-595"></a>                    <span class="p">((</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var2&quot;</span><span class="p">)</span><span class="o">==</span><span class="n">var1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">tp</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s1">&#39;var1&#39;</span><span class="p">)</span><span class="o">==</span><span class="n">var2</span><span class="p">))</span>
+</span><span id="__span-0-596"><a id="__codelineno-0-596" name="__codelineno-0-596"></a>                    <span class="p">)</span>
+</span><span id="__span-0-597"><a id="__codelineno-0-597" name="__codelineno-0-597"></a>        <span class="p">)</span>
+</span><span id="__span-0-598"><a id="__codelineno-0-598" name="__codelineno-0-598"></a>        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="s1">&#39;conditional&#39;</span><span class="p">)</span>
+</span><span id="__span-0-599"><a id="__codelineno-0-599" name="__codelineno-0-599"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+</span><span id="__span-0-600"><a id="__codelineno-0-600" name="__codelineno-0-600"></a>        <span class="n">res</span> <span class="o">=</span> <span class="p">[[</span><span class="n">string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">inner_list</span><span class="p">]</span> <span class="k">for</span> <span class="n">inner_list</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+</span><span id="__span-0-601"><a id="__codelineno-0-601" name="__codelineno-0-601"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-0-602"><a id="__codelineno-0-602" name="__codelineno-0-602"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Not possible to d-separate </span><span class="si">{</span><span class="n">var1</span><span class="si">}</span><span class="s1"> and </span><span class="si">{</span><span class="n">var2</span><span class="si">}</span><span class="s1"> in the graph.&#39;</span><span class="p">)</span>
+</span><span id="__span-0-603"><a id="__codelineno-0-603" name="__codelineno-0-603"></a>        <span class="n">res</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="__span-0-604"><a id="__codelineno-0-604" name="__codelineno-0-604"></a>    <span class="k">return</span> <span class="n">res</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

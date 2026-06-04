@@ -1139,6 +1139,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1168,7 +1238,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1226,7 +1296,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -1282,7 +1352,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -1294,70 +1364,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -1622,25 +1628,25 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4829">4829</a></span>
-<span class="normal"><a href="#__codelineno-0-4830">4830</a></span>
-<span class="normal"><a href="#__codelineno-0-4831">4831</a></span>
-<span class="normal"><a href="#__codelineno-0-4832">4832</a></span>
-<span class="normal"><a href="#__codelineno-0-4833">4833</a></span>
-<span class="normal"><a href="#__codelineno-0-4834">4834</a></span>
-<span class="normal"><a href="#__codelineno-0-4835">4835</a></span>
-<span class="normal"><a href="#__codelineno-0-4836">4836</a></span>
-<span class="normal"><a href="#__codelineno-0-4837">4837</a></span>
-<span class="normal"><a href="#__codelineno-0-4838">4838</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4829"><a id="__codelineno-0-4829" name="__codelineno-0-4829"></a><span class="k">def</span><span class="w"> </span><span class="nf">copy_style</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
-</span><span id="__span-0-4830"><a id="__codelineno-0-4830" name="__codelineno-0-4830"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a mutable copy of a built-in style.</span>
-</span><span id="__span-0-4831"><a id="__codelineno-0-4831" name="__codelineno-0-4831"></a>
-</span><span id="__span-0-4832"><a id="__codelineno-0-4832" name="__codelineno-0-4832"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-4833"><a id="__codelineno-0-4833" name="__codelineno-0-4833"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-4834"><a id="__codelineno-0-4834" name="__codelineno-0-4834"></a><span class="sd">    which : str</span>
-</span><span id="__span-0-4835"><a id="__codelineno-0-4835" name="__codelineno-0-4835"></a><span class="sd">        String with the name of the built-in style.</span>
-</span><span id="__span-0-4836"><a id="__codelineno-0-4836" name="__codelineno-0-4836"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-4837"><a id="__codelineno-0-4837" name="__codelineno-0-4837"></a>    <span class="n">resolve_graph_style</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">GRAPH_STYLES</span><span class="p">)</span>
-</span><span id="__span-0-4838"><a id="__codelineno-0-4838" name="__codelineno-0-4838"></a>    <span class="k">return</span> <span class="n">_copy_style</span><span class="p">(</span><span class="n">GRAPH_STYLES</span><span class="p">[</span><span class="n">which</span><span class="p">])</span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4772">4772</a></span>
+<span class="normal"><a href="#__codelineno-0-4773">4773</a></span>
+<span class="normal"><a href="#__codelineno-0-4774">4774</a></span>
+<span class="normal"><a href="#__codelineno-0-4775">4775</a></span>
+<span class="normal"><a href="#__codelineno-0-4776">4776</a></span>
+<span class="normal"><a href="#__codelineno-0-4777">4777</a></span>
+<span class="normal"><a href="#__codelineno-0-4778">4778</a></span>
+<span class="normal"><a href="#__codelineno-0-4779">4779</a></span>
+<span class="normal"><a href="#__codelineno-0-4780">4780</a></span>
+<span class="normal"><a href="#__codelineno-0-4781">4781</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4772"><a id="__codelineno-0-4772" name="__codelineno-0-4772"></a><span class="k">def</span><span class="w"> </span><span class="nf">copy_style</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">):</span>
+</span><span id="__span-0-4773"><a id="__codelineno-0-4773" name="__codelineno-0-4773"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a mutable copy of a built-in style.</span>
+</span><span id="__span-0-4774"><a id="__codelineno-0-4774" name="__codelineno-0-4774"></a>
+</span><span id="__span-0-4775"><a id="__codelineno-0-4775" name="__codelineno-0-4775"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-4776"><a id="__codelineno-0-4776" name="__codelineno-0-4776"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-4777"><a id="__codelineno-0-4777" name="__codelineno-0-4777"></a><span class="sd">    which : str</span>
+</span><span id="__span-0-4778"><a id="__codelineno-0-4778" name="__codelineno-0-4778"></a><span class="sd">        String with the name of the built-in style.</span>
+</span><span id="__span-0-4779"><a id="__codelineno-0-4779" name="__codelineno-0-4779"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-4780"><a id="__codelineno-0-4780" name="__codelineno-0-4780"></a>    <span class="n">resolve_graph_style</span><span class="p">(</span><span class="n">which</span><span class="p">,</span> <span class="n">GRAPH_STYLES</span><span class="p">)</span>
+</span><span id="__span-0-4781"><a id="__codelineno-0-4781" name="__codelineno-0-4781"></a>    <span class="k">return</span> <span class="n">_copy_style</span><span class="p">(</span><span class="n">GRAPH_STYLES</span><span class="p">[</span><span class="n">which</span><span class="p">])</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

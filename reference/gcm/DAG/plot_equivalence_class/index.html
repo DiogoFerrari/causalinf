@@ -1912,6 +1912,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1941,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1999,7 +2069,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -2055,7 +2125,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -2067,70 +2137,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -2458,12 +2464,7 @@
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2019">2019</a></span>
-<span class="normal"><a href="#__codelineno-0-2020">2020</a></span>
-<span class="normal"><a href="#__codelineno-0-2021">2021</a></span>
-<span class="normal"><a href="#__codelineno-0-2022">2022</a></span>
-<span class="normal"><a href="#__codelineno-0-2023">2023</a></span>
-<span class="normal"><a href="#__codelineno-0-2024">2024</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-2024">2024</a></span>
 <span class="normal"><a href="#__codelineno-0-2025">2025</a></span>
 <span class="normal"><a href="#__codelineno-0-2026">2026</a></span>
 <span class="normal"><a href="#__codelineno-0-2027">2027</a></span>
@@ -2481,30 +2482,35 @@
 <span class="normal"><a href="#__codelineno-0-2039">2039</a></span>
 <span class="normal"><a href="#__codelineno-0-2040">2040</a></span>
 <span class="normal"><a href="#__codelineno-0-2041">2041</a></span>
-<span class="normal"><a href="#__codelineno-0-2042">2042</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2019"><a id="__codelineno-0-2019" name="__codelineno-0-2019"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_equivalence_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
-</span><span id="__span-0-2020"><a id="__codelineno-0-2020" name="__codelineno-0-2020"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-2021"><a id="__codelineno-0-2021" name="__codelineno-0-2021"></a><span class="sd">    Plot the partially directed Markov equivalence class of the DAG.</span>
-</span><span id="__span-0-2022"><a id="__codelineno-0-2022" name="__codelineno-0-2022"></a>
-</span><span id="__span-0-2023"><a id="__codelineno-0-2023" name="__codelineno-0-2023"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-2024"><a id="__codelineno-0-2024" name="__codelineno-0-2024"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-2025"><a id="__codelineno-0-2025" name="__codelineno-0-2025"></a><span class="sd">    *args :</span>
-</span><span id="__span-0-2026"><a id="__codelineno-0-2026" name="__codelineno-0-2026"></a><span class="sd">        Positional arguments forwarded to ``DAG.plot``.</span>
-</span><span id="__span-0-2027"><a id="__codelineno-0-2027" name="__codelineno-0-2027"></a><span class="sd">    **kws :</span>
-</span><span id="__span-0-2028"><a id="__codelineno-0-2028" name="__codelineno-0-2028"></a><span class="sd">        Keyword arguments forwarded to ``DAG.plot``.</span>
-</span><span id="__span-0-2029"><a id="__codelineno-0-2029" name="__codelineno-0-2029"></a>
-</span><span id="__span-0-2030"><a id="__codelineno-0-2030" name="__codelineno-0-2030"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-2031"><a id="__codelineno-0-2031" name="__codelineno-0-2031"></a><span class="sd">    -------</span>
-</span><span id="__span-0-2032"><a id="__codelineno-0-2032" name="__codelineno-0-2032"></a><span class="sd">    matplotlib.axes.Axes</span>
-</span><span id="__span-0-2033"><a id="__codelineno-0-2033" name="__codelineno-0-2033"></a><span class="sd">        Axis containing the rendered equivalence class.</span>
+<span class="normal"><a href="#__codelineno-0-2042">2042</a></span>
+<span class="normal"><a href="#__codelineno-0-2043">2043</a></span>
+<span class="normal"><a href="#__codelineno-0-2044">2044</a></span>
+<span class="normal"><a href="#__codelineno-0-2045">2045</a></span>
+<span class="normal"><a href="#__codelineno-0-2046">2046</a></span>
+<span class="normal"><a href="#__codelineno-0-2047">2047</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-2024"><a id="__codelineno-0-2024" name="__codelineno-0-2024"></a><span class="k">def</span><span class="w"> </span><span class="nf">plot_equivalence_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+</span><span id="__span-0-2025"><a id="__codelineno-0-2025" name="__codelineno-0-2025"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-2026"><a id="__codelineno-0-2026" name="__codelineno-0-2026"></a><span class="sd">    Plot the partially directed Markov equivalence class of the DAG.</span>
+</span><span id="__span-0-2027"><a id="__codelineno-0-2027" name="__codelineno-0-2027"></a>
+</span><span id="__span-0-2028"><a id="__codelineno-0-2028" name="__codelineno-0-2028"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-2029"><a id="__codelineno-0-2029" name="__codelineno-0-2029"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-2030"><a id="__codelineno-0-2030" name="__codelineno-0-2030"></a><span class="sd">    *args :</span>
+</span><span id="__span-0-2031"><a id="__codelineno-0-2031" name="__codelineno-0-2031"></a><span class="sd">        Positional arguments forwarded to ``DAG.plot``.</span>
+</span><span id="__span-0-2032"><a id="__codelineno-0-2032" name="__codelineno-0-2032"></a><span class="sd">    **kws :</span>
+</span><span id="__span-0-2033"><a id="__codelineno-0-2033" name="__codelineno-0-2033"></a><span class="sd">        Keyword arguments forwarded to ``DAG.plot``.</span>
 </span><span id="__span-0-2034"><a id="__codelineno-0-2034" name="__codelineno-0-2034"></a>
-</span><span id="__span-0-2035"><a id="__codelineno-0-2035" name="__codelineno-0-2035"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-2036"><a id="__codelineno-0-2036" name="__codelineno-0-2036"></a><span class="sd">    --------</span>
-</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z &lt;- Y&quot;)</span>
-</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a><span class="sd">    &gt;&gt;&gt; ax = G.plot_equivalence_class(show_plot=False)</span>
-</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a><span class="sd">    &gt;&gt;&gt; ax is not None</span>
-</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a><span class="sd">    True</span>
-</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">equivalence_class</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span>
+</span><span id="__span-0-2035"><a id="__codelineno-0-2035" name="__codelineno-0-2035"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-2036"><a id="__codelineno-0-2036" name="__codelineno-0-2036"></a><span class="sd">    -------</span>
+</span><span id="__span-0-2037"><a id="__codelineno-0-2037" name="__codelineno-0-2037"></a><span class="sd">    matplotlib.axes.Axes</span>
+</span><span id="__span-0-2038"><a id="__codelineno-0-2038" name="__codelineno-0-2038"></a><span class="sd">        Axis containing the rendered equivalence class.</span>
+</span><span id="__span-0-2039"><a id="__codelineno-0-2039" name="__codelineno-0-2039"></a>
+</span><span id="__span-0-2040"><a id="__codelineno-0-2040" name="__codelineno-0-2040"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-2041"><a id="__codelineno-0-2041" name="__codelineno-0-2041"></a><span class="sd">    --------</span>
+</span><span id="__span-0-2042"><a id="__codelineno-0-2042" name="__codelineno-0-2042"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z &lt;- Y&quot;)</span>
+</span><span id="__span-0-2043"><a id="__codelineno-0-2043" name="__codelineno-0-2043"></a><span class="sd">    &gt;&gt;&gt; ax = G.plot_equivalence_class(show_plot=False)</span>
+</span><span id="__span-0-2044"><a id="__codelineno-0-2044" name="__codelineno-0-2044"></a><span class="sd">    &gt;&gt;&gt; ax is not None</span>
+</span><span id="__span-0-2045"><a id="__codelineno-0-2045" name="__codelineno-0-2045"></a><span class="sd">    True</span>
+</span><span id="__span-0-2046"><a id="__codelineno-0-2046" name="__codelineno-0-2046"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-2047"><a id="__codelineno-0-2047" name="__codelineno-0-2047"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">equivalence_class</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

@@ -1912,6 +1912,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1941,7 +2011,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1999,7 +2069,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -2055,7 +2125,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -2067,70 +2137,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -2494,8 +2500,7 @@ Defaults to <code>False</code>.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-899">899</a></span>
-<span class="normal"><a href="#__codelineno-0-900">900</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-900">900</a></span>
 <span class="normal"><a href="#__codelineno-0-901">901</a></span>
 <span class="normal"><a href="#__codelineno-0-902">902</a></span>
 <span class="normal"><a href="#__codelineno-0-903">903</a></span>
@@ -2534,47 +2539,48 @@ Defaults to <code>False</code>.</p>
 <span class="normal"><a href="#__codelineno-0-936">936</a></span>
 <span class="normal"><a href="#__codelineno-0-937">937</a></span>
 <span class="normal"><a href="#__codelineno-0-938">938</a></span>
-<span class="normal"><a href="#__codelineno-0-939">939</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-899"><a id="__codelineno-0-899" name="__codelineno-0-899"></a><span class="k">def</span><span class="w"> </span><span class="nf">paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-</span><span id="__span-0-900"><a id="__codelineno-0-900" name="__codelineno-0-900"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-901"><a id="__codelineno-0-901" name="__codelineno-0-901"></a><span class="sd">    Get paths between exposure and outcome, optionally conditioning on a set.</span>
-</span><span id="__span-0-902"><a id="__codelineno-0-902" name="__codelineno-0-902"></a>
-</span><span id="__span-0-903"><a id="__codelineno-0-903" name="__codelineno-0-903"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-904"><a id="__codelineno-0-904" name="__codelineno-0-904"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-905"><a id="__codelineno-0-905" name="__codelineno-0-905"></a><span class="sd">    exposure : str or list[str] or None, optional</span>
-</span><span id="__span-0-906"><a id="__codelineno-0-906" name="__codelineno-0-906"></a><span class="sd">        Exposure node(s). Defaults to the DAG&#39;s exposure role when omitted.</span>
-</span><span id="__span-0-907"><a id="__codelineno-0-907" name="__codelineno-0-907"></a><span class="sd">    outcome : str or list[str] or None, optional</span>
-</span><span id="__span-0-908"><a id="__codelineno-0-908" name="__codelineno-0-908"></a><span class="sd">        Outcome node(s). Defaults to the DAG&#39;s outcome role when omitted.</span>
-</span><span id="__span-0-909"><a id="__codelineno-0-909" name="__codelineno-0-909"></a><span class="sd">    adj_set : Sequence[str] or None, optional</span>
-</span><span id="__span-0-910"><a id="__codelineno-0-910" name="__codelineno-0-910"></a><span class="sd">        Conditioning set supplied to ``dagitty.paths``. ``None`` is passed</span>
-</span><span id="__span-0-911"><a id="__codelineno-0-911" name="__codelineno-0-911"></a><span class="sd">        through to indicate no adjustment.</span>
-</span><span id="__span-0-912"><a id="__codelineno-0-912" name="__codelineno-0-912"></a><span class="sd">    directed : bool, optional</span>
-</span><span id="__span-0-913"><a id="__codelineno-0-913" name="__codelineno-0-913"></a><span class="sd">        When ``True``, restrict to directed paths from exposure to outcome.</span>
-</span><span id="__span-0-914"><a id="__codelineno-0-914" name="__codelineno-0-914"></a><span class="sd">        Defaults to ``False``.</span>
-</span><span id="__span-0-915"><a id="__codelineno-0-915" name="__codelineno-0-915"></a>
-</span><span id="__span-0-916"><a id="__codelineno-0-916" name="__codelineno-0-916"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-917"><a id="__codelineno-0-917" name="__codelineno-0-917"></a><span class="sd">    -------</span>
-</span><span id="__span-0-918"><a id="__codelineno-0-918" name="__codelineno-0-918"></a><span class="sd">    dict[str, dict[str, Any]]</span>
-</span><span id="__span-0-919"><a id="__codelineno-0-919" name="__codelineno-0-919"></a><span class="sd">        Mapping from path strings to dictionaries with keys ``&#39;open&#39;`` and</span>
-</span><span id="__span-0-920"><a id="__codelineno-0-920" name="__codelineno-0-920"></a><span class="sd">        ``&#39;adj_set&#39;`` indicating path status and conditioning set.</span>
-</span><span id="__span-0-921"><a id="__codelineno-0-921" name="__codelineno-0-921"></a>
-</span><span id="__span-0-922"><a id="__codelineno-0-922" name="__codelineno-0-922"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-923"><a id="__codelineno-0-923" name="__codelineno-0-923"></a><span class="sd">    --------</span>
-</span><span id="__span-0-924"><a id="__codelineno-0-924" name="__codelineno-0-924"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
-</span><span id="__span-0-925"><a id="__codelineno-0-925" name="__codelineno-0-925"></a><span class="sd">    &gt;&gt;&gt; G.paths(exposure=&quot;X&quot;, outcome=&quot;Y&quot;, directed=True)</span>
-</span><span id="__span-0-926"><a id="__codelineno-0-926" name="__codelineno-0-926"></a><span class="sd">    {&#39;X -&gt; Z -&gt; Y&#39;: {&#39;open&#39;: True, &#39;adj_set&#39;: None}}</span>
-</span><span id="__span-0-927"><a id="__codelineno-0-927" name="__codelineno-0-927"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-928"><a id="__codelineno-0-928" name="__codelineno-0-928"></a>    <span class="n">exposure</span> <span class="o">=</span> <span class="n">exposure</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">exposure</span>
-</span><span id="__span-0-929"><a id="__codelineno-0-929" name="__codelineno-0-929"></a>    <span class="n">outcome</span> <span class="o">=</span> <span class="n">outcome</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span>
-</span><span id="__span-0-930"><a id="__codelineno-0-930" name="__codelineno-0-930"></a>
-</span><span id="__span-0-931"><a id="__codelineno-0-931" name="__codelineno-0-931"></a>    <span class="k">assert</span> <span class="n">exposure</span><span class="p">,</span> <span class="s2">&quot;Exposure must be provided.&quot;</span>
-</span><span id="__span-0-932"><a id="__codelineno-0-932" name="__codelineno-0-932"></a>    <span class="k">assert</span> <span class="n">outcome</span><span class="p">,</span> <span class="s2">&quot;Outcome must be provided.&quot;</span>
-</span><span id="__span-0-933"><a id="__codelineno-0-933" name="__codelineno-0-933"></a>
-</span><span id="__span-0-934"><a id="__codelineno-0-934" name="__codelineno-0-934"></a>    <span class="n">adj</span> <span class="o">=</span> <span class="n">adj_set</span> <span class="ow">or</span> <span class="n">NULL</span>
-</span><span id="__span-0-935"><a id="__codelineno-0-935" name="__codelineno-0-935"></a>    <span class="n">paths_info</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">adj</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">)</span>
-</span><span id="__span-0-936"><a id="__codelineno-0-936" name="__codelineno-0-936"></a>    <span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths_info</span><span class="o">.</span><span class="n">rx2</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">])</span>
-</span><span id="__span-0-937"><a id="__codelineno-0-937" name="__codelineno-0-937"></a>    <span class="n">are_open</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths_info</span><span class="o">.</span><span class="n">rx2</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">])</span>
-</span><span id="__span-0-938"><a id="__codelineno-0-938" name="__codelineno-0-938"></a>
-</span><span id="__span-0-939"><a id="__codelineno-0-939" name="__codelineno-0-939"></a>    <span class="k">return</span> <span class="p">{</span><span class="n">path</span><span class="p">:{</span><span class="s1">&#39;open&#39;</span><span class="p">:</span><span class="n">is_open</span><span class="p">,</span> <span class="s1">&#39;adj_set&#39;</span><span class="p">:</span><span class="n">adj_set</span><span class="p">}</span> <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">is_open</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">are_open</span><span class="p">)}</span>
+<span class="normal"><a href="#__codelineno-0-939">939</a></span>
+<span class="normal"><a href="#__codelineno-0-940">940</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-900"><a id="__codelineno-0-900" name="__codelineno-0-900"></a><span class="k">def</span><span class="w"> </span><span class="nf">paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exposure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">outcome</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">adj_set</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="__span-0-901"><a id="__codelineno-0-901" name="__codelineno-0-901"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-902"><a id="__codelineno-0-902" name="__codelineno-0-902"></a><span class="sd">    Get paths between exposure and outcome, optionally conditioning on a set.</span>
+</span><span id="__span-0-903"><a id="__codelineno-0-903" name="__codelineno-0-903"></a>
+</span><span id="__span-0-904"><a id="__codelineno-0-904" name="__codelineno-0-904"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-905"><a id="__codelineno-0-905" name="__codelineno-0-905"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-906"><a id="__codelineno-0-906" name="__codelineno-0-906"></a><span class="sd">    exposure : str or list[str] or None, optional</span>
+</span><span id="__span-0-907"><a id="__codelineno-0-907" name="__codelineno-0-907"></a><span class="sd">        Exposure node(s). Defaults to the DAG&#39;s exposure role when omitted.</span>
+</span><span id="__span-0-908"><a id="__codelineno-0-908" name="__codelineno-0-908"></a><span class="sd">    outcome : str or list[str] or None, optional</span>
+</span><span id="__span-0-909"><a id="__codelineno-0-909" name="__codelineno-0-909"></a><span class="sd">        Outcome node(s). Defaults to the DAG&#39;s outcome role when omitted.</span>
+</span><span id="__span-0-910"><a id="__codelineno-0-910" name="__codelineno-0-910"></a><span class="sd">    adj_set : Sequence[str] or None, optional</span>
+</span><span id="__span-0-911"><a id="__codelineno-0-911" name="__codelineno-0-911"></a><span class="sd">        Conditioning set supplied to ``dagitty.paths``. ``None`` is passed</span>
+</span><span id="__span-0-912"><a id="__codelineno-0-912" name="__codelineno-0-912"></a><span class="sd">        through to indicate no adjustment.</span>
+</span><span id="__span-0-913"><a id="__codelineno-0-913" name="__codelineno-0-913"></a><span class="sd">    directed : bool, optional</span>
+</span><span id="__span-0-914"><a id="__codelineno-0-914" name="__codelineno-0-914"></a><span class="sd">        When ``True``, restrict to directed paths from exposure to outcome.</span>
+</span><span id="__span-0-915"><a id="__codelineno-0-915" name="__codelineno-0-915"></a><span class="sd">        Defaults to ``False``.</span>
+</span><span id="__span-0-916"><a id="__codelineno-0-916" name="__codelineno-0-916"></a>
+</span><span id="__span-0-917"><a id="__codelineno-0-917" name="__codelineno-0-917"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-918"><a id="__codelineno-0-918" name="__codelineno-0-918"></a><span class="sd">    -------</span>
+</span><span id="__span-0-919"><a id="__codelineno-0-919" name="__codelineno-0-919"></a><span class="sd">    dict[str, dict[str, Any]]</span>
+</span><span id="__span-0-920"><a id="__codelineno-0-920" name="__codelineno-0-920"></a><span class="sd">        Mapping from path strings to dictionaries with keys ``&#39;open&#39;`` and</span>
+</span><span id="__span-0-921"><a id="__codelineno-0-921" name="__codelineno-0-921"></a><span class="sd">        ``&#39;adj_set&#39;`` indicating path status and conditioning set.</span>
+</span><span id="__span-0-922"><a id="__codelineno-0-922" name="__codelineno-0-922"></a>
+</span><span id="__span-0-923"><a id="__codelineno-0-923" name="__codelineno-0-923"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-924"><a id="__codelineno-0-924" name="__codelineno-0-924"></a><span class="sd">    --------</span>
+</span><span id="__span-0-925"><a id="__codelineno-0-925" name="__codelineno-0-925"></a><span class="sd">    &gt;&gt;&gt; G = DAG(graph=&quot;X -&gt; Z -&gt; Y&quot;)</span>
+</span><span id="__span-0-926"><a id="__codelineno-0-926" name="__codelineno-0-926"></a><span class="sd">    &gt;&gt;&gt; G.paths(exposure=&quot;X&quot;, outcome=&quot;Y&quot;, directed=True)</span>
+</span><span id="__span-0-927"><a id="__codelineno-0-927" name="__codelineno-0-927"></a><span class="sd">    {&#39;X -&gt; Z -&gt; Y&#39;: {&#39;open&#39;: True, &#39;adj_set&#39;: None}}</span>
+</span><span id="__span-0-928"><a id="__codelineno-0-928" name="__codelineno-0-928"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-929"><a id="__codelineno-0-929" name="__codelineno-0-929"></a>    <span class="n">exposure</span> <span class="o">=</span> <span class="n">exposure</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">exposure</span>
+</span><span id="__span-0-930"><a id="__codelineno-0-930" name="__codelineno-0-930"></a>    <span class="n">outcome</span> <span class="o">=</span> <span class="n">outcome</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">outcome</span>
+</span><span id="__span-0-931"><a id="__codelineno-0-931" name="__codelineno-0-931"></a>
+</span><span id="__span-0-932"><a id="__codelineno-0-932" name="__codelineno-0-932"></a>    <span class="k">assert</span> <span class="n">exposure</span><span class="p">,</span> <span class="s2">&quot;Exposure must be provided.&quot;</span>
+</span><span id="__span-0-933"><a id="__codelineno-0-933" name="__codelineno-0-933"></a>    <span class="k">assert</span> <span class="n">outcome</span><span class="p">,</span> <span class="s2">&quot;Outcome must be provided.&quot;</span>
+</span><span id="__span-0-934"><a id="__codelineno-0-934" name="__codelineno-0-934"></a>
+</span><span id="__span-0-935"><a id="__codelineno-0-935" name="__codelineno-0-935"></a>    <span class="n">adj</span> <span class="o">=</span> <span class="n">adj_set</span> <span class="ow">or</span> <span class="n">NULL</span>
+</span><span id="__span-0-936"><a id="__codelineno-0-936" name="__codelineno-0-936"></a>    <span class="n">paths_info</span> <span class="o">=</span> <span class="n">dagitty</span><span class="o">.</span><span class="n">paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dagitty__</span><span class="p">,</span> <span class="n">exposure</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="n">outcome</span><span class="p">,</span> <span class="n">Z</span><span class="o">=</span><span class="n">adj</span><span class="p">,</span> <span class="n">directed</span><span class="o">=</span><span class="n">directed</span><span class="p">)</span>
+</span><span id="__span-0-937"><a id="__codelineno-0-937" name="__codelineno-0-937"></a>    <span class="n">paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths_info</span><span class="o">.</span><span class="n">rx2</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">])</span>
+</span><span id="__span-0-938"><a id="__codelineno-0-938" name="__codelineno-0-938"></a>    <span class="n">are_open</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">paths_info</span><span class="o">.</span><span class="n">rx2</span><span class="p">[</span><span class="s1">&#39;open&#39;</span><span class="p">])</span>
+</span><span id="__span-0-939"><a id="__codelineno-0-939" name="__codelineno-0-939"></a>
+</span><span id="__span-0-940"><a id="__codelineno-0-940" name="__codelineno-0-940"></a>    <span class="k">return</span> <span class="p">{</span><span class="n">path</span><span class="p">:{</span><span class="s1">&#39;open&#39;</span><span class="p">:</span><span class="n">is_open</span><span class="p">,</span> <span class="s1">&#39;adj_set&#39;</span><span class="p">:</span><span class="n">adj_set</span><span class="p">}</span> <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">is_open</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span> <span class="n">are_open</span><span class="p">)}</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>

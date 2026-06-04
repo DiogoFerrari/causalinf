@@ -1139,6 +1139,76 @@
       
         
       
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../assumptions/Assumption/to_dict/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03) Assumptions
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
     
     
     
@@ -1168,7 +1238,7 @@
   <span class="md-ellipsis">
     
   
-    03) Models
+    04) Models
   
 
     
@@ -1226,7 +1296,7 @@
   <span class="md-ellipsis">
     
   
-    04) Utils
+    05) Utils
   
 
     
@@ -1282,7 +1352,7 @@
   <span class="md-ellipsis">
     
   
-    05) Simulate Data
+    06) Simulate Data
   
 
     
@@ -1294,70 +1364,6 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
-  
-
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-    
-    
-      
-        
-        
-      
-    
-    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
-      
-        
-  
-  
-  
-    
-  
-  
-  
-    <a href="../../gcm_original/DAG/assumptions/" class="md-nav__link">
-      
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    06) gcm_original
-  
-
-    
-  </span>
-  
-  
-
-      
-        <span class="md-nav__icon md-icon"></span>
-      
-    </a>
-  
-
   
 
       
@@ -1716,7 +1722,64 @@ baseline, so changes to the result do not affect the built-in styles.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>causalinf/gcm.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4840">4840</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-4783">4783</a></span>
+<span class="normal"><a href="#__codelineno-0-4784">4784</a></span>
+<span class="normal"><a href="#__codelineno-0-4785">4785</a></span>
+<span class="normal"><a href="#__codelineno-0-4786">4786</a></span>
+<span class="normal"><a href="#__codelineno-0-4787">4787</a></span>
+<span class="normal"><a href="#__codelineno-0-4788">4788</a></span>
+<span class="normal"><a href="#__codelineno-0-4789">4789</a></span>
+<span class="normal"><a href="#__codelineno-0-4790">4790</a></span>
+<span class="normal"><a href="#__codelineno-0-4791">4791</a></span>
+<span class="normal"><a href="#__codelineno-0-4792">4792</a></span>
+<span class="normal"><a href="#__codelineno-0-4793">4793</a></span>
+<span class="normal"><a href="#__codelineno-0-4794">4794</a></span>
+<span class="normal"><a href="#__codelineno-0-4795">4795</a></span>
+<span class="normal"><a href="#__codelineno-0-4796">4796</a></span>
+<span class="normal"><a href="#__codelineno-0-4797">4797</a></span>
+<span class="normal"><a href="#__codelineno-0-4798">4798</a></span>
+<span class="normal"><a href="#__codelineno-0-4799">4799</a></span>
+<span class="normal"><a href="#__codelineno-0-4800">4800</a></span>
+<span class="normal"><a href="#__codelineno-0-4801">4801</a></span>
+<span class="normal"><a href="#__codelineno-0-4802">4802</a></span>
+<span class="normal"><a href="#__codelineno-0-4803">4803</a></span>
+<span class="normal"><a href="#__codelineno-0-4804">4804</a></span>
+<span class="normal"><a href="#__codelineno-0-4805">4805</a></span>
+<span class="normal"><a href="#__codelineno-0-4806">4806</a></span>
+<span class="normal"><a href="#__codelineno-0-4807">4807</a></span>
+<span class="normal"><a href="#__codelineno-0-4808">4808</a></span>
+<span class="normal"><a href="#__codelineno-0-4809">4809</a></span>
+<span class="normal"><a href="#__codelineno-0-4810">4810</a></span>
+<span class="normal"><a href="#__codelineno-0-4811">4811</a></span>
+<span class="normal"><a href="#__codelineno-0-4812">4812</a></span>
+<span class="normal"><a href="#__codelineno-0-4813">4813</a></span>
+<span class="normal"><a href="#__codelineno-0-4814">4814</a></span>
+<span class="normal"><a href="#__codelineno-0-4815">4815</a></span>
+<span class="normal"><a href="#__codelineno-0-4816">4816</a></span>
+<span class="normal"><a href="#__codelineno-0-4817">4817</a></span>
+<span class="normal"><a href="#__codelineno-0-4818">4818</a></span>
+<span class="normal"><a href="#__codelineno-0-4819">4819</a></span>
+<span class="normal"><a href="#__codelineno-0-4820">4820</a></span>
+<span class="normal"><a href="#__codelineno-0-4821">4821</a></span>
+<span class="normal"><a href="#__codelineno-0-4822">4822</a></span>
+<span class="normal"><a href="#__codelineno-0-4823">4823</a></span>
+<span class="normal"><a href="#__codelineno-0-4824">4824</a></span>
+<span class="normal"><a href="#__codelineno-0-4825">4825</a></span>
+<span class="normal"><a href="#__codelineno-0-4826">4826</a></span>
+<span class="normal"><a href="#__codelineno-0-4827">4827</a></span>
+<span class="normal"><a href="#__codelineno-0-4828">4828</a></span>
+<span class="normal"><a href="#__codelineno-0-4829">4829</a></span>
+<span class="normal"><a href="#__codelineno-0-4830">4830</a></span>
+<span class="normal"><a href="#__codelineno-0-4831">4831</a></span>
+<span class="normal"><a href="#__codelineno-0-4832">4832</a></span>
+<span class="normal"><a href="#__codelineno-0-4833">4833</a></span>
+<span class="normal"><a href="#__codelineno-0-4834">4834</a></span>
+<span class="normal"><a href="#__codelineno-0-4835">4835</a></span>
+<span class="normal"><a href="#__codelineno-0-4836">4836</a></span>
+<span class="normal"><a href="#__codelineno-0-4837">4837</a></span>
+<span class="normal"><a href="#__codelineno-0-4838">4838</a></span>
+<span class="normal"><a href="#__codelineno-0-4839">4839</a></span>
+<span class="normal"><a href="#__codelineno-0-4840">4840</a></span>
 <span class="normal"><a href="#__codelineno-0-4841">4841</a></span>
 <span class="normal"><a href="#__codelineno-0-4842">4842</a></span>
 <span class="normal"><a href="#__codelineno-0-4843">4843</a></span>
@@ -1730,135 +1793,78 @@ baseline, so changes to the result do not affect the built-in styles.</p>
 <span class="normal"><a href="#__codelineno-0-4851">4851</a></span>
 <span class="normal"><a href="#__codelineno-0-4852">4852</a></span>
 <span class="normal"><a href="#__codelineno-0-4853">4853</a></span>
-<span class="normal"><a href="#__codelineno-0-4854">4854</a></span>
-<span class="normal"><a href="#__codelineno-0-4855">4855</a></span>
-<span class="normal"><a href="#__codelineno-0-4856">4856</a></span>
-<span class="normal"><a href="#__codelineno-0-4857">4857</a></span>
-<span class="normal"><a href="#__codelineno-0-4858">4858</a></span>
-<span class="normal"><a href="#__codelineno-0-4859">4859</a></span>
-<span class="normal"><a href="#__codelineno-0-4860">4860</a></span>
-<span class="normal"><a href="#__codelineno-0-4861">4861</a></span>
-<span class="normal"><a href="#__codelineno-0-4862">4862</a></span>
-<span class="normal"><a href="#__codelineno-0-4863">4863</a></span>
-<span class="normal"><a href="#__codelineno-0-4864">4864</a></span>
-<span class="normal"><a href="#__codelineno-0-4865">4865</a></span>
-<span class="normal"><a href="#__codelineno-0-4866">4866</a></span>
-<span class="normal"><a href="#__codelineno-0-4867">4867</a></span>
-<span class="normal"><a href="#__codelineno-0-4868">4868</a></span>
-<span class="normal"><a href="#__codelineno-0-4869">4869</a></span>
-<span class="normal"><a href="#__codelineno-0-4870">4870</a></span>
-<span class="normal"><a href="#__codelineno-0-4871">4871</a></span>
-<span class="normal"><a href="#__codelineno-0-4872">4872</a></span>
-<span class="normal"><a href="#__codelineno-0-4873">4873</a></span>
-<span class="normal"><a href="#__codelineno-0-4874">4874</a></span>
-<span class="normal"><a href="#__codelineno-0-4875">4875</a></span>
-<span class="normal"><a href="#__codelineno-0-4876">4876</a></span>
-<span class="normal"><a href="#__codelineno-0-4877">4877</a></span>
-<span class="normal"><a href="#__codelineno-0-4878">4878</a></span>
-<span class="normal"><a href="#__codelineno-0-4879">4879</a></span>
-<span class="normal"><a href="#__codelineno-0-4880">4880</a></span>
-<span class="normal"><a href="#__codelineno-0-4881">4881</a></span>
-<span class="normal"><a href="#__codelineno-0-4882">4882</a></span>
-<span class="normal"><a href="#__codelineno-0-4883">4883</a></span>
-<span class="normal"><a href="#__codelineno-0-4884">4884</a></span>
-<span class="normal"><a href="#__codelineno-0-4885">4885</a></span>
-<span class="normal"><a href="#__codelineno-0-4886">4886</a></span>
-<span class="normal"><a href="#__codelineno-0-4887">4887</a></span>
-<span class="normal"><a href="#__codelineno-0-4888">4888</a></span>
-<span class="normal"><a href="#__codelineno-0-4889">4889</a></span>
-<span class="normal"><a href="#__codelineno-0-4890">4890</a></span>
-<span class="normal"><a href="#__codelineno-0-4891">4891</a></span>
-<span class="normal"><a href="#__codelineno-0-4892">4892</a></span>
-<span class="normal"><a href="#__codelineno-0-4893">4893</a></span>
-<span class="normal"><a href="#__codelineno-0-4894">4894</a></span>
-<span class="normal"><a href="#__codelineno-0-4895">4895</a></span>
-<span class="normal"><a href="#__codelineno-0-4896">4896</a></span>
-<span class="normal"><a href="#__codelineno-0-4897">4897</a></span>
-<span class="normal"><a href="#__codelineno-0-4898">4898</a></span>
-<span class="normal"><a href="#__codelineno-0-4899">4899</a></span>
-<span class="normal"><a href="#__codelineno-0-4900">4900</a></span>
-<span class="normal"><a href="#__codelineno-0-4901">4901</a></span>
-<span class="normal"><a href="#__codelineno-0-4902">4902</a></span>
-<span class="normal"><a href="#__codelineno-0-4903">4903</a></span>
-<span class="normal"><a href="#__codelineno-0-4904">4904</a></span>
-<span class="normal"><a href="#__codelineno-0-4905">4905</a></span>
-<span class="normal"><a href="#__codelineno-0-4906">4906</a></span>
-<span class="normal"><a href="#__codelineno-0-4907">4907</a></span>
-<span class="normal"><a href="#__codelineno-0-4908">4908</a></span>
-<span class="normal"><a href="#__codelineno-0-4909">4909</a></span>
-<span class="normal"><a href="#__codelineno-0-4910">4910</a></span>
-<span class="normal"><a href="#__codelineno-0-4911">4911</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4840"><a id="__codelineno-0-4840" name="__codelineno-0-4840"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_style</span><span class="p">(</span><span class="n">new_style</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">baseline</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span id="__span-0-4841"><a id="__codelineno-0-4841" name="__codelineno-0-4841"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="__span-0-4842"><a id="__codelineno-0-4842" name="__codelineno-0-4842"></a><span class="sd">    Construct a customized, mutable graph style dictionary by applying a set of</span>
-</span><span id="__span-0-4843"><a id="__codelineno-0-4843" name="__codelineno-0-4843"></a><span class="sd">    user-provided overrides (`new_style`) to a baseline built-in style template.</span>
-</span><span id="__span-0-4844"><a id="__codelineno-0-4844" name="__codelineno-0-4844"></a>
-</span><span id="__span-0-4845"><a id="__codelineno-0-4845" name="__codelineno-0-4845"></a><span class="sd">    Parameters</span>
-</span><span id="__span-0-4846"><a id="__codelineno-0-4846" name="__codelineno-0-4846"></a><span class="sd">    ----------</span>
-</span><span id="__span-0-4847"><a id="__codelineno-0-4847" name="__codelineno-0-4847"></a><span class="sd">    new_style : Mapping[str, Any]</span>
-</span><span id="__span-0-4848"><a id="__codelineno-0-4848" name="__codelineno-0-4848"></a><span class="sd">        A dictionary describing style modifications. The structure may range from</span>
-</span><span id="__span-0-4849"><a id="__codelineno-0-4849" name="__codelineno-0-4849"></a><span class="sd">        flat (broadcast) updates to arbitrarily nested overrides.</span>
-</span><span id="__span-0-4850"><a id="__codelineno-0-4850" name="__codelineno-0-4850"></a><span class="sd">        The function recursively matches keys against the baseline schema and applies</span>
-</span><span id="__span-0-4851"><a id="__codelineno-0-4851" name="__codelineno-0-4851"></a><span class="sd">        overrides to the appropriate subtrees. Unknown keys or incompatible structures</span>
-</span><span id="__span-0-4852"><a id="__codelineno-0-4852" name="__codelineno-0-4852"></a><span class="sd">        raise informative errors. To see the visual properties available to set</span>
-</span><span id="__span-0-4853"><a id="__codelineno-0-4853" name="__codelineno-0-4853"></a><span class="sd">        use ``causalinf.gcm.get_styles(which=&#39;default&#39;)``, and see ``Notes`` below.</span>
-</span><span id="__span-0-4854"><a id="__codelineno-0-4854" name="__codelineno-0-4854"></a><span class="sd">        The output of this function can be used to set the plot style locally using</span>
-</span><span id="__span-0-4855"><a id="__codelineno-0-4855" name="__codelineno-0-4855"></a><span class="sd">       ``causalinf.gcm.plot(graph_style=&lt;dict&gt;)`` or globally using </span>
-</span><span id="__span-0-4856"><a id="__codelineno-0-4856" name="__codelineno-0-4856"></a><span class="sd">       ``causalinf.options.set_options(graph_style=&lt;dict&gt;)``.</span>
-</span><span id="__span-0-4857"><a id="__codelineno-0-4857" name="__codelineno-0-4857"></a><span class="sd">        Supported patterns include:</span>
-</span><span id="__span-0-4858"><a id="__codelineno-0-4858" name="__codelineno-0-4858"></a>
-</span><span id="__span-0-4859"><a id="__codelineno-0-4859" name="__codelineno-0-4859"></a><span class="sd">        * Flat parameter override (propagate style option to all nodes). Ex:</span>
-</span><span id="__span-0-4860"><a id="__codelineno-0-4860" name="__codelineno-0-4860"></a><span class="sd">            {&quot;node_shape&quot;: &quot;.&quot;}</span>
-</span><span id="__span-0-4861"><a id="__codelineno-0-4861" name="__codelineno-0-4861"></a>
-</span><span id="__span-0-4862"><a id="__codelineno-0-4862" name="__codelineno-0-4862"></a><span class="sd">        * Scoped override for a specific node type. Ex (propagate to Exposure nodes only):</span>
-</span><span id="__span-0-4863"><a id="__codelineno-0-4863" name="__codelineno-0-4863"></a><span class="sd">            {&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}}</span>
-</span><span id="__span-0-4864"><a id="__codelineno-0-4864" name="__codelineno-0-4864"></a>
-</span><span id="__span-0-4865"><a id="__codelineno-0-4865" name="__codelineno-0-4865"></a><span class="sd">        * Fully explicit nesting is accepted:</span>
-</span><span id="__span-0-4866"><a id="__codelineno-0-4866" name="__codelineno-0-4866"></a><span class="sd">            {&quot;nodes&quot;: {&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}}}</span>
-</span><span id="__span-0-4867"><a id="__codelineno-0-4867" name="__codelineno-0-4867"></a>
-</span><span id="__span-0-4868"><a id="__codelineno-0-4868" name="__codelineno-0-4868"></a><span class="sd">        * Edge-level overrides (same as for node options):</span>
-</span><span id="__span-0-4869"><a id="__codelineno-0-4869" name="__codelineno-0-4869"></a><span class="sd">            {&quot;edge_color&quot;: &quot;red&quot;}               &lt;= all edges become red</span>
-</span><span id="__span-0-4870"><a id="__codelineno-0-4870" name="__codelineno-0-4870"></a><span class="sd">            {&quot;edges&quot;: {&quot;edge_color&quot;: &quot;red&quot;}}    &lt;= all edges become red</span>
-</span><span id="__span-0-4871"><a id="__codelineno-0-4871" name="__codelineno-0-4871"></a><span class="sd">            {&quot;Directed&quot;: {&quot;edge_color&quot;: &quot;red&quot;}} &lt;= only directed edges become red</span>
-</span><span id="__span-0-4872"><a id="__codelineno-0-4872" name="__codelineno-0-4872"></a>
-</span><span id="__span-0-4873"><a id="__codelineno-0-4873" name="__codelineno-0-4873"></a>
-</span><span id="__span-0-4874"><a id="__codelineno-0-4874" name="__codelineno-0-4874"></a><span class="sd">    baseline : str, optional</span>
-</span><span id="__span-0-4875"><a id="__codelineno-0-4875" name="__codelineno-0-4875"></a><span class="sd">        Name of the baseline built-in style (see ``causalinf.gcm.get_styles()``).</span>
-</span><span id="__span-0-4876"><a id="__codelineno-0-4876" name="__codelineno-0-4876"></a>
-</span><span id="__span-0-4877"><a id="__codelineno-0-4877" name="__codelineno-0-4877"></a><span class="sd">    Returns</span>
-</span><span id="__span-0-4878"><a id="__codelineno-0-4878" name="__codelineno-0-4878"></a><span class="sd">    -------</span>
-</span><span id="__span-0-4879"><a id="__codelineno-0-4879" name="__codelineno-0-4879"></a><span class="sd">    dict</span>
-</span><span id="__span-0-4880"><a id="__codelineno-0-4880" name="__codelineno-0-4880"></a><span class="sd">        A **mutable** style dictionary derived from the baseline but modified according</span>
-</span><span id="__span-0-4881"><a id="__codelineno-0-4881" name="__codelineno-0-4881"></a><span class="sd">        to ``new_style``. The returned structure is fully detached from the immutable</span>
-</span><span id="__span-0-4882"><a id="__codelineno-0-4882" name="__codelineno-0-4882"></a><span class="sd">        baseline, so changes to the result do not affect the built-in styles.</span>
-</span><span id="__span-0-4883"><a id="__codelineno-0-4883" name="__codelineno-0-4883"></a>
-</span><span id="__span-0-4884"><a id="__codelineno-0-4884" name="__codelineno-0-4884"></a><span class="sd">    Notes</span>
-</span><span id="__span-0-4885"><a id="__codelineno-0-4885" name="__codelineno-0-4885"></a><span class="sd">    -----</span>
-</span><span id="__span-0-4886"><a id="__codelineno-0-4886" name="__codelineno-0-4886"></a><span class="sd">    * This function does **not** mutate the baseline style.</span>
-</span><span id="__span-0-4887"><a id="__codelineno-0-4887" name="__codelineno-0-4887"></a><span class="sd">    * Flat parameters (e.g., {&quot;node_size&quot;: 800}) are automatically broadcast to every</span>
-</span><span id="__span-0-4888"><a id="__codelineno-0-4888" name="__codelineno-0-4888"></a><span class="sd">      location in the schema where that parameter exists.</span>
-</span><span id="__span-0-4889"><a id="__codelineno-0-4889" name="__codelineno-0-4889"></a><span class="sd">    * Nested dictionaries target specific nodes/edges or structural locations.</span>
-</span><span id="__span-0-4890"><a id="__codelineno-0-4890" name="__codelineno-0-4890"></a><span class="sd">    * The override mechanism is schema-guided: only fields that exist in the baseline</span>
-</span><span id="__span-0-4891"><a id="__codelineno-0-4891" name="__codelineno-0-4891"></a><span class="sd">      structure can be modified.</span>
-</span><span id="__span-0-4892"><a id="__codelineno-0-4892" name="__codelineno-0-4892"></a>
-</span><span id="__span-0-4893"><a id="__codelineno-0-4893" name="__codelineno-0-4893"></a><span class="sd">    Examples</span>
-</span><span id="__span-0-4894"><a id="__codelineno-0-4894" name="__codelineno-0-4894"></a><span class="sd">    --------</span>
-</span><span id="__span-0-4895"><a id="__codelineno-0-4895" name="__codelineno-0-4895"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;node_shape&quot;: &quot;.&quot;})</span>
-</span><span id="__span-0-4896"><a id="__codelineno-0-4896" name="__codelineno-0-4896"></a><span class="sd">    # returns a dictionary with node_shape=&#39;.&#39; to all node types</span>
-</span><span id="__span-0-4897"><a id="__codelineno-0-4897" name="__codelineno-0-4897"></a>
-</span><span id="__span-0-4898"><a id="__codelineno-0-4898" name="__codelineno-0-4898"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}})</span>
-</span><span id="__span-0-4899"><a id="__codelineno-0-4899" name="__codelineno-0-4899"></a><span class="sd">    # returns a dictionary with node_shape=&#39;.&#39; only for the Exposure node</span>
-</span><span id="__span-0-4900"><a id="__codelineno-0-4900" name="__codelineno-0-4900"></a>
-</span><span id="__span-0-4901"><a id="__codelineno-0-4901" name="__codelineno-0-4901"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;edges&quot;: {&quot;edge_color&quot;: &quot;red&quot;}})</span>
-</span><span id="__span-0-4902"><a id="__codelineno-0-4902" name="__codelineno-0-4902"></a><span class="sd">    # returns a dictionary with  all edge colors (directed, bidirected, undirected) to red</span>
-</span><span id="__span-0-4903"><a id="__codelineno-0-4903" name="__codelineno-0-4903"></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="__span-0-4904"><a id="__codelineno-0-4904" name="__codelineno-0-4904"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_style</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-</span><span id="__span-0-4905"><a id="__codelineno-0-4905" name="__codelineno-0-4905"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;new_style must be a dict-like mapping&quot;</span><span class="p">)</span>
-</span><span id="__span-0-4906"><a id="__codelineno-0-4906" name="__codelineno-0-4906"></a>
-</span><span id="__span-0-4907"><a id="__codelineno-0-4907" name="__codelineno-0-4907"></a>    <span class="n">style</span> <span class="o">=</span> <span class="n">copy_style</span><span class="p">(</span><span class="n">baseline</span><span class="p">)</span>
-</span><span id="__span-0-4908"><a id="__codelineno-0-4908" name="__codelineno-0-4908"></a>    <span class="n">schema</span> <span class="o">=</span> <span class="n">GRAPH_STYLES</span><span class="p">[</span><span class="n">baseline</span><span class="p">]</span>
-</span><span id="__span-0-4909"><a id="__codelineno-0-4909" name="__codelineno-0-4909"></a>
-</span><span id="__span-0-4910"><a id="__codelineno-0-4910" name="__codelineno-0-4910"></a>    <span class="n">_make_style_apply_style_update</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">new_style</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
-</span><span id="__span-0-4911"><a id="__codelineno-0-4911" name="__codelineno-0-4911"></a>    <span class="k">return</span> <span class="n">style</span>
+<span class="normal"><a href="#__codelineno-0-4854">4854</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-4783"><a id="__codelineno-0-4783" name="__codelineno-0-4783"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_style</span><span class="p">(</span><span class="n">new_style</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">baseline</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+</span><span id="__span-0-4784"><a id="__codelineno-0-4784" name="__codelineno-0-4784"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-0-4785"><a id="__codelineno-0-4785" name="__codelineno-0-4785"></a><span class="sd">    Construct a customized, mutable graph style dictionary by applying a set of</span>
+</span><span id="__span-0-4786"><a id="__codelineno-0-4786" name="__codelineno-0-4786"></a><span class="sd">    user-provided overrides (`new_style`) to a baseline built-in style template.</span>
+</span><span id="__span-0-4787"><a id="__codelineno-0-4787" name="__codelineno-0-4787"></a>
+</span><span id="__span-0-4788"><a id="__codelineno-0-4788" name="__codelineno-0-4788"></a><span class="sd">    Parameters</span>
+</span><span id="__span-0-4789"><a id="__codelineno-0-4789" name="__codelineno-0-4789"></a><span class="sd">    ----------</span>
+</span><span id="__span-0-4790"><a id="__codelineno-0-4790" name="__codelineno-0-4790"></a><span class="sd">    new_style : Mapping[str, Any]</span>
+</span><span id="__span-0-4791"><a id="__codelineno-0-4791" name="__codelineno-0-4791"></a><span class="sd">        A dictionary describing style modifications. The structure may range from</span>
+</span><span id="__span-0-4792"><a id="__codelineno-0-4792" name="__codelineno-0-4792"></a><span class="sd">        flat (broadcast) updates to arbitrarily nested overrides.</span>
+</span><span id="__span-0-4793"><a id="__codelineno-0-4793" name="__codelineno-0-4793"></a><span class="sd">        The function recursively matches keys against the baseline schema and applies</span>
+</span><span id="__span-0-4794"><a id="__codelineno-0-4794" name="__codelineno-0-4794"></a><span class="sd">        overrides to the appropriate subtrees. Unknown keys or incompatible structures</span>
+</span><span id="__span-0-4795"><a id="__codelineno-0-4795" name="__codelineno-0-4795"></a><span class="sd">        raise informative errors. To see the visual properties available to set</span>
+</span><span id="__span-0-4796"><a id="__codelineno-0-4796" name="__codelineno-0-4796"></a><span class="sd">        use ``causalinf.gcm.get_styles(which=&#39;default&#39;)``, and see ``Notes`` below.</span>
+</span><span id="__span-0-4797"><a id="__codelineno-0-4797" name="__codelineno-0-4797"></a><span class="sd">        The output of this function can be used to set the plot style locally using</span>
+</span><span id="__span-0-4798"><a id="__codelineno-0-4798" name="__codelineno-0-4798"></a><span class="sd">       ``causalinf.gcm.plot(graph_style=&lt;dict&gt;)`` or globally using </span>
+</span><span id="__span-0-4799"><a id="__codelineno-0-4799" name="__codelineno-0-4799"></a><span class="sd">       ``causalinf.options.set_options(graph_style=&lt;dict&gt;)``.</span>
+</span><span id="__span-0-4800"><a id="__codelineno-0-4800" name="__codelineno-0-4800"></a><span class="sd">        Supported patterns include:</span>
+</span><span id="__span-0-4801"><a id="__codelineno-0-4801" name="__codelineno-0-4801"></a>
+</span><span id="__span-0-4802"><a id="__codelineno-0-4802" name="__codelineno-0-4802"></a><span class="sd">        * Flat parameter override (propagate style option to all nodes). Ex:</span>
+</span><span id="__span-0-4803"><a id="__codelineno-0-4803" name="__codelineno-0-4803"></a><span class="sd">            {&quot;node_shape&quot;: &quot;.&quot;}</span>
+</span><span id="__span-0-4804"><a id="__codelineno-0-4804" name="__codelineno-0-4804"></a>
+</span><span id="__span-0-4805"><a id="__codelineno-0-4805" name="__codelineno-0-4805"></a><span class="sd">        * Scoped override for a specific node type. Ex (propagate to Exposure nodes only):</span>
+</span><span id="__span-0-4806"><a id="__codelineno-0-4806" name="__codelineno-0-4806"></a><span class="sd">            {&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}}</span>
+</span><span id="__span-0-4807"><a id="__codelineno-0-4807" name="__codelineno-0-4807"></a>
+</span><span id="__span-0-4808"><a id="__codelineno-0-4808" name="__codelineno-0-4808"></a><span class="sd">        * Fully explicit nesting is accepted:</span>
+</span><span id="__span-0-4809"><a id="__codelineno-0-4809" name="__codelineno-0-4809"></a><span class="sd">            {&quot;nodes&quot;: {&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}}}</span>
+</span><span id="__span-0-4810"><a id="__codelineno-0-4810" name="__codelineno-0-4810"></a>
+</span><span id="__span-0-4811"><a id="__codelineno-0-4811" name="__codelineno-0-4811"></a><span class="sd">        * Edge-level overrides (same as for node options):</span>
+</span><span id="__span-0-4812"><a id="__codelineno-0-4812" name="__codelineno-0-4812"></a><span class="sd">            {&quot;edge_color&quot;: &quot;red&quot;}               &lt;= all edges become red</span>
+</span><span id="__span-0-4813"><a id="__codelineno-0-4813" name="__codelineno-0-4813"></a><span class="sd">            {&quot;edges&quot;: {&quot;edge_color&quot;: &quot;red&quot;}}    &lt;= all edges become red</span>
+</span><span id="__span-0-4814"><a id="__codelineno-0-4814" name="__codelineno-0-4814"></a><span class="sd">            {&quot;Directed&quot;: {&quot;edge_color&quot;: &quot;red&quot;}} &lt;= only directed edges become red</span>
+</span><span id="__span-0-4815"><a id="__codelineno-0-4815" name="__codelineno-0-4815"></a>
+</span><span id="__span-0-4816"><a id="__codelineno-0-4816" name="__codelineno-0-4816"></a>
+</span><span id="__span-0-4817"><a id="__codelineno-0-4817" name="__codelineno-0-4817"></a><span class="sd">    baseline : str, optional</span>
+</span><span id="__span-0-4818"><a id="__codelineno-0-4818" name="__codelineno-0-4818"></a><span class="sd">        Name of the baseline built-in style (see ``causalinf.gcm.get_styles()``).</span>
+</span><span id="__span-0-4819"><a id="__codelineno-0-4819" name="__codelineno-0-4819"></a>
+</span><span id="__span-0-4820"><a id="__codelineno-0-4820" name="__codelineno-0-4820"></a><span class="sd">    Returns</span>
+</span><span id="__span-0-4821"><a id="__codelineno-0-4821" name="__codelineno-0-4821"></a><span class="sd">    -------</span>
+</span><span id="__span-0-4822"><a id="__codelineno-0-4822" name="__codelineno-0-4822"></a><span class="sd">    dict</span>
+</span><span id="__span-0-4823"><a id="__codelineno-0-4823" name="__codelineno-0-4823"></a><span class="sd">        A **mutable** style dictionary derived from the baseline but modified according</span>
+</span><span id="__span-0-4824"><a id="__codelineno-0-4824" name="__codelineno-0-4824"></a><span class="sd">        to ``new_style``. The returned structure is fully detached from the immutable</span>
+</span><span id="__span-0-4825"><a id="__codelineno-0-4825" name="__codelineno-0-4825"></a><span class="sd">        baseline, so changes to the result do not affect the built-in styles.</span>
+</span><span id="__span-0-4826"><a id="__codelineno-0-4826" name="__codelineno-0-4826"></a>
+</span><span id="__span-0-4827"><a id="__codelineno-0-4827" name="__codelineno-0-4827"></a><span class="sd">    Notes</span>
+</span><span id="__span-0-4828"><a id="__codelineno-0-4828" name="__codelineno-0-4828"></a><span class="sd">    -----</span>
+</span><span id="__span-0-4829"><a id="__codelineno-0-4829" name="__codelineno-0-4829"></a><span class="sd">    * This function does **not** mutate the baseline style.</span>
+</span><span id="__span-0-4830"><a id="__codelineno-0-4830" name="__codelineno-0-4830"></a><span class="sd">    * Flat parameters (e.g., {&quot;node_size&quot;: 800}) are automatically broadcast to every</span>
+</span><span id="__span-0-4831"><a id="__codelineno-0-4831" name="__codelineno-0-4831"></a><span class="sd">      location in the schema where that parameter exists.</span>
+</span><span id="__span-0-4832"><a id="__codelineno-0-4832" name="__codelineno-0-4832"></a><span class="sd">    * Nested dictionaries target specific nodes/edges or structural locations.</span>
+</span><span id="__span-0-4833"><a id="__codelineno-0-4833" name="__codelineno-0-4833"></a><span class="sd">    * The override mechanism is schema-guided: only fields that exist in the baseline</span>
+</span><span id="__span-0-4834"><a id="__codelineno-0-4834" name="__codelineno-0-4834"></a><span class="sd">      structure can be modified.</span>
+</span><span id="__span-0-4835"><a id="__codelineno-0-4835" name="__codelineno-0-4835"></a>
+</span><span id="__span-0-4836"><a id="__codelineno-0-4836" name="__codelineno-0-4836"></a><span class="sd">    Examples</span>
+</span><span id="__span-0-4837"><a id="__codelineno-0-4837" name="__codelineno-0-4837"></a><span class="sd">    --------</span>
+</span><span id="__span-0-4838"><a id="__codelineno-0-4838" name="__codelineno-0-4838"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;node_shape&quot;: &quot;.&quot;})</span>
+</span><span id="__span-0-4839"><a id="__codelineno-0-4839" name="__codelineno-0-4839"></a><span class="sd">    # returns a dictionary with node_shape=&#39;.&#39; to all node types</span>
+</span><span id="__span-0-4840"><a id="__codelineno-0-4840" name="__codelineno-0-4840"></a>
+</span><span id="__span-0-4841"><a id="__codelineno-0-4841" name="__codelineno-0-4841"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;Exposure&quot;: {&quot;node_shape&quot;: &quot;.&quot;}})</span>
+</span><span id="__span-0-4842"><a id="__codelineno-0-4842" name="__codelineno-0-4842"></a><span class="sd">    # returns a dictionary with node_shape=&#39;.&#39; only for the Exposure node</span>
+</span><span id="__span-0-4843"><a id="__codelineno-0-4843" name="__codelineno-0-4843"></a>
+</span><span id="__span-0-4844"><a id="__codelineno-0-4844" name="__codelineno-0-4844"></a><span class="sd">    &gt;&gt;&gt; make_style({&quot;edges&quot;: {&quot;edge_color&quot;: &quot;red&quot;}})</span>
+</span><span id="__span-0-4845"><a id="__codelineno-0-4845" name="__codelineno-0-4845"></a><span class="sd">    # returns a dictionary with  all edge colors (directed, bidirected, undirected) to red</span>
+</span><span id="__span-0-4846"><a id="__codelineno-0-4846" name="__codelineno-0-4846"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-0-4847"><a id="__codelineno-0-4847" name="__codelineno-0-4847"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">new_style</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+</span><span id="__span-0-4848"><a id="__codelineno-0-4848" name="__codelineno-0-4848"></a>        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;new_style must be a dict-like mapping&quot;</span><span class="p">)</span>
+</span><span id="__span-0-4849"><a id="__codelineno-0-4849" name="__codelineno-0-4849"></a>
+</span><span id="__span-0-4850"><a id="__codelineno-0-4850" name="__codelineno-0-4850"></a>    <span class="n">style</span> <span class="o">=</span> <span class="n">copy_style</span><span class="p">(</span><span class="n">baseline</span><span class="p">)</span>
+</span><span id="__span-0-4851"><a id="__codelineno-0-4851" name="__codelineno-0-4851"></a>    <span class="n">schema</span> <span class="o">=</span> <span class="n">GRAPH_STYLES</span><span class="p">[</span><span class="n">baseline</span><span class="p">]</span>
+</span><span id="__span-0-4852"><a id="__codelineno-0-4852" name="__codelineno-0-4852"></a>
+</span><span id="__span-0-4853"><a id="__codelineno-0-4853" name="__codelineno-0-4853"></a>    <span class="n">_make_style_apply_style_update</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">new_style</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+</span><span id="__span-0-4854"><a id="__codelineno-0-4854" name="__codelineno-0-4854"></a>    <span class="k">return</span> <span class="n">style</span>
 </span></code></pre></div></td></tr></table></div>
             </details>
     </div>
